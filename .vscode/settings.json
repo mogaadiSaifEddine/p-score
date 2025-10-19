@@ -1,0 +1,6 @@
+{
+    "typescript.autoClosingTags": false,
+    "i18n-ally.localesPaths": [
+        "public/locales"
+    ]
+}

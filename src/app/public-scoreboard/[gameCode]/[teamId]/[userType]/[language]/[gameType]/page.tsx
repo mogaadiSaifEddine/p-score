@@ -1,0 +1,303 @@
+// app/public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[gameType]/page-final-fix.tsx
+// Final fix with better team detection and error handling
+
+'use client';
+
+import MobileScoreboard from '@/app/components/MobileScoreboard';
+import { useGameObserver } from '@/app/hooks/useGameObserver';
+import { usePublicScoreboardData } from '@/app/hooks/useRouteParams';
+import { GameData, useTreasureData } from '@/app/hooks/useTreasureData';
+import React from 'react';
+
+// Team icon configurations
+const teamIconConfigs: Record<string, { color: string; shapes: ('circle' | 'triangle' | 'square')[] }> = {
+  'kids': { color: '#FFB347', shapes: ['circle', 'triangle', 'square'] },
+  'lbb': { color: '#FF6B6B', shapes: ['circle', 'triangle', 'square'] },
+  'team1': { color: '#4ECDC4', shapes: ['circle', 'triangle', 'square'] },
+  'team2': { color: '#45B7D1', shapes: ['circle', 'triangle', 'square'] },
+  'players': { color: '#9B59B6', shapes: ['circle', 'triangle', 'square'] },
+  'hunters': { color: '#E67E22', shapes: ['circle', 'triangle', 'square'] },
+  'default': { color: '#95A5A6', shapes: ['circle', 'triangle', 'square'] }
+};
+
+export default function PublicScoreboardFinalFixPage() {
+  // Parse route parameters
+  const {
+    isValidRoute,
+    error: routeError,
+    parsedData,
+    isPlayerView,
+    hasValidationErrors,
+    getValidationErrorsFormatted
+  } = usePublicScoreboardData();
+
+  // Load game data with team-specific calls
+  const {
+    game,
+    observer,
+    scoreboard,
+    teamScoreboard,
+    loading: gameLoading,
+    error: gameError,
+    reload,
+    isGameStarted,
+    isGameFinished,
+    getCurrentTeamData,
+    hasTeamData,
+    getTeamTreasures,
+    getDebugInfo
+  } = useGameObserver({
+    gameCode: parsedData?.gameCode || '',
+    teamId: parsedData?.teamId,
+    autoRefresh: false,
+    refreshInterval: 5000
+  });
+
+  // Get current team data
+  const currentTeam = getCurrentTeamData();
+  const debugInfo = getDebugInfo();
+
+  // Get treasure data from team-specific API
+  const teamTreasures = getTeamTreasures();
+  
+  // Format treasure data for the mobile UI
+  const treasureApiData = React.useMemo(() => {
+    console.log('Processing treasure data:', teamTreasures);
+
+    if (teamTreasures.length > 0) {
+      return teamTreasures.map((treasure: any, index: number) => ({
+        waypoint_challenge: treasure.waypoint_id || treasure.id || treasure.challenge_id || index + 1,
+        score_earned: treasure.score || treasure.points || treasure.score_earned || treasure.value || 0,
+        description: treasure.name || treasure.description || treasure.title || treasure.type || `Treasure ${index + 1}`,
+        time: treasure.found_at || treasure.time || treasure.discovered_at || treasure.completed_at || new Date().toISOString()
+      }));
+    }
+    
+    // Fallback: create treasure data based on team score if no specific treasure data
+    if (currentTeam?.score && currentTeam.score > 0) {
+      return [{
+        waypoint_challenge: 1,
+        score_earned: currentTeam.score,
+        description: 'Points earned',
+        time: new Date().toISOString()
+      }];
+    }
+    
+    return [];
+  }, [teamTreasures, currentTeam]);
+  const gameRes =  game as GameData;
+  // Use treasure data hook to format for UI
+  const { treasures, totalScore } = useTreasureData(treasureApiData, gameRes);
+
+  // Debug logging
+  React.useEffect(() => {
+    if (parsedData?.isValid) {
+      console.log('=== Final Fix Debug Info ===');
+      console.log('Route data:', parsedData);
+      console.log('Debug info:', debugInfo);
+      console.log('Current team:', currentTeam);
+      console.log('Has team data:', hasTeamData());
+      console.log('Team scoreboard raw:', teamScoreboard);
+      console.log('Team treasures:', teamTreasures);
+      console.log('Formatted treasures:', treasures);
+    }
+  }, [parsedData, debugInfo, currentTeam, hasTeamData, teamScoreboard, teamTreasures, treasures]);
+
+  // Loading state for route parsing
+  if (!isValidRoute && !routeError) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Route validation errors
+  if (!isValidRoute || hasValidationErrors()) {
+    return (
+      <div className="min-h-screen bg-red-50 flex items-center justify-center p-4">
+        <div className="max-w-sm mx-auto bg-white rounded-lg shadow p-6">
+          <div className="text-center mb-4">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 19c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <h1 className="text-xl font-bold text-red-600 mb-2">Invalid URL</h1>
+          </div>
+          <div className="space-y-2 mb-4">
+            {routeError && <p className="text-red-700 text-sm">• {routeError}</p>}
+            {hasValidationErrors() && (
+              <p className="text-red-700 text-sm">• {getValidationErrorsFormatted()}</p>
+            )}
+          </div>
+          <div className="p-3 bg-gray-100 rounded text-xs">
+            <p className="font-medium mb-1">Expected format:</p>
+            <code>/public-scoreboard/BQTHUT/1/player/en/turf_hunt</code>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Game data loading
+  if (gameLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600 font-medium">Loading Game Data</p>
+          <p className="text-sm text-gray-500">{parsedData!.gameCode} - Team {parsedData!.teamId}</p>
+          <div className="mt-2 text-xs text-gray-400">
+            <p>Calling: /apis/observer/{parsedData!.gameCode}/scoreboard/{parsedData!.teamId}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Game data error
+  if (gameError) {
+    return (
+      <div className="min-h-screen bg-red-50 flex items-center justify-center p-4">
+        <div className="max-w-sm mx-auto bg-white rounded-lg shadow p-6">
+          <div className="text-center mb-4">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h1 className="text-xl font-bold text-red-600 mb-2">API Error</h1>
+          </div>
+          <p className="text-red-700 mb-4 text-sm text-center">{gameError}</p>
+          <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
+            <p>Failed API: /apis/observer/{parsedData!.gameCode}/scoreboard/{parsedData!.teamId}</p>
+          </div>
+          <button
+            onClick={reload}
+            className="w-full bg-red-500 text-white px-4 py-3 rounded-lg hover:bg-red-600 font-medium"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if we have team data but couldn't find the specific team
+  const hasApiData = hasTeamData() || (scoreboard?.teams && scoreboard.teams.length > 0);
+  
+  if (!currentTeam && isPlayerView() && hasApiData) {
+    return (
+      <div className="min-h-screen bg-yellow-50 flex items-center justify-center p-4">
+        <div className="max-w-sm mx-auto bg-white rounded-lg shadow p-6">
+          <div className="text-center mb-4">
+            <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h1 className="text-xl font-bold text-yellow-600 mb-2">Team Not Found</h1>
+          </div>
+          <p className="text-yellow-700 text-sm text-center mb-2">
+            Team #{parsedData!.teamId} not found in game {parsedData!.gameCode}
+          </p>
+          
+          {/* Debug info */}
+         
+          
+          <button
+            onClick={reload}
+            className="w-full bg-yellow-500 text-white px-4 py-3 rounded-lg hover:bg-yellow-600 font-medium"
+          >
+            Refresh Game
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // If we're in player view but have no API data at all, show a different error
+  if (!currentTeam && isPlayerView() && !hasApiData) {
+    return (
+      <div className="min-h-screen bg-red-50 flex items-center justify-center p-4">
+        <div className="max-w-sm mx-auto bg-white rounded-lg shadow p-6">
+          <div className="text-center mb-4">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h1 className="text-xl font-bold text-red-600 mb-2">No Game Data</h1>
+          </div>
+          <p className="text-red-700 text-sm text-center mb-4">
+            Could not load data for game {parsedData!.gameCode}
+          </p>
+          <button
+            onClick={reload}
+            className="w-full bg-red-500 text-white px-4 py-3 rounded-lg hover:bg-red-600 font-medium"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Prepare team data for mobile component
+  const teamData = currentTeam ? {
+    name: currentTeam.name,
+    score: currentTeam.score || totalScore || 0,
+    color: teamIconConfigs[currentTeam.name.toLowerCase()]?.color || teamIconConfigs.default.color,
+    shapes: teamIconConfigs[currentTeam.name.toLowerCase()]?.shapes || teamIconConfigs.default.shapes
+  } : {
+    name: `Team ${parsedData!.teamId}`,
+    score: totalScore || 0,
+    color: teamIconConfigs.default.color,
+    shapes: teamIconConfigs.default.shapes
+  };
+
+  // Determine game status
+  const gameStatus = isGameFinished ? 'finished' : isGameStarted ? 'in_progress' : 'not_started';
+
+  // Handle end game
+  const handleEndGame = async () => {
+    try {
+      console.log('Ending game for team:', parsedData!.teamId, 'in game:', parsedData!.gameCode);
+      
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      reload();
+    } catch (error) {
+      console.error('Error ending game:', error);
+    }
+  };
+
+  return (
+    <>
+      {/* Debug info in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="bg-green-50 border-b border-green-200 p-2 text-xs">
+          <div className="max-w-sm mx-auto">
+            <p><strong>✅ API Status:</strong></p>
+            <p>Team API: /apis/observer/{parsedData!.gameCode}/scoreboard/{parsedData!.teamId}</p>
+            <p>Team data: {hasTeamData() ? '✅ Available' : '❌ Not available'}</p>
+            <p>Current team: {currentTeam ? '✅ Found' : '❌ Not found'}</p>
+            <p>Treasures: {treasures.length} items</p>
+            <p>Score: {teamData.score} points</p>
+          </div>
+        </div>
+      )}
+
+      <MobileScoreboard
+        gameStatus={gameStatus}
+        currentTeam={teamData}
+        treasures={treasures}
+        onEndGame={handleEndGame}
+        showEndGameButton={isPlayerView() && gameStatus === 'in_progress'}
+      />
+    </>
+  );
+}
