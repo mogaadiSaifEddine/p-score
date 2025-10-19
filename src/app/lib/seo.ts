@@ -56,7 +56,7 @@ export function generateSEOMetadata(config: SEOConfig = {}): Metadata {
     const statusText = gameStatus === 'finished' ? 'completed' : gameStatus === 'in_progress' ? 'is playing' : 'joined';
     finalDescription = `${teamName} ${statusText} game ${gameCode} with ${teamScore} points. Follow their progress in this exciting location-based treasure hunt!`;
   } else if (gameCode) {
-    finalDescription = `Live scoreboard for PowerMaps game ${gameCode}. Track team progress and scores in real-time!`;
+    finalDescription = `Live scoreboard for Locatify game ${gameCode}. Track team progress and scores in real-time!`;
   }
 
   // Image generation
@@ -183,7 +183,7 @@ export function generateTeamSchema(config: {
     "url": config.url,
     "memberOf": {
       "@type": "SportsOrganization",
-      "name": `PowerMaps Game ${config.gameCode}`
+      "name": `Locatify Game ${config.gameCode}`
     }
   };
 }

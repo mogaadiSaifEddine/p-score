@@ -1,6 +1,6 @@
 {
-    "name": "PowerMaps - EV Charging Network",
-    "short_name": "PowerMaps",
+    "name": "Locatify - EV Charging Network",
+    "short_name": "Locatify",
     "description": "Find and navigate to EV charging stations across Tunisia",
     "start_url": "/",
     "display": "standalone",

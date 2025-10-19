@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: { params: ScoreboardLayoutPro
 
   return generateSEOMetadata({
     title: `${teamName} - Game ${gameCodeUpper} Live Scoreboard`,
-    description: `Follow ${teamName}'s progress in PowerMaps game ${gameCodeUpper}. Watch their live score and see their treasure hunting achievements in real-time!`,
+    description: `Follow ${teamName}'s progress in Locatify game ${gameCodeUpper}. Watch their live score and see their treasure hunting achievements in real-time!`,
     image: dynamicImage,
     url: currentUrl,
     type: 'article',
@@ -50,7 +50,7 @@ export default function ScoreboardLayout({ children, params }: ScoreboardLayoutP
   const { gameCode, teamId, userType, language, gameType } = params;
   const teamName = `Team ${teamId}`;
   const gameCodeUpper = gameCode.toUpperCase();
-  const currentUrl = `https://powermaps.app/public-scoreboard/${gameCode}/${teamId}/${userType}/${language}/${gameType}`;
+  const currentUrl = `https://locatify.com/public-scoreboard/${gameCode}/${teamId}/${userType}/${language}/${gameType}`;
 
   // Generate structured data for better SEO
   const gameSchema = generateGameSchema({

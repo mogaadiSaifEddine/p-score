@@ -12,9 +12,9 @@ const nextConfig = {
     domains: [
       'localhost', 
       'api.charge-tn.com', 
-      'api.powermaps.com', 
-      'api.powermaps.tech',
-      'staging-api.powermaps.tech'
+      'api.Locatify.com', 
+      'api.Locatify.tech',
+      'staging-api.Locatify.tech'
     ],
     unoptimized: isCapacitorBuild, // Disable image optimization for Capacitor builds
   },

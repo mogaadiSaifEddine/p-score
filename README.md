@@ -1,4 +1,4 @@
-# PowerMaps Frontend
+# Locatify Frontend
 
 This is the frontend application for public Scoreboard, built with Next.js and TypeScript.
 

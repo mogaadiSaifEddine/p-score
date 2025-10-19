@@ -3,8 +3,8 @@ import "./globals.css";
 import { generateSEOMetadata } from "./lib/seo";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "PowerMaps - Interactive Location-Based Games & Treasure Hunts",
-  description: "Create and play immersive location-based games and treasure hunts. Track team progress, compete in real-time, and explore the world around you with PowerMaps.",
+  title: "Locatify - Interactive Location-Based Games & Treasure Hunts",
+  description: "Create and play immersive location-based games and treasure hunts. Track team progress, compete in real-time, and explore the world around you with Locatify.",
   url: "/",
   type: "website"
 });
@@ -22,7 +22,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="PowerMaps" />
+        <meta name="apple-mobile-web-app-title" content="Locatify" />
         
         {/* Favicon and app icons */}
         <link rel="icon" href="/favicon.ico" />
@@ -40,9 +40,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebApplication",
-              "name": "PowerMaps",
+              "name": "Locatify",
               "description": "Interactive location-based games and treasure hunts platform",
-              "url": "https://powermaps.app",
+              "url": "https://Locatify.com",
               "applicationCategory": "GameApplication",
               "operatingSystem": "Web, iOS, Android",
               "offers": {
