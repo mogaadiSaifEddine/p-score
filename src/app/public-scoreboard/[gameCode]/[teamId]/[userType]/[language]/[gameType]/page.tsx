@@ -277,7 +277,6 @@ export default function PublicScoreboardFinalFixPage() {
 
   return (
     <>
-      {/* Debug info in development */}
       <MobileScoreboard
         gameStatus={gameStatus}
         currentTeam={teamData}

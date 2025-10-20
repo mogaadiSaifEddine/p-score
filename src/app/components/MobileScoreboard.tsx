@@ -156,6 +156,7 @@ const getTreasureIcon = (description: string, waypointId?: number): string => {
 
 export default function ExactMobileScoreboard({
   gameStatus = 'in_progress',
+  currentTeam={},
   teamName = 'Team',
   teamColor = '#FFB347',
   teamShapes = ['circle', 'triangle', 'square'],
