@@ -279,7 +279,7 @@ export default function PublicScoreboardFinalFixPage() {
     <>
       <MobileScoreboard
         gameStatus={gameStatus}
-        currentTeam={teamData}
+        // currentTeam={teamData}
         treasures={treasures}
         onEndGame={handleEndGame}
         showEndGameButton={isPlayerView() && gameStatus === 'in_progress'}
