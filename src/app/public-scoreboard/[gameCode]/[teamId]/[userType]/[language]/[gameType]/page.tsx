@@ -278,19 +278,6 @@ export default function PublicScoreboardFinalFixPage() {
   return (
     <>
       {/* Debug info in development */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="bg-green-50 border-b border-green-200 p-2 text-xs">
-          <div className="max-w-sm mx-auto">
-            <p><strong>✅ API Status:</strong></p>
-            <p>Team API: /apis/observer/{parsedData!.gameCode}/scoreboard/{parsedData!.teamId}</p>
-            <p>Team data: {hasTeamData() ? '✅ Available' : '❌ Not available'}</p>
-            <p>Current team: {currentTeam ? '✅ Found' : '❌ Not found'}</p>
-            <p>Treasures: {treasures.length} items</p>
-            <p>Score: {teamData.score} points</p>
-          </div>
-        </div>
-      )}
-
       <MobileScoreboard
         gameStatus={gameStatus}
         currentTeam={teamData}
