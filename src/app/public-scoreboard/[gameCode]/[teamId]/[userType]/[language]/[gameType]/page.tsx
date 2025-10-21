@@ -46,6 +46,7 @@ export default function PublicScoreboardFinalFixPage() {
     getCurrentTeamData,
     hasTeamData,
     getTeamTreasures,
+    getTeamCoupons,
     getDebugInfo
   } = useGameObserver({
     gameCode: parsedData?.gameCode || '',
@@ -60,6 +61,9 @@ export default function PublicScoreboardFinalFixPage() {
 
   // Get treasure data from team-specific API
   const teamTreasures = getTeamTreasures();
+
+  // Get coupons data from team-specific API
+  const teamCoupons = getTeamCoupons();
 
   // Format treasure data for the mobile UI
   const treasureApiData = React.useMemo(() => {
@@ -111,6 +115,23 @@ export default function PublicScoreboardFinalFixPage() {
   // Use treasure data hook to format for UI
   const { treasures, totalScore } = useTreasureData(treasureApiData, gameData);
 
+  // Format coupons data for the mobile UI
+  const couponsData = React.useMemo(() => {
+    console.log('Processing coupons data:', teamCoupons);
+
+    if (teamCoupons.length > 0) {
+      return teamCoupons
+        .filter((coupon: any) => coupon.acquired) // Only show acquired coupons
+        .map((coupon: any) => ({
+          id: coupon.id,
+          name: coupon.title || `Coupon ${coupon.id}`,
+          description: coupon.subtitle || undefined
+        }));
+    }
+
+    return [];
+  }, [teamCoupons]);
+
   // Debug logging for treasure icon calculations
   React.useEffect(() => {
     console.log('=== Treasure Icon Debug ===');
@@ -131,9 +152,10 @@ export default function PublicScoreboardFinalFixPage() {
       console.log('Has team data:', hasTeamData());
       console.log('Team scoreboard raw:', teamScoreboard);
       console.log('Team treasures:', teamTreasures);
+      console.log('Team coupons:', teamCoupons);
       console.log('Formatted treasures:', treasures);
     }
-  }, [parsedData, debugInfo, currentTeam, hasTeamData, teamScoreboard, teamTreasures, treasures]);
+  }, [parsedData, debugInfo, currentTeam, hasTeamData, teamScoreboard, teamTreasures, teamCoupons, treasures]);
 
   // Loading state for route parsing
   if (!isValidRoute && !routeError) {
@@ -304,13 +326,16 @@ export default function PublicScoreboardFinalFixPage() {
       console.error('Error ending game:', error);
     }
   };
-  console.log(treasures);
+
+  console.log('Final treasures:', treasures);
+  console.log('Final coupons:', couponsData);
 
   return (
     <ScoreboardProviders initialLocale={parsedData?.language}>
       <MobileScoreboard
         gameStatus={gameStatus}
         treasures={treasures}
+        coupons={couponsData}
         teamName={teamData.name}
         onEndGame={handleEndGame}
         showEndGameButton={isPlayerView() && gameStatus === 'in_progress'}

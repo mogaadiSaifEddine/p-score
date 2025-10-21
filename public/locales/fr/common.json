@@ -9,7 +9,8 @@
     "time": "Temps",
     "treasuresDiscovered": "Trésors découverts",
     "noTreasures": "Aucun trésor découvert pour le moment",
-    "endGame": "Terminer le jeu"
+    "endGame": "Terminer le jeu",
+    "rewards": "Récompenses"
   },
   "errors": {
     "invalidUrl": "Paramètres d'URL invalides",

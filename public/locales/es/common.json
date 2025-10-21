@@ -9,7 +9,8 @@
     "time": "Tiempo",
     "treasuresDiscovered": "Tesoros descubiertos",
     "noTreasures": "Aún no se han descubierto tesoros",
-    "endGame": "Terminar juego"
+    "endGame": "Terminar juego",
+    "rewards": "Recompensas"
   },
   "errors": {
     "invalidUrl": "Parámetros de URL inválidos",
