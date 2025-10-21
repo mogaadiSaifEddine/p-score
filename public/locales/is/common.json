@@ -1,0 +1,39 @@
+{
+  "gameStatus": {
+    "inProgress": "Leikur í gangi",
+    "finished": "Leikur lokið",
+    "notStarted": "Leikur ekki byrjaður"
+  },
+  "scoreboard": {
+    "totalScore": "Heildareinkunn",
+    "time": "Tími",
+    "treasuresDiscovered": "Fjársjóðir fundnir",
+    "noTreasures": "Engir fjársjóðir fundnir ennþá",
+    "endGame": "Ljúka leik"
+  },
+  "errors": {
+    "invalidUrl": "Ógild URL færibreytur",
+    "teamNotFound": "Lið fannst ekki",
+    "noGameData": "Engin leikjagögn tiltæk",
+    "apiError": "API villa kom upp",
+    "tryAgain": "Vinsamlegast reyndu aftur"
+  },
+  "loading": {
+    "loadingGame": "Hleð leikjagögnum...",
+    "loading": "Hleður..."
+  },
+
+  "themes": {
+    "light": "Ljóst",
+    "dark": "Dökkt",
+    "system": "Kerfi",
+    "switchTheme": "Skipta um þema (núverandi: {{current}})"
+  },
+  "languages": {
+    "en": "Enska",
+    "fr": "Franska",
+    "es": "Spænska",
+    "is": "Íslenska",
+    "switchLanguage": "Skipta um tungumál (núverandi: {{current}})"
+  }
+}

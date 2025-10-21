@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./styles/themes.css";
 import { generateSEOMetadata } from "./lib/seo";
 
 export const metadata: Metadata = generateSEOMetadata({

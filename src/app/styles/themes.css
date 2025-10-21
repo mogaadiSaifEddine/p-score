@@ -1,0 +1,191 @@
+/* Theme Variables and Classes */
+
+/* Base theme variables - Light theme (default) */
+:root {
+  /* Background colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  
+  /* Text colors */
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+  --text-muted: #cbd5e1;
+  
+  /* Border and divider colors */
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+  --divider-color: #e2e8f0;
+  
+  /* Accent and brand colors */
+  --accent-color: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-light: #dbeafe;
+  
+  /* Status colors */
+  --success-color: #10b981;
+  --success-light: #d1fae5;
+  --warning-color: #f59e0b;
+  --warning-light: #fef3c7;
+  --error-color: #ef4444;
+  --error-light: #fee2e2;
+  --info-color: #06b6d4;
+  --info-light: #cffafe;
+  
+  /* Game-specific colors */
+  --score-primary: #5b8d96;
+  --score-secondary: #a8d7dc;
+  --score-accent: #7ed8c8;
+  --badge-gradient-start: #f4be7f;
+  --badge-gradient-end: #efaa68;
+  --treasure-icon-bg: #f9f9f9;
+  
+  /* Shadow colors */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+  --shadow-heavy: rgba(0, 0, 0, 0.25);
+  
+  /* Interactive states */
+  --hover-overlay: rgba(0, 0, 0, 0.05);
+  --active-overlay: rgba(0, 0, 0, 0.1);
+  --focus-ring: rgba(59, 130, 246, 0.5);
+}
+
+/* Light theme explicit class */
+.theme-light {
+  /* Same as root variables - explicit for clarity */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+  --text-muted: #cbd5e1;
+  
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+  --divider-color: #e2e8f0;
+  
+  --accent-color: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-light: #dbeafe;
+  
+  --success-color: #10b981;
+  --success-light: #d1fae5;
+  --warning-color: #f59e0b;
+  --warning-light: #fef3c7;
+  --error-color: #ef4444;
+  --error-light: #fee2e2;
+  --info-color: #06b6d4;
+  --info-light: #cffafe;
+  
+  --score-primary: #5b8d96;
+  --score-secondary: #a8d7dc;
+  --score-accent: #7ed8c8;
+  --badge-gradient-start: #f4be7f;
+  --badge-gradient-end: #efaa68;
+  --treasure-icon-bg: #f9f9f9;
+  
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+  --shadow-heavy: rgba(0, 0, 0, 0.25);
+  
+  --hover-overlay: rgba(0, 0, 0, 0.05);
+  --active-overlay: rgba(0, 0, 0, 0.1);
+  --focus-ring: rgba(59, 130, 246, 0.5);
+}
+
+/* Dark theme */
+.theme-dark {
+  /* Background colors */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  
+  /* Text colors */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
+  
+  /* Border and divider colors */
+  --border-color: #334155;
+  --border-light: #475569;
+  --divider-color: #334155;
+  
+  /* Accent and brand colors */
+  --accent-color: #60a5fa;
+  --accent-hover: #3b82f6;
+  --accent-light: #1e3a8a;
+  
+  /* Status colors */
+  --success-color: #34d399;
+  --success-light: #064e3b;
+  --warning-color: #fbbf24;
+  --warning-light: #451a03;
+  --error-color: #f87171;
+  --error-light: #450a0a;
+  --info-color: #22d3ee;
+  --info-light: #083344;
+  
+  /* Game-specific colors - adjusted for dark theme */
+  --score-primary: #7dd3fc;
+  --score-secondary: #67e8f9;
+  --score-accent: #5eead4;
+  --badge-gradient-start: #fbbf24;
+  --badge-gradient-end: #f59e0b;
+  --treasure-icon-bg: #374151;
+  
+  /* Shadow colors */
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-light: rgba(0, 0, 0, 0.2);
+  --shadow-medium: rgba(0, 0, 0, 0.4);
+  --shadow-heavy: rgba(0, 0, 0, 0.6);
+  
+  /* Interactive states */
+  --hover-overlay: rgba(255, 255, 255, 0.05);
+  --active-overlay: rgba(255, 255, 255, 0.1);
+  --focus-ring: rgba(96, 165, 250, 0.5);
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: 
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Disable transitions during theme initialization to prevent flash */
+.theme-transitioning * {
+  transition: none !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root,
+  .theme-light {
+    --border-color: #000000;
+    --text-secondary: #000000;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .theme-dark {
+    --border-color: #ffffff;
+    --text-secondary: #ffffff;
+    --shadow-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

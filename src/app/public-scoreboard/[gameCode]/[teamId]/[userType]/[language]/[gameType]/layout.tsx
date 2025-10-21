@@ -2,7 +2,7 @@
 // Dynamic layout with metadata for public scoreboard pages
 
 import { generateDynamicOGImage, generateGameSchema, generateSEOMetadata, generateTeamSchema } from "@/app/lib/seo";
-import type { Metadata } from "next";
+import { Metadata } from "next";
 
 interface ScoreboardLayoutProps {
   children: React.ReactNode;

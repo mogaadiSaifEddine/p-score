@@ -1,5 +1,7 @@
 import React from 'react';
 import './MobileScoreboard.css'
+import ThemeToggle from './ThemeToggle';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface Treasure {
   id: number;
@@ -27,6 +29,13 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 }) => {
   console.log('MobileScoreboard treasures:', treasures);
   
+  const { t, locale } = useTranslation();
+  
+  // Debug: Log current locale
+  React.useEffect(() => {
+    console.log('MobileScoreboard - Current locale:', locale);
+  }, [locale]);
+  
   // Calculate total score from actual treasures data
   const totalScore = treasures.reduce((sum: number, treasure: Treasure) => sum + treasure.score, 0);
 
@@ -36,11 +45,14 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
         <div className="game-over-content">
           {/* Game Status Header */}
           <div className="game-over-header">
-            <h1 className="game-over-title">
-              {gameStatus === 'finished' ? 'Game over' : 
-               gameStatus === 'in_progress' ? 'Game in progress' : 
-               'Game not started'}
-            </h1>
+            <div className="header-content">
+              <h1 className="game-over-title">
+                {gameStatus === 'finished' ? t('gameStatus.finished') : 
+                 gameStatus === 'in_progress' ? t('gameStatus.inProgress') : 
+                 t('gameStatus.notStarted')}
+              </h1>
+              <ThemeToggle className="header-theme-toggle" />
+            </div>
           </div>
 
           {/* Treasures Section Container - With relative positioning */}
@@ -53,7 +65,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 <div className="score-section">
               {/* Left - Total Score Label and Circle */}
               <div className="score-item">
-                <h2 className="score-label">Total Score</h2>
+                <h2 className="score-label">{t('scoreboard.totalScore')}</h2>
                 <div className="score-circle">
                   <span className="score-number">{totalScore}</span>
                 </div>
@@ -79,15 +91,15 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 
               {/* Right - Time Label and Circle */}
               <div className="score-item time">
-                <h2 className="score-label">Time</h2>
+                <h2 className="score-label">{t('scoreboard.time')}</h2>
                 <div className="score-circle">
                   <span className="score-number">0</span>
                 </div>
               </div>
             </div>
               <div className="treasures-header">
-                <h3 className="treasures-title">Treasures Discovered ({treasures.length})</h3>
-                <h3 className="treasures-title">Score</h3>
+                <h3 className="treasures-title">{t('scoreboard.treasuresDiscovered')} ({treasures.length})</h3>
+                <h3 className="treasures-title">{t('scoreboard.totalScore')}</h3>
               </div>
 
               {/* Treasure Items */}
@@ -115,7 +127,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 <div className="treasure-item">
                   <div className="treasure-content">
                     <div className="treasure-icon">🏴‍☠️</div>
-                    <span className="treasure-name">No treasures discovered yet</span>
+                    <span className="treasure-name">{t('scoreboard.noTreasures')}</span>
                   </div>
                   <div className="treasure-score">0</div>
                 </div>
@@ -130,7 +142,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 onClick={onEndGame}
                 className="end-game-button"
               >
-                End Game
+                {t('scoreboard.endGame')}
               </button>
             </div>
           )}
