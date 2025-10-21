@@ -41,18 +41,19 @@
   top: clamp(-105px, -20vw, -130px);
   left: 0;
   right: 0;
-  display: flex;
+  display: grid;
   /* gap: clamp(8px, 2vw, 12px); */
   align-items: flex-end;
   flex-wrap: wrap;
   justify-content: center;
   z-index: 20;
+  grid-template-columns: 1fr 2fr 1fr;
 }
 
 .score-item {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: clamp(8px, 1.5vw, 10px);
   flex: 0 0 auto;
   min-width: clamp(55px, 12vw, 70px);
@@ -60,7 +61,7 @@
 
 
 .score-label {
-  font-size: clamp(12px, 2.8vw, 15px);
+  font-size: clamp(15px, 2.8vw, 15px);
   color: #5b8d96;
   margin: auto;
   font-weight: 700;
