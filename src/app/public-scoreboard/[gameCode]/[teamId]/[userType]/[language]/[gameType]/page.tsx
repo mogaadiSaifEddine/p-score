@@ -274,7 +274,8 @@ export default function PublicScoreboardFinalFixPage() {
       console.error('Error ending game:', error);
     }
   };
-
+  console.log(treasures);
+  
   return (
     <>
       <MobileScoreboard

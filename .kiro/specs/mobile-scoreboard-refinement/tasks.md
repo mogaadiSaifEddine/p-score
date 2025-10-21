@@ -6,45 +6,47 @@
   - Fix typography sizing and weights to match screenshots
   - _Requirements: 1.3, 1.4, 2.2, 2.3, 2.4, 9.3, 9.4, 9.5_
 
-- [ ] 2. Enhance team icon component with precise geometric shapes
-  - [ ] 2.1 Update TeamIcon component with exact shape positioning and colors
+- [x] 2. Enhance team icon component with precise geometric shapes
+  - [x] 2.1 Update TeamIcon component with exact shape positioning and colors
     - Implement precise corner positioning for geometric shapes
     - Use exact colors: teal circle (#14B8A6), dark triangle (#1F2937), pink square (#F472B6)
     - Adjust shape sizes for both large and small variants
     - _Requirements: 3.2, 3.3, 3.5_
 
-  - [ ] 2.2 Fix team icon sizing and layout in different contexts
+  - [x] 2.2 Fix team icon sizing and layout in different contexts
     - Ensure 64x64px for main display, 48x48px for team list
     - Proper centering and spacing around team icons
     - _Requirements: 3.1, 3.4, 8.4_
 
-- [ ] 3. Implement exact score display styling
-  - [ ] 3.1 Refine circular score container design
+- [x] 3. Implement exact score display styling
+  - [x] 3.1 Refine circular score container design
     - Update border color to light blue (#BFDBFE)
     - Ensure 80x80px size with 4px border width
     - Center score number with proper font sizing (32px, bold)
     - _Requirements: 2.1, 2.2, 2.4_
 
-  - [ ] 3.2 Style "Total Score" label positioning and color
+  - [x] 3.2 Style "Total Score" label positioning and color
     - Position label above score circle
     - Use blue color (#2563EB) and proper font weight
     - _Requirements: 2.3_
 
-- [ ] 4. Enhance treasure and team list card styling
-  - [ ] 4.1 Update treasure item cards to match screenshot design
+- [x] 4. Enhance treasure and team list card styling
+  - [x] 4.1 Update treasure item cards to match screenshot design
     - Refine white background, border radius, and shadow
     - Adjust internal padding and spacing
     - Ensure proper image/icon container styling (48x48px, gray background)
     - _Requirements: 4.2, 4.3, 4.4_
 
-  - [ ] 4.2 Implement team row cards with consistent styling
+  - [x] 4.2 Implement team row cards with consistent styling
     - Apply same card design as treasure items
+
     - Ensure proper team icon sizing (48x48px) in list context
     - Align team name and score with proper typography
     - _Requirements: 8.2, 8.3, 8.4_
 
-- [ ] 5. Refine section headers and layout structure
+- [x] 5. Refine section headers and layout structure
   - Update section headers ("Treasures Discovered", "Score", "Teams in the Game")
+
   - Ensure proper spacing between sections and consistent typography
   - Implement exact layout matching screenshot spacing
   - _Requirements: 4.5, 8.5_
@@ -105,7 +107,32 @@
     - Cross-browser compatibility testing
     - _Requirements: All requirements_
 
-- [ ] 11. Update demo page with refined component
+- [ ] 11. Integrate dynamic API data using existing hooks
+  - [ ] 11.1 Replace static data with useGameObserver hook
+    - Integrate useGameObserver hook for real-time game data
+    - Handle loading states and error conditions
+    - Support both team-specific and general scoreboard views
+    - _Requirements: All requirements_
+
+  - [ ] 11.2 Implement useTreasureData hook for treasure display
+    - Use useTreasureData hook to format treasure/checkpoint data
+    - Display proper treasure icons and scores from API
+    - Handle empty states when no treasures are found
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
+
+  - [ ] 11.3 Add useRouteParams for dynamic route handling
+    - Extract gameCode and teamId from URL parameters
+    - Validate route parameters and handle invalid states
+    - Support different user types (player, observer, admin)
+    - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
+
+  - [ ] 11.4 Implement End Game API functionality
+    - Add API call to end game when button is clicked
+    - Handle loading states during game termination
+    - Update game state after successful end game operation
+    - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
+
+- [ ] 12. Update demo page with refined component
   - Update ScoreboardDemo page to showcase all refined features
   - Ensure proper data structure matches new component requirements
   - Test state transitions and interactive elements

@@ -5,34 +5,82 @@
 
 import React from 'react';
 
-const TeamIcon: React.FC = () => {
+export interface TeamIconProps {
+  color?: string;
+  shapes?: ('circle' | 'triangle' | 'square')[];
+  size?: 'small' | 'large';
+}
+
+export const TeamIcon: React.FC<TeamIconProps> = ({ 
+  color = '#FFB347', 
+  shapes = ['circle', 'triangle', 'square'],
+  size = 'large'
+}) => {
+  const isLarge = size === 'large';
+  const iconSize = isLarge ? 64 : 48; // 64px for large, 48px for small
+  const shapeSize = isLarge ? 12 : 8; // 12px for large, 8px for small
+  
   return (
     <div 
-      className="w-16 h-16 rounded-full flex items-center justify-center relative"
-      style={{ backgroundColor: '#FFB347' }} // Orange background like in the screenshot
+      className="rounded-full flex items-center justify-center relative"
+      style={{ 
+        backgroundColor: color,
+        width: `${iconSize}px`,
+        height: `${iconSize}px`
+      }}
     >
-      {/* Teal circle - top left */}
-      <div className="absolute top-2 left-2 w-3 h-3 bg-teal-400 rounded-full"></div>
-      
-      {/* Blue triangle - top right */}
-      <div className="absolute top-2 right-2">
+      {/* Teal circle in top-left corner */}
+      {shapes.includes('circle') && (
         <div 
-          className="w-0 h-0"
+          className="absolute rounded-full"
           style={{
-            borderLeft: '6px solid transparent',
-            borderRight: '6px solid transparent',
-            borderBottom: '8px solid #4A90E2'
+            backgroundColor: '#14B8A6', // Exact teal color
+            width: `${shapeSize}px`,
+            height: `${shapeSize}px`,
+            top: '4px',
+            left: '4px'
           }}
-        ></div>
-      </div>
+        />
+      )}
       
-      {/* Pink square - bottom left */}
-      <div className="absolute bottom-2 left-2 w-3 h-3 bg-pink-400 rounded-sm"></div>
+      {/* Dark triangle in top-right corner */}
+      {shapes.includes('triangle') && (
+        <div 
+          className="absolute"
+          style={{
+            top: '4px',
+            right: '4px'
+          }}
+        >
+          <div 
+            className="w-0 h-0"
+            style={{
+              borderLeft: `${shapeSize/2}px solid transparent`,
+              borderRight: `${shapeSize/2}px solid transparent`,
+              borderBottom: `${shapeSize}px solid #1F2937` // Exact dark gray color
+            }}
+          />
+        </div>
+      )}
+      
+      {/* Pink square in bottom-left corner */}
+      {shapes.includes('square') && (
+        <div 
+          className="absolute"
+          style={{
+            backgroundColor: '#F472B6', // Exact pink color
+            width: `${shapeSize}px`,
+            height: `${shapeSize}px`,
+            bottom: '4px',
+            left: '4px'
+          }}
+        />
+      )}
     </div>
   );
 };
 
-const TreasureItem: React.FC = () => {
+export const TreasureItem: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-3">
       <div className="flex items-center justify-between">
@@ -54,7 +102,7 @@ const TreasureItem: React.FC = () => {
   );
 };
 
-interface ExactMobileScoreboardProps {
+export interface ExactMobileScoreboardProps {
   gameStatus?: 'in_progress' | 'finished' | 'not_started';
   teamName?: string;
   score?: number;
@@ -62,7 +110,7 @@ interface ExactMobileScoreboardProps {
   showEndGameButton?: boolean;
 }
 
-export default function ExactMobileScoreboard({
+export  function ExactMobileScoreboard({
   gameStatus = 'in_progress',
   teamName = 'Kids',
   score = 6,
@@ -129,8 +177,8 @@ export default function ExactMobileScoreboard({
           </div>
 
           {/* Team Info */}
-          <div className="text-center">
-            <TeamIcon />
+          <div className="text-center flex flex-col items-center">
+            <TeamIcon size="large" />
             <p className="mt-4 text-gray-700 font-medium text-lg">{teamName}</p>
           </div>
         </div>
