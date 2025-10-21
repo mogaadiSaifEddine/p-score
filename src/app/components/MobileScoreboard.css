@@ -26,7 +26,7 @@
 .game-over-title {
   color: #bfbfbf;
   font-size: clamp(20px, 4.5vw, 28px);
-  font-weight: 300;
+  font-weight: 500;
   letter-spacing: 1px;
   margin: 0;
 }
@@ -38,11 +38,11 @@
 
 .score-section {
   position: absolute;
-  top: clamp(-120px, -20vw, -130px);
+  top: clamp(-105px, -20vw, -130px);
   left: 0;
   right: 0;
   display: flex;
-  gap: clamp(8px, 2vw, 12px);
+  /* gap: clamp(8px, 2vw, 12px); */
   align-items: flex-end;
   flex-wrap: wrap;
   justify-content: center;
@@ -58,9 +58,6 @@
   min-width: clamp(55px, 12vw, 70px);
 }
 
-.score-item.time {
-  align-items: flex-end;
-}
 
 .score-label {
   font-size: clamp(12px, 2.8vw, 15px);
@@ -71,8 +68,8 @@
 }
 
 .score-circle {
-  width: clamp(55px, 12vw, 70px);
-  height: clamp(55px, 12vw, 70px);
+  width: clamp(60px, 12vw, 70px);
+  height: clamp(60px, 12vw, 70px);
   border-radius: 50%;
   border: 5px solid #ddeef5;
   display: flex;
@@ -85,7 +82,7 @@
 .score-number {
   font-size: clamp(26px, 5.5vw, 36px);
   font-weight: 600;
-  color: #5b8d96;
+  color: hsl(215.58deg 45.75% 48.43%);
   line-height: 1;
 }
 
@@ -127,7 +124,7 @@
   border-radius: 50%;
   background: #7ed8c8;
   top: 3px;
-left: 0;
+  left: 0;
 }
 
 .badge-triangle {
@@ -150,7 +147,6 @@ left: 0;
   left: clamp(12px, 2.6vw, 15px);
   border-radius: 2px;
   transform: rotate(30deg);
-
 }
 
 .score-box {
@@ -165,18 +161,22 @@ left: 0;
   align-items: center;
   justify-content: center;
   min-height: clamp(65px, 15vw, 80px);
+  min-width: 50%;
 }
 
 .score-box-number {
-  font-size: clamp(48px, 12vw, 72px);
-  font-weight: 200;
-  color: #b8dde3;
-  letter-spacing: clamp(-1.5px, -0.4vw, -2.5px);
-  line-height: 1;
+  font-size: clamp(24px, 6vw, 36px);
+  font-weight: 500;
+  color: hsl(214.71deg 66.23% 69.8%);
+  letter-spacing: clamp(-0.5px, -0.2vw, -1px);
+  line-height: 1.2;
+  text-align: center;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 .treasures-list {
-  padding-top: clamp(100px, 20vw, 130px);
+  padding-top: clamp(29px, 11vw, 130px);
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
   border-radius: clamp(12px, 3vw, 16px);
   padding-left: 20px;
@@ -193,9 +193,9 @@ left: 0;
 }
 
 .treasures-title {
-  font-size: clamp(13px, 2.8vw, 15px);
+  font-size: clamp(18px, 2.8vw, 15px);
   color: #bababa;
-  font-weight: 300;
+  font-weight: 400;
   margin: 0;
   letter-spacing: 0.3px;
 }
@@ -238,11 +238,46 @@ left: 0;
 }
 
 .treasure-score {
-  border-left: 3px solid #094e6b;
+  border-left: 3px solid hsl(214.86deg 66.88% 69.22%);
   font-size: clamp(20px, 5vw, 26px);
   color: #5b8d96;
   font-weight: 400;
   min-width: clamp(30px, 6vw, 38px);
   text-align: right;
   padding-right: clamp(4px, 1.2vw, 6px);
+}
+.end-game-section {
+  margin-top: clamp(20px, 4vw, 30px);
+  text-align: center;
+  padding: clamp(15px, 3vw, 20px);
+}
+
+.end-game-button {
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: clamp(8px, 2vw, 12px);
+  padding: clamp(12px, 3vw, 16px) clamp(24px, 6vw, 32px);
+  font-size: clamp(14px, 3.5vw, 18px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+}
+
+.end-game-button:hover {
+  background: #ff3742;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 71, 87, 0.4);
+}
+
+.end-game-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+}
+.trea sure-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: clamp(8px, 2vw, 10px);
 }

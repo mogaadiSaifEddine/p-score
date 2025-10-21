@@ -85,9 +85,39 @@ export default function PublicScoreboardFinalFixPage() {
     
     return [];
   }, [teamTreasures, currentTeam]);
-  const gameRes =  game as GameData;
+  // Create proper GameData structure for useTreasureData hook
+  const gameData: GameData | null = React.useMemo(() => {
+    // Check if we have waypoint data in observer or game data
+    const observerAny = observer as any;
+    const gameAny = game as any;
+    const waypoints = observerAny?.waypoints || gameAny?.waypoints || [];
+    
+    if (waypoints.length > 0) {
+      return {
+        waypoints: waypoints.map((wp: any) => ({
+          id: wp.id || wp.waypoint_id || wp.challenge_id,
+          title: wp.title || wp.name || wp.description || `Waypoint ${wp.id}`,
+          description: wp.description || wp.title || wp.name || '',
+          thumb_image: wp.thumb_image || wp.image || wp.thumbnail,
+          score: wp.score || wp.points || wp.value || 0
+        }))
+      };
+    }
+    
+    return null;
+  }, [observer, game]);
+
   // Use treasure data hook to format for UI
-  const { treasures, totalScore } = useTreasureData(treasureApiData, gameRes);
+  const { treasures, totalScore } = useTreasureData(treasureApiData, gameData);
+
+  // Debug logging for treasure icon calculations
+  React.useEffect(() => {
+    console.log('=== Treasure Icon Debug ===');
+    console.log('Raw team treasures:', teamTreasures);
+    console.log('Formatted treasureApiData:', treasureApiData);
+    console.log('Game data for waypoints:', gameData);
+    console.log('Final formatted treasures:', treasures);
+  }, [teamTreasures, treasureApiData, gameData, treasures]);
 
   // Debug logging
   React.useEffect(() => {
@@ -151,9 +181,7 @@ export default function PublicScoreboardFinalFixPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-4 text-gray-600 font-medium">Loading Game Data</p>
           <p className="text-sm text-gray-500">{parsedData!.gameCode} - Team {parsedData!.teamId}</p>
-          <div className="mt-2 text-xs text-gray-400">
-            <p>Calling: /apis/observer/{parsedData!.gameCode}/scoreboard/{parsedData!.teamId}</p>
-          </div>
+         
         </div>
       </div>
     );
@@ -280,8 +308,8 @@ export default function PublicScoreboardFinalFixPage() {
     <>
       <MobileScoreboard
         gameStatus={gameStatus}
-        // currentTeam={teamData}
         treasures={treasures}
+        teamName={teamData.name}
         onEndGame={handleEndGame}
         showEndGameButton={isPlayerView() && gameStatus === 'in_progress'}
       />

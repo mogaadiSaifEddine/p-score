@@ -1,139 +1,111 @@
 # Implementation Plan
 
-- [x] 1. Refine visual styling to match screenshot specifications
-  - Update color values to match exact design (blue tones, gray shades, coral button)
-  - Adjust spacing, padding, and margins for pixel-perfect alignment
-  - Fix typography sizing and weights to match screenshots
-  - _Requirements: 1.3, 1.4, 2.2, 2.3, 2.4, 9.3, 9.4, 9.5_
+- [ ] 1. Set up core interfaces and types
+  - Create TypeScript interfaces for ScoreData, PlayerScore, GameInfo, and API responses
+  - Define service interfaces for ScoreboardService and error handling
+  - Set up data validation schemas for API responses
+  - _Requirements: 1.1, 2.1, 2.2, 4.4_
 
-- [x] 2. Enhance team icon component with precise geometric shapes
-  - [x] 2.1 Update TeamIcon component with exact shape positioning and colors
-    - Implement precise corner positioning for geometric shapes
-    - Use exact colors: teal circle (#14B8A6), dark triangle (#1F2937), pink square (#F472B6)
-    - Adjust shape sizes for both large and small variants
-    - _Requirements: 3.2, 3.3, 3.5_
+- [ ] 2. Implement ScoreboardService for API integration
+  - [ ] 2.1 Create base ScoreboardService class with HTTP client setup
+    - Implement fetch-based HTTP client with proper headers and error handling
+    - Add request timeout configuration and retry logic
+    - _Requirements: 1.1, 3.2, 3.3_
 
-  - [x] 2.2 Fix team icon sizing and layout in different contexts
-    - Ensure 64x64px for main display, 48x48px for team list
-    - Proper centering and spacing around team icons
-    - _Requirements: 3.1, 3.4, 8.4_
+  - [ ] 2.2 Implement data fetching methods
+    - Code fetchScoreData method with proper error handling
+    - Add data validation and transformation logic
+    - _Requirements: 1.1, 1.2, 2.1, 2.2_
 
-- [x] 3. Implement exact score display styling
-  - [x] 3.1 Refine circular score container design
-    - Update border color to light blue (#BFDBFE)
-    - Ensure 80x80px size with 4px border width
-    - Center score number with proper font sizing (32px, bold)
-    - _Requirements: 2.1, 2.2, 2.4_
+  - [ ] 2.3 Add caching mechanism
+    - Implement localStorage-based caching with TTL
+    - Create cache invalidation and refresh logic
+    - _Requirements: 4.1, 3.1_
 
-  - [x] 3.2 Style "Total Score" label positioning and color
-    - Position label above score circle
-    - Use blue color (#2563EB) and proper font weight
-    - _Requirements: 2.3_
+  - [ ]\* 2.4 Write unit tests for ScoreboardService
+    - Test API methods with mock responses
+    - Test error handling scenarios and retry logic
+    - Test caching behavior and data validation
+    - _Requirements: 1.1, 3.2, 4.1_
 
-- [x] 4. Enhance treasure and team list card styling
-  - [x] 4.1 Update treasure item cards to match screenshot design
-    - Refine white background, border radius, and shadow
-    - Adjust internal padding and spacing
-    - Ensure proper image/icon container styling (48x48px, gray background)
-    - _Requirements: 4.2, 4.3, 4.4_
+- [ ] 3. Create custom hook for scoreboard data management
+  - [ ] 3.1 Implement useScoreboardData hook
+    - Create hook with state management for score data, loading, and error states
+    - Add automatic refresh logic with configurable intervals
+    - Implement cleanup on component unmount
+    - _Requirements: 1.1, 1.3, 4.2_
 
-  - [x] 4.2 Implement team row cards with consistent styling
-    - Apply same card design as treasure items
+  - [ ] 3.2 Add manual refresh and error recovery
+    - Implement manual refresh functionality
+    - Add retry logic for failed requests with exponential backoff
+    - Handle network connectivity changes
+    - _Requirements: 3.1, 3.2, 3.4_
 
-    - Ensure proper team icon sizing (48x48px) in list context
-    - Align team name and score with proper typography
-    - _Requirements: 8.2, 8.3, 8.4_
+  - [ ]\* 3.3 Write tests for useScoreboardData hook
+    - Test hook behavior with different data states
+    - Test automatic refresh and manual refresh functionality
+    - Test error handling and recovery scenarios
+    - _Requirements: 1.3, 3.2, 3.4_
 
-- [x] 5. Refine section headers and layout structure
-  - Update section headers ("Treasures Discovered", "Score", "Teams in the Game")
+- [ ] 4. Build scoreboard UI components
+  - [ ] 4.1 Create ScoreDisplay component
+    - Implement main score display with responsive layout
+    - Add loading states and smooth transitions
+    - Handle dynamic number of players
+    - _Requirements: 1.2, 1.5, 2.2, 2.5_
 
-  - Ensure proper spacing between sections and consistent typography
-  - Implement exact layout matching screenshot spacing
-  - _Requirements: 4.5, 8.5_
+  - [ ] 4.2 Implement PlayerStats component
+    - Create player statistics display with proper formatting
+    - Handle missing or incomplete player data gracefully
+    - Optimize for mobile viewing
+    - _Requirements: 2.1, 2.3, 2.4_
 
-- [ ] 6. Enhance game finished state components
-  - [ ] 6.1 Implement reward section with circular red containers
-    - Create reward icons in 48x48px red circular containers (#DC2626)
-    - Position rewards in horizontal layout with proper spacing
-    - _Requirements: 6.1, 6.3_
+  - [ ] 4.3 Build ScoreboardHeader component
+    - Display game information and status
+    - Add refresh controls and status indicators
+    - Implement error state UI
+    - _Requirements: 2.2, 3.3, 3.5_
 
-  - [ ] 6.2 Implement media section with thumbnail grid
-    - Create 48x48px rounded square containers for media thumbnails
-    - Handle image loading and placeholder states
-    - _Requirements: 6.2, 6.4_
+  - [ ] 4.4 Create ErrorBoundary and error UI
+    - Implement error boundary for component-level error handling
+    - Create user-friendly error messages and retry options
+    - Add offline/connectivity indicators
+    - _Requirements: 1.4, 3.3, 3.4_
 
-  - [ ] 6.3 Implement tab navigation with exact styling
-    - Create "My Team" and "All teams" buttons with proper styling
-    - Active state: blue background (#3B82F6), white text
-    - Inactive state: white background, gray text, gray border
-    - _Requirements: 7.1, 7.2, 7.3_
+- [ ] 5. Integrate components into main Scoreboard container
+  - [x] 5.1 Create ScoreboardContainer component
+    - Integrate all sub-components with proper data flow
+    - Implement the useScoreboardData hook
+    - Add performance optimizations with React.memo and useCallback
+    - _Requirements: 1.1, 1.2, 4.4_
 
-- [ ] 7. Refine End Game button styling and behavior
-  - Update button to coral/red background color matching screenshot
-  - Ensure full width with proper border radius (16px)
-  - Implement loading state with spinner and "Ending Game..." text
-  - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
+  - [x] 5.2 Add responsive layout and mobile optimizations
+    - Ensure proper mobile layout and touch interactions
+    - Optimize component re-rendering for performance
+    - Add accessibility features and ARIA labels
+    - _Requirements: 1.5, 4.3, 4.5_
 
-- [ ] 8. Fix navigation header to match exact design
-  - [ ] 8.1 Update header styling and layout
-    - Ensure white background with bottom border
-    - Proper height (64px) and padding (16px horizontal)
-    - _Requirements: 9.5_
+  - [ ]\* 5.3 Write integration tests for complete scoreboard
+    - Test component integration and data flow
+    - Test responsive behavior and mobile interactions
+    - Test error scenarios and recovery
+    - _Requirements: 1.5, 3.4, 4.5_
 
-  - [ ] 8.2 Style back arrow and title positioning
-    - Blue back arrow (#3B82F6) on left side
-    - Centered "Scoreboard" title with proper typography
-    - _Requirements: 9.1, 9.2, 9.3, 9.4_
+- [ ] 6. Connect to existing application
+  - [ ] 6.1 Replace static scoreboard with dynamic component
+    - Identify and update existing scoreboard implementation
+    - Ensure proper props passing and configuration
+    - Maintain existing styling and layout structure
+    - _Requirements: 1.1, 1.2_
 
-- [ ] 9. Implement proper state management and transitions
-  - [ ] 9.1 Enhance game state transitions
-    - Smooth transitions between in_progress and finished states
-    - Proper content showing/hiding based on game state
-    - _Requirements: 6.5, 7.4_
+  - [ ] 6.2 Configure API endpoints and environment settings
+    - Set up API endpoint configuration
+    - Add environment-specific settings for refresh intervals
+    - Configure error handling and retry parameters
+    - _Requirements: 1.1, 3.2_
 
-  - [ ] 9.2 Implement tab state management
-    - Handle tab switching with proper state updates
-    - Maintain tab selection during session
-    - _Requirements: 7.4, 7.5_
-
-- [ ]\* 10. Add comprehensive testing
-  - [ ]\* 10.1 Write unit tests for component rendering
-    - Test different game states and prop combinations
-    - Verify proper styling application
-    - _Requirements: All requirements_
-
-  - [ ]\* 10.2 Add visual regression tests
-    - Screenshot comparisons against design mockups
-    - Cross-browser compatibility testing
-    - _Requirements: All requirements_
-
-- [ ] 11. Integrate dynamic API data using existing hooks
-  - [ ] 11.1 Replace static data with useGameObserver hook
-    - Integrate useGameObserver hook for real-time game data
-    - Handle loading states and error conditions
-    - Support both team-specific and general scoreboard views
-    - _Requirements: All requirements_
-
-  - [ ] 11.2 Implement useTreasureData hook for treasure display
-    - Use useTreasureData hook to format treasure/checkpoint data
-    - Display proper treasure icons and scores from API
-    - Handle empty states when no treasures are found
-    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
-
-  - [ ] 11.3 Add useRouteParams for dynamic route handling
-    - Extract gameCode and teamId from URL parameters
-    - Validate route parameters and handle invalid states
-    - Support different user types (player, observer, admin)
-    - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
-
-  - [ ] 11.4 Implement End Game API functionality
-    - Add API call to end game when button is clicked
-    - Handle loading states during game termination
-    - Update game state after successful end game operation
-    - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
-
-- [ ] 12. Update demo page with refined component
-  - Update ScoreboardDemo page to showcase all refined features
-  - Ensure proper data structure matches new component requirements
-  - Test state transitions and interactive elements
-  - _Requirements: All requirements_
+  - [ ]\* 6.3 Add end-to-end testing
+    - Test complete user flow with real API integration
+    - Verify mobile responsiveness and performance
+    - Test error scenarios and recovery flows
+    - _Requirements: 1.5, 3.4, 4.5_

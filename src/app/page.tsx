@@ -6,7 +6,6 @@
 import React from 'react';
 import { useGameObserver } from './hooks/useGameObserver';
 import { usePublicScoreboardData } from './hooks/useRouteParams';
-import {ExactMobileScoreboard} from './public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[gameType]/page-mobile';
 
 export default function PublicScoreboardExactPage() {
   // Parse route parameters
@@ -163,13 +162,7 @@ export default function PublicScoreboardExactPage() {
         </div>
       )}
 
-      <ExactMobileScoreboard
-        gameStatus={gameStatus}
-        teamName={teamName}
-        score={teamScore}
-        onEndGame={handleEndGame}
-        showEndGameButton={isPlayerView() && gameStatus === 'in_progress'}
-      />
+     
     </>
   );
 }
