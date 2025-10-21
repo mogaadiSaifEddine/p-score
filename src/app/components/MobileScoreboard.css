@@ -3,14 +3,14 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background: #f5f5f5;
+  background: var(--bg-secondary);
   padding: 0;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 .game-over-content {
-  background: white;
+  background: var(--bg-primary);
   width: 100%;
   max-width: 100%;
   padding: clamp(20px, 5vw, 35px) clamp(12px, 3vw, 20px) clamp(25px, 4vw, 30px)
@@ -23,12 +23,47 @@
   margin-bottom: clamp(20px, 4vw, 30px);
 }
 
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
 .game-over-title {
-  color: #bfbfbf;
+  color: var(--text-muted);
   font-size: clamp(20px, 4.5vw, 28px);
   font-weight: 500;
   letter-spacing: 1px;
   margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.header-theme-toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 640px) {
+  .header-content {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .header-theme-toggle {
+    position: static;
+    transform: none;
+  }
+
+  .game-over-title {
+    text-align: center;
+  }
 }
 
 .treasures-container {
@@ -59,10 +94,9 @@
   min-width: clamp(55px, 12vw, 70px);
 }
 
-
 .score-label {
   font-size: clamp(15px, 2.8vw, 15px);
-  color: #5b8d96;
+  color: var(--score-primary);
   margin: auto;
   font-weight: 700;
   letter-spacing: 0.2px;
@@ -72,18 +106,18 @@
   width: clamp(60px, 12vw, 70px);
   height: clamp(60px, 12vw, 70px);
   border-radius: 50%;
-  border: 5px solid #ddeef5;
+  border: 5px solid var(--border-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: var(--bg-primary);
   flex-shrink: 0;
 }
 
 .score-number {
   font-size: clamp(26px, 5.5vw, 36px);
   font-weight: 600;
-  color: hsl(215.58deg 45.75% 48.43%);
+  color: var(--accent-color);
   line-height: 1;
 }
 
@@ -102,11 +136,11 @@
   width: clamp(70px, 16vw, 95px);
   height: clamp(70px, 16vw, 95px);
   border-radius: 50%;
-  background: linear-gradient(135deg, #f4be7f, #efaa68);
+  background: linear-gradient(135deg, var(--badge-gradient-start), var(--badge-gradient-end));
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(240, 170, 104, 0.3);
+  box-shadow: 0 4px 15px var(--shadow-medium);
   z-index: 10;
   position: relative;
   margin-bottom: clamp(-15px, -4vw, -22px);
@@ -123,7 +157,7 @@
   width: clamp(16px, 3.5vw, 21px);
   height: clamp(16px, 3.5vw, 21px);
   border-radius: 50%;
-  background: #7ed8c8;
+  background: var(--score-accent);
   top: 3px;
   left: 0;
 }
@@ -152,12 +186,12 @@
 
 .score-box {
   width: 100%;
-  background: white;
+  background: var(--bg-primary);
   border-radius: clamp(14px, 3.5vw, 18px);
   padding: clamp(32px, 8vw, 45px) clamp(12px, 3vw, 16px) clamp(16px, 4vw, 20px)
     clamp(12px, 3vw, 16px);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #ebebeb;
+  box-shadow: 0 2px 12px var(--shadow-light);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,7 +202,7 @@
 .score-box-number {
   font-size: clamp(24px, 6vw, 36px);
   font-weight: 500;
-  color: hsl(214.71deg 66.23% 69.8%);
+  color: var(--score-secondary);
   letter-spacing: clamp(-0.5px, -0.2vw, -1px);
   line-height: 1.2;
   text-align: center;
@@ -178,7 +212,7 @@
 
 .treasures-list {
   padding-top: clamp(29px, 11vw, 130px);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 -4px 20px var(--shadow-medium);
   border-radius: clamp(12px, 3vw, 16px);
   padding-left: 20px;
   padding-right: 20px;
@@ -195,18 +229,18 @@
 
 .treasures-title {
   font-size: clamp(18px, 2.8vw, 15px);
-  color: #bababa;
+  color: var(--text-tertiary);
   font-weight: 400;
   margin: 0;
   letter-spacing: 0.3px;
 }
 
 .treasure-item {
-  background: white;
+  background: var(--bg-primary);
   border-radius: clamp(12px, 3vw, 16px);
   padding: clamp(12px, 3vw, 16px) clamp(14px, 4vw, 18px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  border: 1px solid #ebebeb;
+  box-shadow: 0 4px 20px var(--shadow-medium);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -223,25 +257,25 @@
   width: clamp(38px, 8vw, 48px);
   height: clamp(38px, 8vw, 48px);
   border-radius: clamp(10px, 2.5vw, 12px);
-  background: #f9f9f9;
+  background: var(--treasure-icon-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: clamp(20px, 4.5vw, 26px);
-  border: 1px solid #ebebeb;
+  border: 1px solid var(--border-color);
 }
 
 .treasure-name {
   font-size: clamp(15px, 3.5vw, 18px);
-  color: #a8d7dc;
+  color: var(--score-secondary);
   font-weight: 300;
   letter-spacing: 0.3px;
 }
 
 .treasure-score {
-  border-left: 3px solid hsl(214.86deg 66.88% 69.22%);
+  border-left: 3px solid var(--accent-color);
   font-size: clamp(20px, 5vw, 26px);
-  color: #5b8d96;
+  color: var(--score-primary);
   font-weight: 400;
   min-width: clamp(30px, 6vw, 38px);
   text-align: right;
@@ -254,8 +288,8 @@
 }
 
 .end-game-button {
-  background: #ff4757;
-  color: white;
+  background: var(--error-color);
+  color: var(--bg-primary);
   border: none;
   border-radius: clamp(8px, 2vw, 12px);
   padding: clamp(12px, 3vw, 16px) clamp(24px, 6vw, 32px);
@@ -263,18 +297,19 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+  box-shadow: 0 4px 12px var(--shadow-medium);
 }
 
 .end-game-button:hover {
-  background: #ff3742;
+  background: var(--error-color);
+  filter: brightness(0.9);
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(255, 71, 87, 0.4);
+  box-shadow: 0 6px 16px var(--shadow-heavy);
 }
 
 .end-game-button:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+  box-shadow: 0 2px 8px var(--shadow-medium);
 }
 .trea sure-image {
   width: 100%;

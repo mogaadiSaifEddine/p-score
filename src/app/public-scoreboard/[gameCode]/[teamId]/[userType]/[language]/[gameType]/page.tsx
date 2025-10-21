@@ -7,6 +7,7 @@ import MobileScoreboard from '@/app/components/MobileScoreboard';
 import { useGameObserver } from '@/app/hooks/useGameObserver';
 import { usePublicScoreboardData } from '@/app/hooks/useRouteParams';
 import { GameData, useTreasureData } from '@/app/hooks/useTreasureData';
+import ScoreboardProviders from '@/app/components/ScoreboardProviders';
 import React from 'react';
 
 // Team icon configurations
@@ -59,7 +60,7 @@ export default function PublicScoreboardFinalFixPage() {
 
   // Get treasure data from team-specific API
   const teamTreasures = getTeamTreasures();
-  
+
   // Format treasure data for the mobile UI
   const treasureApiData = React.useMemo(() => {
     console.log('Processing treasure data:', teamTreasures);
@@ -72,7 +73,7 @@ export default function PublicScoreboardFinalFixPage() {
         time: treasure.found_at || treasure.time || treasure.discovered_at || treasure.completed_at || new Date().toISOString()
       }));
     }
-    
+
     // Fallback: create treasure data based on team score if no specific treasure data
     if (currentTeam?.score && currentTeam.score > 0) {
       return [{
@@ -82,7 +83,7 @@ export default function PublicScoreboardFinalFixPage() {
         time: new Date().toISOString()
       }];
     }
-    
+
     return [];
   }, [teamTreasures, currentTeam]);
   // Create proper GameData structure for useTreasureData hook
@@ -91,7 +92,7 @@ export default function PublicScoreboardFinalFixPage() {
     const observerAny = observer as any;
     const gameAny = game as any;
     const waypoints = observerAny?.waypoints || gameAny?.waypoints || [];
-    
+
     if (waypoints.length > 0) {
       return {
         waypoints: waypoints.map((wp: any) => ({
@@ -103,7 +104,7 @@ export default function PublicScoreboardFinalFixPage() {
         }))
       };
     }
-    
+
     return null;
   }, [observer, game]);
 
@@ -124,6 +125,7 @@ export default function PublicScoreboardFinalFixPage() {
     if (parsedData?.isValid) {
       console.log('=== Final Fix Debug Info ===');
       console.log('Route data:', parsedData);
+      console.log('Language from URL:', parsedData.language);
       console.log('Debug info:', debugInfo);
       console.log('Current team:', currentTeam);
       console.log('Has team data:', hasTeamData());
@@ -181,7 +183,7 @@ export default function PublicScoreboardFinalFixPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-4 text-gray-600 font-medium">Loading Game Data</p>
           <p className="text-sm text-gray-500">{parsedData!.gameCode} - Team {parsedData!.teamId}</p>
-         
+
         </div>
       </div>
     );
@@ -217,7 +219,7 @@ export default function PublicScoreboardFinalFixPage() {
 
   // Check if we have team data but couldn't find the specific team
   const hasApiData = hasTeamData() || (scoreboard?.teams && scoreboard.teams.length > 0);
-  
+
   if (!currentTeam && isPlayerView() && hasApiData) {
     return (
       <div className="min-h-screen bg-yellow-50 flex items-center justify-center p-4">
@@ -233,10 +235,10 @@ export default function PublicScoreboardFinalFixPage() {
           <p className="text-yellow-700 text-sm text-center mb-2">
             Team #{parsedData!.teamId} not found in game {parsedData!.gameCode}
           </p>
-          
+
           {/* Debug info */}
-         
-          
+
+
           <button
             onClick={reload}
             className="w-full bg-yellow-500 text-white px-4 py-3 rounded-lg hover:bg-yellow-600 font-medium"
@@ -295,7 +297,7 @@ export default function PublicScoreboardFinalFixPage() {
   const handleEndGame = async () => {
     try {
       console.log('Ending game for team:', parsedData!.teamId, 'in game:', parsedData!.gameCode);
-      
+
       await new Promise(resolve => setTimeout(resolve, 1500));
       reload();
     } catch (error) {
@@ -303,9 +305,9 @@ export default function PublicScoreboardFinalFixPage() {
     }
   };
   console.log(treasures);
-  
+
   return (
-    <>
+    <ScoreboardProviders initialLocale={parsedData?.language}>
       <MobileScoreboard
         gameStatus={gameStatus}
         treasures={treasures}
@@ -313,6 +315,6 @@ export default function PublicScoreboardFinalFixPage() {
         onEndGame={handleEndGame}
         showEndGameButton={isPlayerView() && gameStatus === 'in_progress'}
       />
-    </>
+    </ScoreboardProviders>
   );
 }

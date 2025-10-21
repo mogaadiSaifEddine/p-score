@@ -1,0 +1,88 @@
+/* ThemeToggle Component Styles */
+
+.theme-toggle-button {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.theme-toggle-button:hover {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.theme-toggle-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme styles */
+.theme-dark .theme-toggle-button {
+  background: rgba(30, 30, 30, 0.9);
+  color: #ccc;
+}
+
+.theme-dark .theme-toggle-button:hover {
+  background: rgba(30, 30, 30, 1);
+  color: #fff;
+}
+
+/* Focus styles for accessibility */
+.theme-toggle-button:focus {
+  outline: none;
+  ring: 2px solid var(--accent-color, #3b82f6);
+  ring-offset: 2px;
+}
+
+/* Animation for icon changes */
+.theme-toggle-button svg {
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle-button:hover svg {
+  transform: rotate(15deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .theme-toggle-button {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .theme-toggle-button {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle-button,
+  .theme-toggle-button svg {
+    transition: none;
+  }
+  
+  .theme-toggle-button:hover {
+    transform: none;
+  }
+  
+  .theme-toggle-button:hover svg {
+    transform: none;
+  }
+}
