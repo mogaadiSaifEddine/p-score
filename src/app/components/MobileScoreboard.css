@@ -114,7 +114,7 @@
   }
 
   .game-over-title {
-    font-size: 28px;
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: 0.5px;
     color: var(--text-primary);
@@ -135,7 +135,7 @@
   }
 
   .game-over-title {
-    font-size: 32px;
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: 0.8px;
   }
@@ -282,7 +282,7 @@
   }
 
   .score-number {
-    font-size: 28px;
+    font-size: 20px;
     font-weight: 800;
     background: linear-gradient(135deg, var(--accent-color), var(--score-accent));
     -webkit-background-clip: text;
@@ -291,7 +291,7 @@
   }
 
   .score-label {
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.8px;
     text-transform: uppercase;
@@ -315,12 +315,12 @@
   }
 
   .score-number {
-    font-size: 32px;
+    font-size: 22px;
     font-weight: 900;
   }
 
   .score-label {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 1px;
   }
@@ -543,7 +543,7 @@
   }
 
   .score-box-number {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: 0.5px;
     background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
@@ -570,7 +570,7 @@
   }
 
   .score-box-number {
-    font-size: 28px;
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: 0.8px;
   }
@@ -655,7 +655,7 @@
   }
 
   .treasures-title {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.8px;
     text-transform: uppercase;
@@ -686,7 +686,7 @@
   }
 
   .treasures-title {
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 700;
     letter-spacing: 1px;
     color: var(--text-primary);
@@ -795,10 +795,10 @@
 /* Enhanced Treasure Icons for Larger Screens */
 @media (min-width: 768px) {
   .treasure-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    font-size: 22px;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    font-size: 18px;
     border: 2px solid var(--border-light);
     box-shadow:
       0 3px 8px var(--shadow-light),
@@ -818,10 +818,10 @@
 
 @media (min-width: 1024px) {
   .treasure-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    font-size: 24px;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    font-size: 20px;
     border: 3px solid var(--border-light);
     box-shadow:
       0 4px 12px var(--shadow-light),
@@ -922,7 +922,7 @@
 /* Enhanced Treasure Text for Larger Screens */
 @media (min-width: 768px) {
   .treasure-name {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.3px;
     color: var(--text-primary);
@@ -931,9 +931,9 @@
 
   .treasure-score {
     border-left: 4px solid var(--accent-color);
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
-    min-width: 50px;
+    min-width: 45px;
     padding-right: 8px;
     background: linear-gradient(135deg, var(--accent-color), var(--score-accent));
     -webkit-background-clip: text;
@@ -956,15 +956,15 @@
 
 @media (min-width: 1024px) {
   .treasure-name {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 600;
     letter-spacing: 0.4px;
   }
 
   .treasure-score {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 800;
-    min-width: 55px;
+    min-width: 50px;
     padding-right: 10px;
     border-left: 5px solid var(--accent-color);
   }
@@ -1035,7 +1035,7 @@
   }
 
   .rewards-title {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.8px;
     text-transform: uppercase;
@@ -1064,7 +1064,7 @@
   }
 
   .rewards-title {
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 700;
     letter-spacing: 1px;
     color: var(--text-primary);
@@ -1355,7 +1355,7 @@ Image Overlay Styles */
   .team-tab {
     padding: 14px 28px;
     border-radius: 12px;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
     min-height: 48px;
     min-width: 140px;
@@ -1406,7 +1406,7 @@ Image Overlay Styles */
   .team-tab {
     padding: 16px 32px;
     border-radius: 14px;
-    font-size: 16px;
+    font-size: 14px;
     min-height: 52px;
     min-width: 150px;
     box-shadow:
