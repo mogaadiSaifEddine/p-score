@@ -29,7 +29,7 @@ const PROXY_CONFIG = [
       "/apis/observer/",
       "/apis/app/",
       "/observer/",
-      "/store/",
+      "/store/get_coupon_image/turf_hunt",
       "/ws/",
       "/content_manager/preview/",
       "/creator_server/preview_tour/",

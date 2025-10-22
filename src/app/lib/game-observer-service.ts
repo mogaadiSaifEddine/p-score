@@ -1,6 +1,8 @@
 // lib/game-observer-service.ts
 // Simple service for handling game observer and scoreboard APIs (no auth required)
 
+import { WayPoint } from "../types";
+
 export interface ApiResponse<T = any> {
   data: T | null;
   status: number;
@@ -9,23 +11,122 @@ export interface ApiResponse<T = any> {
 }
 
 export interface GameByCodeResponse {
-  id: number;
-  name: string;
-  game_code_hash: string;
-  game_key: string;
-  is_started: boolean;
-  finish_time?: string;
-  start_time?: string;
+  default_map_style?: string;
+  promoted?: boolean;
+  publish_share_with_users?: any;
+  icon?: string;
+  id?: number;
+  project?: number;
+  alias?: string;
+  author?: any;
+  media?: any;
+  last_updated?: string;
+  status?: any;
+  archtype?: any | string;
+  tour_archtype_name?: string;
+  thumb_file_url?: string;
+  template?: number;
+  content?: any;
+  needs_login?: boolean;
+  login_disclaim?: any;
+  background_location_service?: boolean;
+  auto_calculated_location?: boolean;
+  location_detection_method?: string;
+  disable_location_detection?: boolean;
+  location_detection_after_intro?: boolean;
+  local_server_address?: any;
+  local_server_apikey?: any;
+  publisher?: string;
+  readonly?: boolean;
+  use_timer?: boolean;
+  show_map_marker?: boolean;
+  max_number_of_teams?: number;
+  play_intro_audio_in_tour?: boolean;
+  path_color?: string;
+  allow_preview?: boolean;
+  publish_expire_time?: number;
+  publish_hide_team_positions?: boolean;
+  publish_include_osm?: boolean;
+  game_type?: any;
+  team_mode?: string;
+  publish_price?: string;
+  publish_price_currency?: string;
+  publish_store_product_id?: string;
+  publish_show_in_catalog?: boolean;
+  languages?: any[];
+  waypoints?: any[];
+  coupons?: any[];
+  info?: WayPoint;
+  sponsors?: number[];
+  routes?: any[];
+  paths?: any[];
+  category?: number;
+  product_id?: string;
+  tour_map?: any;
+  revision?: number;
+  time_minutes?: number;
+  distance_meters?: number;
+  game_over_title?: any;
+  game_over_subtitle?: any;
+  auto_order_waypoint?: boolean;
+  travel_type?: number;
+  can_play_backwards?: boolean;
+  needs_charger?: boolean;
+  use_online_scoreboard?: boolean;
+  default_destination_pin?: number;
+  default_hint_pin?: any;
+  default_treasure_pin?: any;
+  publish_game_teams?: string[];
+  edit?: boolean;
+  finish_time?: Date;
+  start_time?: Date;
+  is_lite_tour?: boolean;
+  display_type?: any;
+  custom_pin?: number;
+  template_tour_id?: number;
+  activation_method?: string;
   // Add other game properties as needed
 }
-
 export interface ObserverData {
-  game_id: number;
-  game_code: string;
-  teams: any[];
-  current_status: string;
-  // Add other observer properties as needed
+  is_game_master?: boolean;
+  treasures_found?: Treasuresfound[];
+  id?: number;
+  author_first_name?: string;
+  author_last_name?: string;
+  name?: string;
+  create_time?: string;
+  start_time?: string;
+  is_started?: boolean;
+  is_test?: boolean;
+  finish_time?: string;
+  schedule_start_time?: null;
+  game_code_hash?: string;
+  game_key?: string;
+  game_organizer?: null;
+  game_duration?: number;
+  allow_create_team?: boolean;
+  use_first_player_as_organizer?: boolean;
+  use_timer?: boolean;
+  number_of_teams?: number;
+  invitation_message?: string;
+  team_mode?: string;
+  tour?: number;
+  author?: number;
+  sale_log?: null;
 }
+
+interface Treasuresfound {
+  id?: number;
+  name?: string;
+  found_by?: Foundby[];
+}
+
+interface Foundby {
+  id?: number;
+  name?: string;
+  time?: string;
+}
+
 
 export interface ScoreboardData {
   teams: Array<{

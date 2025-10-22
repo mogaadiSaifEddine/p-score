@@ -56,6 +56,8 @@ export function useGameObserver({
         gameObserverService.getScoreboard(gameCode),
       ]);
 
+      console.log('gameResponse',gameResponse);
+      
       // Load team-specific data if teamId is provided
       let teamScoreboardResponse = null;
       if (teamId) {
@@ -225,8 +227,8 @@ export function useGameObserver({
     refreshScoreboard,
 
     // Computed values
-    isGameStarted: state.game?.is_started || false,
-    isGameFinished: !!state.game?.finish_time,
+    isGameStarted: state.observer?.is_started || false,
+    isGameFinished: !!state.observer?.finish_time,
     teamsCount: state.scoreboard?.teams?.length || 0,
 
     // Helper methods

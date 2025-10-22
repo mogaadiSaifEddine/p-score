@@ -3,6 +3,45 @@ import './MobileScoreboard.css'
 import ThemeToggle from './ThemeToggle';
 import { useTranslation } from '../hooks/useTranslation';
 
+// Component for coupon image with fallback
+const CouponImage: React.FC<{ couponId: number; couponName: string }> = ({ couponId, couponName }) => {
+  const [imageSrc, setImageSrc] = React.useState(
+    `https://cms.locatify.com/store/get_coupon_image/turf_hunt/${couponId}`
+  );
+  const [hasError, setHasError] = React.useState(false);
+
+  // Default coupon image as SVG data URL
+  const defaultCouponImage = `data:image/svg+xml;base64,${btoa(`
+    <svg width="100" height="60" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="60" rx="8" fill="#f3f4f6"/>
+      <rect x="2" y="2" width="96" height="56" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+      <circle cx="15" cy="30" r="8" fill="#e5e7eb"/>
+      <circle cx="85" cy="30" r="8" fill="#e5e7eb"/>
+      <rect x="25" y="20" width="50" height="4" rx="2" fill="#d1d5db"/>
+      <rect x="30" y="28" width="40" height="3" rx="1.5" fill="#e5e7eb"/>
+      <rect x="35" y="35" width="30" height="3" rx="1.5" fill="#e5e7eb"/>
+      <path d="M15 22 L15 38 M11 30 L19 30" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M85 22 L85 38 M81 30 L89 30" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  `)}`;
+
+  const handleError = () => {
+    if (!hasError) {
+      setHasError(true);
+      setImageSrc(defaultCouponImage);
+    }
+  };
+
+  return (
+    <img
+      src={imageSrc}
+      alt={couponName}
+      className="coupon-image"
+      onError={handleError}
+    />
+  );
+};
+
 interface Treasure {
   id: number;
   icon: string;
@@ -12,7 +51,7 @@ interface Treasure {
   foundAt?: string;
 }
 
-interface Coupon {
+export interface Coupon {
   id: number;
   name: string;
   description?: string;
@@ -25,6 +64,7 @@ interface MobileScoreboardProps {
   teamName?: string;
   onEndGame?: () => void;
   showEndGameButton?: boolean;
+  useTimer?: boolean;
 }
 
 const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
@@ -33,9 +73,11 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   coupons = [],
   teamName = 'Team',
   onEndGame,
-  showEndGameButton = false
+  showEndGameButton = false,
+  useTimer = false
 }) => {
   console.log('MobileScoreboard treasures:', treasures);
+  console.log('MobileScoreboard coupons:', coupons);
 
   const { t, locale } = useTranslation();
 
@@ -98,39 +140,33 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 </div>
 
                 {/* Right - Time Label and Circle */}
-                <div className="score-item time">
-                  <h2 className="score-label">{t('scoreboard.time')}</h2>
-                  <div className="score-circle">
-                    <span className="score-number">0</span>
+                {useTimer && (
+                  <div className="score-item time">
+                    <h2 className="score-label">{t('scoreboard.time')}</h2>
+                    <div className="score-circle">
+                      <span className="score-number">0</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* Rewards Section */}
+              {coupons.length > 0 && (
+                <div className="rewards-section">
+                  <div className="rewards-header">
+                    <h3 className="rewards-title">{t('scoreboard.rewards')} ({coupons.length})</h3>
+                  </div>
+                  <div className="rewards-list">
+                    {coupons.map((coupon: Coupon) => (
+                      <div key={coupon.id} >
+                        <div className="reward-image">
+                          <CouponImage couponId={coupon.id} couponName={coupon.name} />
+                        </div>
+
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-                 {/* Rewards Section */}
-            {coupons.length > 0 && (
-              <div className="rewards-section">
-                <div className="rewards-header">
-                  <h3 className="rewards-title">{t('scoreboard.rewards')} ({coupons.length})</h3>
-                </div>
-                <div className="rewards-list">
-                  {coupons.map((coupon: Coupon) => (
-                    <div key={coupon.id} >
-                        <div className="reward-image">
-                          <img
-                            src={`/store/get_coupon_image/turf_hunt/${coupon.id}`}
-                            alt={coupon.name}
-                            className="coupon-image"
-                            onError={(e) => {
-                              // Hide image if it fails to load
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
-                          />
-                        </div>
-                        
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              )}
               <div className="treasures-header">
                 <h3 className="treasures-title">{t('scoreboard.treasuresDiscovered')} ({treasures.length})</h3>
                 <h3 className="treasures-title">{t('scoreboard.totalScore')}</h3>
@@ -168,7 +204,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
               )}
             </div>
 
-         
+
           </div>
 
           {/* End Game Button */}

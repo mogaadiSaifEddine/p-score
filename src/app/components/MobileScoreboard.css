@@ -339,7 +339,8 @@
 
 .rewards-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: clamp(8px, 2vw, 10px);
 }
 

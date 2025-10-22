@@ -121,7 +121,7 @@ export default function PublicScoreboardFinalFixPage() {
 
     if (teamCoupons.length > 0) {
       return teamCoupons
-        .filter((coupon: any) => coupon.acquired) // Only show acquired coupons
+        .filter((coupon: any) => coupon) // Only show acquired coupons
         .map((coupon: any) => ({
           id: coupon.id,
           name: coupon.title || `Coupon ${coupon.id}`,
@@ -339,6 +339,7 @@ export default function PublicScoreboardFinalFixPage() {
         teamName={teamData.name}
         onEndGame={handleEndGame}
         showEndGameButton={isPlayerView() && gameStatus === 'in_progress'}
+        useTimer={observer?.use_timer || false}
       />
     </ScoreboardProviders>
   );
