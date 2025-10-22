@@ -167,7 +167,6 @@ class GameObserverService {
         requestOptions.body = JSON.stringify(data);
       }
 
-      console.log(`Making ${method} request to: ${apiPath} via proxy: ${proxyUrl}`);
 
       const response = await fetch(proxyUrl, requestOptions);
 
@@ -245,7 +244,6 @@ class GameObserverService {
     observer: ApiResponse<ObserverData>;
     scoreboard: ApiResponse<ScoreboardData>;
   }> {
-    console.log(`Loading complete game data for: ${gameCode}`);
 
     // Make all requests in parallel
     const [gameResponse, observerResponse, scoreboardResponse] = await Promise.all([

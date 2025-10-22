@@ -1,6 +1,7 @@
 import React from 'react';
 import './MobileScoreboard.css'
 import ThemeToggle from './ThemeToggle';
+import TeamViewToggle from './TeamViewToggle';
 import { useTranslation } from '../hooks/useTranslation';
 
 // Image overlay component
@@ -47,9 +48,9 @@ const ImageOverlay: React.FC<{
 };
 
 // Component for coupon image with fallback
-const CouponImage: React.FC<{ 
-  couponId: number; 
-  couponName: string; 
+const CouponImage: React.FC<{
+  couponId: number;
+  couponName: string;
   onClick?: () => void;
 }> = ({ couponId, couponName, onClick }) => {
   const [imageSrc, setImageSrc] = React.useState(
@@ -96,11 +97,7 @@ const TreasureImage: React.FC<{ waypointId: number; treasureName: string; fallba
     `https://cms.locatify.com/store/point_image/turf_hunt/${waypointId}`
   );
   const [hasError, setHasError] = React.useState(false);
-console.log(
 
-    `https://cms.locatify.com/store/point_image/turf_hunt/${waypointId}`
-
-);
 
   // Default treasure image as SVG data URL
   const defaultTreasureImage = `data:image/svg+xml;base64,${btoa(`
@@ -143,6 +140,15 @@ export interface Coupon {
   description?: string;
 }
 
+export interface TeamData {
+  id: number;
+  name: string;
+  score: number;
+  color?: string;
+  players?: any[];
+  has_finished?: boolean;
+}
+
 interface MobileScoreboardProps {
   gameStatus: 'in_progress' | 'finished' | 'not_started';
   treasures: Treasure[];
@@ -151,6 +157,8 @@ interface MobileScoreboardProps {
   onEndGame?: () => void;
   showEndGameButton?: boolean;
   useTimer?: boolean;
+  gameType?: string;
+  allTeams?: TeamData[];
 }
 
 const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
@@ -160,13 +168,13 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   teamName = 'Team',
   onEndGame,
   showEndGameButton = false,
-  useTimer = false
+  useTimer = false,
+  gameType,
+  allTeams = []
 }) => {
-  console.log('MobileScoreboard treasures:', treasures);
-  console.log('MobileScoreboard coupons:', coupons);
 
   const { t, locale } = useTranslation();
-  
+
   // State for image overlay
   const [overlayImage, setOverlayImage] = React.useState<{
     src: string;
@@ -175,11 +183,18 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 
   // Debug: Log current locale
   React.useEffect(() => {
-    console.log('MobileScoreboard - Current locale:', locale);
   }, [locale]);
+
+  // State for CMS team view toggle
+  const [activeTab, setActiveTab] = React.useState<'myTeam' | 'allTeams'>('myTeam');
+
+  // Check if this is a CMS game type
+  const isCMSGame = gameType === 'CMS';
 
   // Calculate total score from actual treasures data
   const totalScore = treasures.reduce((sum: number, treasure: Treasure) => sum + treasure.score, 0);
+
+
 
   // Handle coupon image click
   const handleCouponImageClick = (couponId: number, couponName: string) => {
@@ -192,6 +207,32 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   // Close overlay
   const closeOverlay = () => {
     setOverlayImage(null);
+  };
+
+  // Team color combinations based on badge shapes
+  // Each team gets a different background color using one of the shape colors
+  // The shape that matches the background becomes white for contrast
+  const getTeamColorCombination = (index: number) => {
+    const combinations = [
+      {
+        background: 'var(--score-accent)', // Circle color as background
+        shapes: { circle: '#ffffff', triangle: '#7189e3', square: '#ff7280' }
+      },
+      {
+        background: '#7189e3', // Triangle color as background
+        shapes: { circle: 'var(--score-accent)', triangle: '#ffffff', square: '#ff7280' }
+      },
+      {
+        background: '#ff7280', // Square color as background
+        shapes: { circle: 'var(--score-accent)', triangle: '#7189e3', square: '#ffffff' }
+      },
+      {
+        background: '#22c55e', // Green as 4th option
+        shapes: { circle: 'var(--score-accent)', triangle: '#7189e3', square: '#ff7280' }
+      }
+    ];
+
+    return combinations[index % combinations.length];
   };
 
   return (
@@ -216,12 +257,9 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
             </div>
           </div>
 
-          {/* Treasures Section Container - With relative positioning */}
+          {/* Main Content - Always shown */}
           <div className="treasures-container">
-            {/* Score Display Section - Absolute positioned */}
-
-
-            {/* Treasures List - with padding for absolute content above */}
+            {/* Score Display Section - Always shown */}
             <div className="treasures-list">
               <div className="score-section">
                 {/* Left - Total Score Label and Circle */}
@@ -260,7 +298,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                   </div>
                 )}
               </div>
-              {/* Rewards Section */}
+
+              {/* Rewards Section - Always shown */}
               {coupons.length > 0 && (
                 <div className="rewards-section">
                   <div className="rewards-header">
@@ -270,65 +309,121 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                     {coupons.map((coupon: Coupon) => (
                       <div key={coupon.id} >
                         <div className="reward-image">
-                          <CouponImage 
-                            couponId={coupon.id} 
+                          <CouponImage
+                            couponId={coupon.id}
                             couponName={coupon.name}
                             onClick={() => handleCouponImageClick(coupon.id, coupon.name)}
                           />
                         </div>
-
                       </div>
                     ))}
                   </div>
                 </div>
               )}
+
+              {/* CMS Team View Toggle - Only shown for CMS games, positioned between rewards and list */}
+              {isCMSGame && (
+                <TeamViewToggle
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                />
+              )}
+
+              {/* Dynamic List Header and Content - Changes based on active tab */}
               <div className="treasures-header">
-                <h3 className="treasures-title">{t('scoreboard.treasuresDiscovered')} ({treasures.length})</h3>
-                <h3 className="treasures-title">{t('scoreboard.totalScore')}</h3>
+                <h3 className="treasures-title">
+                  {isCMSGame && activeTab === 'allTeams'
+                    ? `${t('scoreboard.allTeams')} (${allTeams.length})`
+                    : `${t('scoreboard.treasuresDiscovered')} (${treasures.length})`
+                  }
+                </h3>
+                <h3 className="treasures-title">{t('scoreboard.points')}</h3>
               </div>
 
-              {/* Treasure Items */}
-              {treasures.length > 0 ? (
-                treasures.map((treasure: Treasure) => (
-                  <div key={treasure.id} className="treasure-item">
+              {/* Dynamic List Content - Changes based on active tab */}
+              {isCMSGame && activeTab === 'allTeams' ? (
+                /* All Teams List */
+                allTeams.length > 0 ? (
+                  allTeams
+                    .sort((a, b) => b.score - a.score) // Sort by score descending
+                    .map((team: TeamData, index: number) => {
+                      const colorCombination = getTeamColorCombination(index);
+                      return (
+                        <div key={team.id} className="treasure-item">
+                          <div className="treasure-content">
+                            <div
+                              className="treasure-icon team-badge"
+                              style={{
+                                '--team-bg-color': colorCombination.background,
+                                '--team-circle-color': colorCombination.shapes.circle,
+                                '--team-triangle-color': colorCombination.shapes.triangle,
+                                '--team-square-color': colorCombination.shapes.square
+                              } as React.CSSProperties}
+                            >
+                              {/* Team badge shapes with custom colors */}
+                              <div className="badge-shapes">
+                                <div className="badge-circle"></div>
+                                <div className="badge-triangle"></div>
+                                <div className="badge-square"></div>
+                              </div>
+                            </div>
+                            <span className="treasure-name">{team.name}</span>
+                          </div>
+                          <div className="treasure-score">{team.score}</div>
+                        </div>
+                      );
+                    })
+                ) : (
+                  <div className="treasure-item">
                     <div className="treasure-content">
-                      <div className="treasure-icon">
-                        <TreasureImage
-                          waypointId={treasure.id}
-                          treasureName={treasure.name}
-                          fallbackIcon={treasure.icon}
-                        />
+                      <div
+                        className="treasure-icon team-badge"
+                        style={{ '--team-bg-color': 'var(--bg-secondary)' } as React.CSSProperties}
+                      >
+                        {/* Empty state badge shapes */}
+                        <div className="badge-shapes">
+                          <div className="badge-circle"></div>
+                          <div className="badge-triangle"></div>
+                          <div className="badge-square"></div>
+                        </div>
                       </div>
-                      <span className="treasure-name">{treasure.name}</span>
+                      <span className="treasure-name">{t('scoreboard.noTeams')}</span>
                     </div>
-                    <div className="treasure-score">{treasure.score}</div>
+                    <div className="treasure-score">0</div>
                   </div>
-                ))
+                )
               ) : (
-                <div className="treasure-item">
-                  <div className="treasure-content">
-                    <div className="treasure-icon">🏴‍☠️</div>
-                    <span className="treasure-name">{t('scoreboard.noTreasures')}</span>
+                /* My Team Treasures List */
+                treasures.length > 0 ? (
+                  treasures.map((treasure: Treasure) => (
+                    <div key={treasure.id} className="treasure-item">
+                      <div className="treasure-content">
+                        <div className="treasure-icon">
+                          <TreasureImage
+                            waypointId={treasure.id}
+                            treasureName={treasure.name}
+                            fallbackIcon={treasure.icon}
+                          />
+                        </div>
+                        <span className="treasure-name">{treasure.name}</span>
+                      </div>
+                      <div className="treasure-score">{treasure.score}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="treasure-item">
+                    <div className="treasure-content">
+                      <div className="treasure-icon">🏴‍☠️</div>
+                      <span className="treasure-name">{t('scoreboard.noTreasures')}</span>
+                    </div>
+                    <div className="treasure-score">0</div>
                   </div>
-                  <div className="treasure-score">0</div>
-                </div>
+                )
               )}
             </div>
-
-
           </div>
 
-          {/* End Game Button */}
-          {showEndGameButton && onEndGame && (
-            <div className="end-game-section">
-              <button
-                onClick={onEndGame}
-                className="end-game-button"
-              >
-                {t('scoreboard.endGame')}
-              </button>
-            </div>
-          )}
+
         </div>
       </div>
     </>

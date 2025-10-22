@@ -44,8 +44,8 @@ export function usePublicScoreboardRoute(options: UseRouteParamsOptions = {}) {
       };
     }
 
-    // Parse and validate
-    const parsedData = RouteParser.parsePublicScoreboardRoute(
+    // Parse and validate with fallback
+    const parsedData = RouteParser.parsePublicScoreboardRouteWithFallback(
       extractedParams,
       options.customValidationRules
     );

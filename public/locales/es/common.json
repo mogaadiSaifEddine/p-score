@@ -6,11 +6,16 @@
   },
   "scoreboard": {
     "totalScore": "Puntuación total",
+    "points": "Puntos",
     "time": "Tiempo",
     "treasuresDiscovered": "Tesoros descubiertos",
     "noTreasures": "Aún no se han descubierto tesoros",
     "endGame": "Terminar juego",
-    "rewards": "Recompensas"
+    "rewards": "Recompensas",
+    "myTeam": "Mi equipo",
+    "allTeams": "Todos los equipos",
+    "teamViewToggle": "Alternar vista de equipo",
+    "noTeams": "No se encontraron equipos"
   },
   "errors": {
     "invalidUrl": "Parámetros de URL inválidos",

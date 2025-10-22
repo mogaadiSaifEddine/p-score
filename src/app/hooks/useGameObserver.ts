@@ -47,7 +47,6 @@ export function useGameObserver({
     try {
       setState((prev) => ({ ...prev, loading: true, error: null }));
 
-      console.log(`Loading data for game: ${gameCode}, team: ${teamId}`);
 
       // Always load general game data
       const [gameResponse, observerResponse, scoreboardResponse] = await Promise.all([
@@ -56,20 +55,12 @@ export function useGameObserver({
         gameObserverService.getScoreboard(gameCode),
       ]);
 
-      console.log('gameResponse',gameResponse);
       
       // Load team-specific data if teamId is provided
       let teamScoreboardResponse = null;
       if (teamId) {
-        console.log(`Loading team-specific scoreboard for team ${teamId}`);
         teamScoreboardResponse = await gameObserverService.getScoreboardByTeam(gameCode, teamId);
 
-        console.log('Team API Response:', {
-          success: teamScoreboardResponse.success,
-          status: teamScoreboardResponse.status,
-          data: teamScoreboardResponse.data,
-          error: teamScoreboardResponse.error,
-        });
       }
 
       // Update state with successful responses
@@ -136,17 +127,10 @@ export function useGameObserver({
   // Enhanced team finder that handles multiple API response structures
   const getTeamById = useCallback(
     (targetTeamId: number) => {
-      console.log('=== Looking for team ===', {
-        targetTeamId,
-        hasTeamScoreboard: !!state.teamScoreboard,
-        hasGeneralScoreboard: !!state.scoreboard,
-        teamScoreboardData: state.teamScoreboard,
-        generalScoreboardTeams: state.scoreboard?.teams?.length,
-      });
+    
 
       // Strategy 1: Check team-specific API response first
       if (state.teamScoreboard) {
-        console.log('Checking team-specific API data...');
 
         // Case 1: API returns array of teams
         if (state.teamScoreboard.teams && Array.isArray(state.teamScoreboard.teams)) {
@@ -154,7 +138,6 @@ export function useGameObserver({
             (team) => team.game_team_id === targetTeamId
           );
           if (team) {
-            console.log('Found team in team API array:', team);
             return team;
           }
         }
@@ -163,21 +146,18 @@ export function useGameObserver({
         if (state.teamScoreboard.teams && !Array.isArray(state.teamScoreboard.teams)) {
           const singleTeam = state.teamScoreboard.teams as any;
           if (singleTeam.game_team_id === targetTeamId) {
-            console.log('Found team as single object:', singleTeam);
             return singleTeam;
           }
         }
 
         // Case 3: API returns team data at root level
         if (state.teamScoreboard.game_team_id === targetTeamId) {
-          console.log('Found team at root level:', state.teamScoreboard);
           return state.teamScoreboard as any;
         }
 
         // Case 4: Check if team data is nested differently
         const teamScoreboardAny = state.teamScoreboard as any;
         if (teamScoreboardAny.team && teamScoreboardAny.team.game_team_id === targetTeamId) {
-          console.log('Found team in nested team property:', teamScoreboardAny.team);
           return teamScoreboardAny.team;
         }
 
@@ -191,7 +171,6 @@ export function useGameObserver({
             players: teamScoreboardAny.players || [],
             has_finished: teamScoreboardAny.has_finished || teamScoreboardAny.finished || false,
           };
-          console.log('Created team from direct data:', directTeam);
           return directTeam;
         }
       }
@@ -200,12 +179,10 @@ export function useGameObserver({
       if (state.scoreboard?.teams && Array.isArray(state.scoreboard.teams)) {
         const team = state.scoreboard.teams.find((team) => team.game_team_id === targetTeamId);
         if (team) {
-          console.log('Found team in general scoreboard:', team);
           return team;
         }
       }
 
-      console.log('Team not found in any API response');
       return null;
     },
     [state.scoreboard, state.teamScoreboard]

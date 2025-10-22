@@ -32,6 +32,13 @@ export default function PublicScoreboardFinalFixPage() {
     getValidationErrorsFormatted
   } = usePublicScoreboardData();
 
+  // Handle language fallback redirect
+  React.useEffect(() => {
+    if (parsedData && 'shouldRedirect' in parsedData && parsedData.shouldRedirect && parsedData.redirectUrl) {
+      window.location.replace(parsedData.redirectUrl);
+    }
+  }, [parsedData]);
+
   // Load game data with team-specific calls
   const {
     game,
@@ -46,18 +53,15 @@ export default function PublicScoreboardFinalFixPage() {
     getCurrentTeamData,
     hasTeamData,
     getTeamTreasures,
-    getTeamCoupons,
-    getDebugInfo
+    getTeamCoupons
   } = useGameObserver({
     gameCode: parsedData?.gameCode || '',
     teamId: parsedData?.teamId,
     autoRefresh: false,
     refreshInterval: 5000
   });
-
   // Get current team data
   const currentTeam = getCurrentTeamData();
-  const debugInfo = getDebugInfo();
 
   // Get treasure data from team-specific API
   const teamTreasures = getTeamTreasures();
@@ -67,8 +71,6 @@ export default function PublicScoreboardFinalFixPage() {
 
   // Format treasure data for the mobile UI
   const treasureApiData = React.useMemo(() => {
-    console.log('Processing treasure data:', teamTreasures);
-
     if (teamTreasures.length > 0) {
       return teamTreasures.map((treasure: any, index: number) => ({
         waypoint_challenge: treasure.waypoint_id || treasure.id || treasure.challenge_id || index + 1,
@@ -117,8 +119,6 @@ export default function PublicScoreboardFinalFixPage() {
 
   // Format coupons data for the mobile UI
   const couponsData = React.useMemo(() => {
-    console.log('Processing coupons data:', teamCoupons);
-
     if (teamCoupons.length > 0) {
       return teamCoupons
         .filter((coupon: any) => coupon) // Only show acquired coupons
@@ -132,30 +132,77 @@ export default function PublicScoreboardFinalFixPage() {
     return [];
   }, [teamCoupons]);
 
-  // Debug logging for treasure icon calculations
-  React.useEffect(() => {
-    console.log('=== Treasure Icon Debug ===');
-    console.log('Raw team treasures:', teamTreasures);
-    console.log('Formatted treasureApiData:', treasureApiData);
-    console.log('Game data for waypoints:', gameData);
-    console.log('Final formatted treasures:', treasures);
-  }, [teamTreasures, treasureApiData, gameData, treasures]);
+  // Extract game type from GameByCodeResponse
+  const gameType = observer?.number_of_teams > 1 ? 'CMS' : '';
 
-  // Debug logging
-  React.useEffect(() => {
-    if (parsedData?.isValid) {
-      console.log('=== Final Fix Debug Info ===');
-      console.log('Route data:', parsedData);
-      console.log('Language from URL:', parsedData.language);
-      console.log('Debug info:', debugInfo);
-      console.log('Current team:', currentTeam);
-      console.log('Has team data:', hasTeamData());
-      console.log('Team scoreboard raw:', teamScoreboard);
-      console.log('Team treasures:', teamTreasures);
-      console.log('Team coupons:', teamCoupons);
-      console.log('Formatted treasures:', treasures);
+  // Format teams data for MobileScoreboard - create distinct teams based on players
+  // This ensures each unique team composition (based on players) appears only once
+  const allTeamsData = React.useMemo(() => {
+    // Handle both scoreboard.teams array and direct scoreboard array structures
+    // Some APIs return { teams: [...] } while others return [...] directly
+    const teamsArray = Array.isArray(scoreboard?.teams)
+      ? scoreboard.teams
+      : Array.isArray(scoreboard)
+        ? scoreboard
+        : [];
+
+    if (!teamsArray || teamsArray.length === 0) {
+      return [];
     }
-  }, [parsedData, debugInfo, currentTeam, hasTeamData, teamScoreboard, teamTreasures, teamCoupons, treasures]);
+
+    // Create a map to track unique teams by their distinct player combinations
+    const uniqueTeamsMap = new Map();
+
+    teamsArray.forEach((team: any) => {
+      const teamId = team.game_team_id || team.id;
+      const teamName = team.name || `Team ${teamId}`;
+      const players = team.players || [];
+
+      // Create a unique key based on sorted player IDs to identify distinct teams
+      // Handle cases where players might not have IDs by using multiple fallback properties
+      const playerIds = players
+        .map((player: any) =>
+          player.user_id ||
+          player.device_serial ||
+          player.nick_name ||
+          player.email ||
+          player.id ||
+          'unknown'
+        )
+        .filter(id => id !== 'unknown') // Remove unknown players
+        .sort();
+
+      // Use team name and player composition to create unique key
+      // If no players, use just team ID to ensure uniqueness
+      const teamKey = playerIds.length > 0
+        ? `${teamName}_${playerIds.join('_')}`
+        : `${teamName}_${teamId}`;
+
+      // Only add if this exact team composition doesn't exist
+      if (!uniqueTeamsMap.has(teamKey)) {
+        uniqueTeamsMap.set(teamKey, {
+          id: teamId,
+          name: teamName,
+          score: team.score || 0,
+          color: teamIconConfigs[teamName.toLowerCase()]?.color || teamIconConfigs.default.color,
+          players: players,
+          has_finished: team.has_finished || false
+        });
+      } else {
+        // If team exists, update score if current score is higher
+        const existingTeam = uniqueTeamsMap.get(teamKey);
+        if ((team.score || 0) > existingTeam.score) {
+          existingTeam.score = team.score || 0;
+          existingTeam.has_finished = team.has_finished || false;
+        }
+      }
+    });
+
+    // Convert map values back to array
+    return Array.from(uniqueTeamsMap.values());
+  }, [scoreboard]);
+
+
 
   // Loading state for route parsing
   if (!isValidRoute && !routeError) {
@@ -240,7 +287,9 @@ export default function PublicScoreboardFinalFixPage() {
   }
 
   // Check if we have team data but couldn't find the specific team
-  const hasApiData = hasTeamData() || (scoreboard?.teams && scoreboard.teams.length > 0);
+  const hasApiData = hasTeamData() ||
+    (scoreboard?.teams && scoreboard.teams.length > 0) ||
+    (Array.isArray(scoreboard) && scoreboard.length > 0);
 
   if (!currentTeam && isPlayerView() && hasApiData) {
     return (
@@ -257,9 +306,6 @@ export default function PublicScoreboardFinalFixPage() {
           <p className="text-yellow-700 text-sm text-center mb-2">
             Team #{parsedData!.teamId} not found in game {parsedData!.gameCode}
           </p>
-
-          {/* Debug info */}
-
 
           <button
             onClick={reload}
@@ -318,17 +364,13 @@ export default function PublicScoreboardFinalFixPage() {
   // Handle end game
   const handleEndGame = async () => {
     try {
-      console.log('Ending game for team:', parsedData!.teamId, 'in game:', parsedData!.gameCode);
-
       await new Promise(resolve => setTimeout(resolve, 1500));
       reload();
     } catch (error) {
       console.error('Error ending game:', error);
     }
   };
-
-  console.log('Final treasures:', treasures);
-  console.log('Final coupons:', couponsData);
+  console.log(allTeamsData);
 
   return (
     <ScoreboardProviders initialLocale={parsedData?.language}>
@@ -340,6 +382,8 @@ export default function PublicScoreboardFinalFixPage() {
         onEndGame={handleEndGame}
         showEndGameButton={isPlayerView() && gameStatus === 'in_progress'}
         useTimer={observer?.use_timer || false}
+        gameType={gameType}
+        allTeams={allTeamsData}
       />
     </ScoreboardProviders>
   );

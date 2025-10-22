@@ -6,11 +6,16 @@
   },
   "scoreboard": {
     "totalScore": "Score total",
+    "points": "Points",
     "time": "Temps",
     "treasuresDiscovered": "Trésors découverts",
     "noTreasures": "Aucun trésor découvert pour le moment",
     "endGame": "Terminer le jeu",
-    "rewards": "Récompenses"
+    "rewards": "Récompenses",
+    "myTeam": "Mon équipe",
+    "allTeams": "Toutes les équipes",
+    "teamViewToggle": "Basculer la vue d'équipe",
+    "noTeams": "Aucune équipe trouvée"
   },
   "errors": {
     "invalidUrl": "Paramètres d'URL invalides",

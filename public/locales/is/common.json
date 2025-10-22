@@ -6,11 +6,16 @@
   },
   "scoreboard": {
     "totalScore": "Heildareinkunn",
+    "points": "Stig",
     "time": "Tími",
     "treasuresDiscovered": "Fjársjóðir fundnir",
     "noTreasures": "Engir fjársjóðir fundnir ennþá",
     "endGame": "Ljúka leik",
-    "rewards": "Verðlaun"
+    "rewards": "Verðlaun",
+    "myTeam": "Mitt lið",
+    "allTeams": "Öll lið",
+    "teamViewToggle": "Skipta um liðsýn",
+    "noTeams": "Engin lið fundust"
   },
   "errors": {
     "invalidUrl": "Ógild URL færibreytur",

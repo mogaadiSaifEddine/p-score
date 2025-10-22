@@ -111,7 +111,6 @@ async function handleProxy(request: NextRequest, method: string, pathSegments: s
     const queryString = searchParams.toString();
     const fullPath = queryString ? `${originalPath}?${queryString}` : originalPath;
 
-    console.log(`Proxying ${method} request for path: ${fullPath}`);
 
     // Find matching proxy configuration
     const proxyConfig = findProxyConfig(originalPath);
@@ -124,7 +123,6 @@ async function handleProxy(request: NextRequest, method: string, pathSegments: s
 
     // Build target URL
     const targetUrl = `${proxyConfig.target}${fullPath}`;
-    console.log(`Target URL: ${targetUrl}`);
 
     // Prepare headers
     const proxyHeaders: Record<string, string> = {};

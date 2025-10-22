@@ -167,3 +167,70 @@ export function detectBrowserLanguage(): string {
   
   return DEFAULT_LOCALE;
 }
+
+/**
+ * Ensures a locale is valid, falling back to default if not
+ */
+export function ensureValidLocale(locale: string): string {
+  if (!locale || typeof locale !== 'string') {
+    console.warn(`Invalid locale provided: ${locale}, falling back to ${DEFAULT_LOCALE}`);
+    return DEFAULT_LOCALE;
+  }
+
+  const normalizedLocale = locale.toLowerCase().trim();
+  
+  if (isValidLocale(normalizedLocale)) {
+    return normalizedLocale;
+  }
+
+  // Try to extract language code from region-specific locale (e.g., 'en-US' -> 'en')
+  const langCode = normalizedLocale.split('-')[0];
+  if (isValidLocale(langCode)) {
+    console.info(`Using language code '${langCode}' from locale '${locale}'`);
+    return langCode;
+  }
+
+  console.warn(`Unsupported locale: ${locale}, falling back to ${DEFAULT_LOCALE}`);
+  return DEFAULT_LOCALE;
+}
+
+/**
+ * Loads translation with enhanced fallback mechanism
+ */
+export async function loadTranslationsWithFallback(locale: string): Promise<{
+  translations: TranslationFile;
+  actualLocale: string;
+  hadFallback: boolean;
+}> {
+  const validLocale = ensureValidLocale(locale);
+  const hadFallback = validLocale !== locale;
+
+  try {
+    const translations = await loadTranslations(validLocale);
+    return {
+      translations,
+      actualLocale: validLocale,
+      hadFallback
+    };
+  } catch (error) {
+    // If we're already trying the default locale and it fails, this is a critical error
+    if (validLocale === DEFAULT_LOCALE) {
+      console.error('Failed to load default locale translations. This is a critical error.', error);
+      throw new Error(`Critical: Cannot load default locale (${DEFAULT_LOCALE}) translations`);
+    }
+
+    // Try default locale as final fallback
+    console.warn(`Failed to load ${validLocale} translations, falling back to ${DEFAULT_LOCALE}`, error);
+    try {
+      const fallbackTranslations = await loadTranslations(DEFAULT_LOCALE);
+      return {
+        translations: fallbackTranslations,
+        actualLocale: DEFAULT_LOCALE,
+        hadFallback: true
+      };
+    } catch (fallbackError) {
+      console.error('Failed to load fallback translations', fallbackError);
+      throw new Error(`Critical: Cannot load any translations (tried ${validLocale} and ${DEFAULT_LOCALE})`);
+    }
+  }
+}

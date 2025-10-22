@@ -74,16 +74,15 @@ export class RouteParser {
       errors.push(`User type must be one of: ${validationRules.validUserTypes?.join(', ')}`);
     }
 
-    // Validate language
-    if (!language) {
-      errors.push('Language is required');
-    } else if (language.length !== 2) {
-      errors.push('Language must be a 2-character code (e.g., en, es, fr)');
-    } else if (
-      validationRules.validLanguages &&
-      !validationRules.validLanguages.includes(language)
+    // Validate language with fallback to English
+    let validatedLanguage = language;
+    if (
+      !language ||
+      language.length !== 2 ||
+      (validationRules.validLanguages && !validationRules.validLanguages.includes(language))
     ) {
-      errors.push(`Language must be one of: ${validationRules.validLanguages.join(', ')}`);
+      console.warn(`Invalid language '${language}', falling back to English`);
+      validatedLanguage = 'en';
     }
 
     // Validate gameType
@@ -100,7 +99,7 @@ export class RouteParser {
       gameCode: gameCode.toUpperCase(),
       teamId,
       userType: userType as 'player' | 'observer' | 'admin',
-      language: language.toLowerCase(),
+      language: validatedLanguage.toLowerCase(),
       gameType: gameType.toLowerCase(),
       isValid: errors.length === 0,
       errors,
@@ -162,6 +161,40 @@ export class RouteParser {
     return { isValid: true, teamId: id };
   }
 
+  static validateLanguage(language: string): {
+    isValid: boolean;
+    language: string;
+    error?: string;
+  } {
+    if (!language) {
+      return {
+        isValid: false,
+        language: 'en',
+        error: 'Language is required, falling back to English',
+      };
+    }
+
+    const normalizedLang = language.toLowerCase().trim();
+
+    if (normalizedLang.length !== 2) {
+      return {
+        isValid: false,
+        language: 'en',
+        error: 'Language must be a 2-character code, falling back to English',
+      };
+    }
+
+    if (!this.defaultRules.validLanguages?.includes(normalizedLang)) {
+      return {
+        isValid: false,
+        language: 'en',
+        error: `Unsupported language '${normalizedLang}', falling back to English`,
+      };
+    }
+
+    return { isValid: true, language: normalizedLang };
+  }
+
   static getRouteDescription(routeData: ParsedRouteData): string {
     const { gameCode, teamId, userType, language, gameType } = routeData;
 
@@ -213,10 +246,44 @@ export class RouteParser {
       gameType: match[5],
     };
   }
+
+  // Parse route with automatic language fallback and redirect suggestion
+  static parsePublicScoreboardRouteWithFallback(
+    params: RouteParams,
+    rules: RouteValidationRules = {}
+  ): ParsedRouteData & { shouldRedirect?: boolean; redirectUrl?: string } {
+    const originalLanguage = params.language?.toLowerCase().trim();
+    const parsedData = this.parsePublicScoreboardRoute(params, rules);
+
+    // Check if language was changed due to fallback
+    const languageChanged = originalLanguage !== parsedData.language;
+
+    if (languageChanged && parsedData.isValid) {
+      // Generate redirect URL with corrected language
+      const redirectUrl = this.generatePublicScoreboardUrl({
+        gameCode: parsedData.gameCode,
+        teamId: parsedData.teamId,
+        userType: parsedData.userType,
+        language: parsedData.language,
+        gameType: parsedData.gameType,
+      });
+
+      return {
+        ...parsedData,
+        shouldRedirect: true,
+        redirectUrl,
+      };
+    }
+
+    return parsedData;
+  }
 }
 
 // Export convenience functions
 export const parsePublicScoreboardRoute = RouteParser.parsePublicScoreboardRoute;
+export const parsePublicScoreboardRouteWithFallback =
+  RouteParser.parsePublicScoreboardRouteWithFallback;
 export const generatePublicScoreboardUrl = RouteParser.generatePublicScoreboardUrl;
 export const validateGameCode = RouteParser.validateGameCode;
 export const validateTeamId = RouteParser.validateTeamId;
+export const validateLanguage = RouteParser.validateLanguage;

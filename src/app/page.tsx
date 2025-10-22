@@ -42,12 +42,6 @@ export default function PublicScoreboardExactPage() {
 
   // Debug logging
   React.useEffect(() => {
-    if (parsedData?.isValid) {
-      console.log('=== Exact UI Debug ===');
-      console.log('Current team:', currentTeam);
-      console.log('Has team data:', hasTeamData());
-      console.log('Team scoreboard:', teamScoreboard);
-    }
   }, [parsedData, currentTeam, hasTeamData, teamScoreboard]);
 
   // Loading state for route parsing
@@ -138,8 +132,6 @@ export default function PublicScoreboardExactPage() {
   // Handle end game
   const handleEndGame = async () => {
     try {
-      console.log('Ending game for team:', parsedData!.teamId, 'in game:', parsedData!.gameCode);
-      
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       reload();

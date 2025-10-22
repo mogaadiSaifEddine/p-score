@@ -7,7 +7,9 @@ import {
   isValidLocale, 
   DEFAULT_LOCALE, 
   SUPPORTED_LOCALE_CODES,
-  detectBrowserLanguage 
+  detectBrowserLanguage,
+  ensureValidLocale,
+  loadTranslationsWithFallback
 } from '../lib/i18n';
 
 interface I18nContextType {
@@ -71,43 +73,32 @@ export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
     }
   };
 
-  // Load translations for the current locale
+  // Load translations for the current locale with enhanced fallback
   const loadLocaleTranslations = async (localeCode: string) => {
     setIsLoading(true);
     try {
-      const translationData = await loadTranslations(localeCode);
+      const { translations: translationData, actualLocale, hadFallback } = await loadTranslationsWithFallback(localeCode);
       setTranslations(translationData);
-    } catch (error) {
-      console.error(`Failed to load translations for locale: ${localeCode}`, error);
       
-      // If we failed to load the requested locale and it's not the default,
-      // try to load the default locale as fallback
-      if (localeCode !== DEFAULT_LOCALE) {
-        try {
-          const fallbackTranslations = await loadTranslations(DEFAULT_LOCALE);
-          setTranslations(fallbackTranslations);
-          console.warn(`Loaded fallback translations (${DEFAULT_LOCALE}) for failed locale: ${localeCode}`);
-        } catch (fallbackError) {
-          console.error('Failed to load fallback translations', fallbackError);
-          setTranslations(null);
-        }
-      } else {
-        setTranslations(null);
+      // Update locale if fallback was used
+      if (hadFallback && actualLocale !== localeCode) {
+        console.info(`Locale changed from '${localeCode}' to '${actualLocale}' due to fallback`);
+        setLocale(actualLocale);
       }
+    } catch (error) {
+      console.error(`Critical error loading translations for locale: ${localeCode}`, error);
+      setTranslations(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Change locale function
+  // Change locale function with validation
   const changeLocale = (newLocale: string) => {
-    if (!isValidLocale(newLocale)) {
-      console.warn(`Invalid locale: ${newLocale}, falling back to ${DEFAULT_LOCALE}`);
-      newLocale = DEFAULT_LOCALE;
-    }
+    const validLocale = ensureValidLocale(newLocale);
     
-    if (newLocale !== locale) {
-      setLocale(newLocale);
+    if (validLocale !== locale) {
+      setLocale(validLocale);
     }
   };
 

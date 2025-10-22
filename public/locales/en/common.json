@@ -6,11 +6,16 @@
   },
   "scoreboard": {
     "totalScore": "Total Score",
+    "points": "Points",
     "time": "Time",
     "treasuresDiscovered": "Treasures Discovered",
     "noTreasures": "No treasures discovered yet",
     "endGame": "End Game",
-    "rewards": "Rewards"
+    "rewards": "Rewards",
+    "myTeam": "My Team",
+    "allTeams": "All Teams",
+    "teamViewToggle": "Team view toggle",
+    "noTeams": "No teams found"
   },
   "errors": {
     "invalidUrl": "Invalid URL parameters",

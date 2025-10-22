@@ -6,11 +6,16 @@
   },
   "scoreboard": {
     "totalScore": "Gesamtpunktzahl",
+    "points": "Punkte",
     "time": "Zeit",
     "treasuresDiscovered": "Entdeckte Schätze",
     "noTreasures": "Noch keine Schätze entdeckt",
     "endGame": "Spiel beenden",
-    "rewards": "Belohnungen"
+    "rewards": "Belohnungen",
+    "myTeam": "Mein Team",
+    "allTeams": "Alle Teams",
+    "teamViewToggle": "Team-Ansicht umschalten",
+    "noTeams": "Keine Teams gefunden"
   },
   "errors": {
     "invalidUrl": "Ungültige URL-Parameter",
