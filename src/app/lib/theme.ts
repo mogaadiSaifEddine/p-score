@@ -24,24 +24,24 @@ export const THEME_CONFIGS: Record<ResolvedTheme, ThemeConfig> = {
       '--warning-color': '#f59e0b',
       '--error-color': '#ef4444',
       '--shadow-color': 'rgba(0, 0, 0, 0.1)',
-    }
+    },
   },
   dark: {
     name: 'Dark',
     cssClass: 'theme-dark',
     variables: {
-      '--bg-primary': '#0f172a',
-      '--bg-secondary': '#1e293b',
-      '--text-primary': '#f1f5f9',
-      '--text-secondary': '#94a3b8',
-      '--border-color': '#334155',
+      '--bg-primary': '#0a0a0a',
+      '--bg-secondary': '#1a1a1a',
+      '--text-primary': '#f5f5f5',
+      '--text-secondary': '#a3a3a3',
+      '--border-color': '#2a2a2a',
       '--accent-color': '#60a5fa',
       '--success-color': '#34d399',
       '--warning-color': '#fbbf24',
       '--error-color': '#f87171',
       '--shadow-color': 'rgba(0, 0, 0, 0.3)',
-    }
-  }
+    },
+  },
 };
 
 export const DEFAULT_THEME: Theme = 'system';
@@ -127,7 +127,7 @@ export function applyThemeToDocument(resolvedTheme: ResolvedTheme): void {
   const root = document.documentElement;
 
   // Remove existing theme classes
-  Object.values(THEME_CONFIGS).forEach(themeConfig => {
+  Object.values(THEME_CONFIGS).forEach((themeConfig) => {
     root.classList.remove(themeConfig.cssClass);
   });
 
@@ -150,7 +150,7 @@ export function setupSystemThemeListener(callback: (theme: ResolvedTheme) => voi
 
   try {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
+
     const handleChange = (e: MediaQueryListEvent) => {
       callback(e.matches ? 'dark' : 'light');
     };
@@ -159,7 +159,7 @@ export function setupSystemThemeListener(callback: (theme: ResolvedTheme) => voi
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
-    } 
+    }
     // Fallback for older browsers
     else if (mediaQuery.addListener) {
       mediaQuery.addListener(handleChange);
