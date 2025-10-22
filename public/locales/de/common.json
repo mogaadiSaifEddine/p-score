@@ -1,0 +1,41 @@
+{
+  "gameStatus": {
+    "inProgress": "Spiel läuft",
+    "finished": "Spiel beendet",
+    "notStarted": "Spiel nicht gestartet"
+  },
+  "scoreboard": {
+    "totalScore": "Gesamtpunktzahl",
+    "time": "Zeit",
+    "treasuresDiscovered": "Entdeckte Schätze",
+    "noTreasures": "Noch keine Schätze entdeckt",
+    "endGame": "Spiel beenden",
+    "rewards": "Belohnungen"
+  },
+  "errors": {
+    "invalidUrl": "Ungültige URL-Parameter",
+    "teamNotFound": "Team nicht gefunden",
+    "noGameData": "Keine Spieldaten verfügbar",
+    "apiError": "API-Fehler aufgetreten",
+    "tryAgain": "Bitte versuchen Sie es erneut"
+  },
+  "loading": {
+    "loadingGame": "Lade Spieldaten...",
+    "loading": "Laden..."
+  },
+  "themes": {
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System",
+    "switchTheme": "Design wechseln (aktuell: {{current}})"
+  },
+  "languages": {
+    "en": "Englisch",
+    "fr": "Französisch",
+    "es": "Spanisch",
+    "is": "Isländisch",
+    "de": "Deutsch",
+    "fi": "Finnisch",
+    "switchLanguage": "Sprache wechseln (aktuell: {{current}})"
+  }
+}

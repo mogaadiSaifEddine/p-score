@@ -3,8 +3,55 @@ import './MobileScoreboard.css'
 import ThemeToggle from './ThemeToggle';
 import { useTranslation } from '../hooks/useTranslation';
 
+// Image overlay component
+const ImageOverlay: React.FC<{
+  isOpen: boolean;
+  imageSrc: string;
+  imageAlt: string;
+  onClose: () => void;
+}> = ({ isOpen, imageSrc, imageAlt, onClose }) => {
+  React.useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="image-overlay" onClick={onClose}>
+      <div className="image-overlay-content" onClick={(e) => e.stopPropagation()}>
+        <button className="image-overlay-close" onClick={onClose}>
+          ×
+        </button>
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          className="image-overlay-image"
+        />
+      </div>
+    </div>
+  );
+};
+
 // Component for coupon image with fallback
-const CouponImage: React.FC<{ couponId: number; couponName: string }> = ({ couponId, couponName }) => {
+const CouponImage: React.FC<{ 
+  couponId: number; 
+  couponName: string; 
+  onClick?: () => void;
+}> = ({ couponId, couponName, onClick }) => {
   const [imageSrc, setImageSrc] = React.useState(
     `https://cms.locatify.com/store/get_coupon_image/turf_hunt/${couponId}`
   );
@@ -36,7 +83,46 @@ const CouponImage: React.FC<{ couponId: number; couponName: string }> = ({ coupo
     <img
       src={imageSrc}
       alt={couponName}
-      className="coupon-image"
+      className={`coupon-image ${onClick ? 'coupon-image-clickable' : ''}`}
+      onError={handleError}
+      onClick={onClick}
+    />
+  );
+};
+
+// Component for treasure image with fallback
+const TreasureImage: React.FC<{ waypointId: number; treasureName: string; fallbackIcon: string }> = ({ waypointId, treasureName, fallbackIcon }) => {
+  const [imageSrc, setImageSrc] = React.useState(
+    `https://cms.locatify.com/store/point_image/turf_hunt/${waypointId}`
+  );
+  const [hasError, setHasError] = React.useState(false);
+console.log(
+
+    `https://cms.locatify.com/store/point_image/turf_hunt/${waypointId}`
+
+);
+
+  // Default treasure image as SVG data URL
+  const defaultTreasureImage = `data:image/svg+xml;base64,${btoa(`
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="18" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+      <circle cx="20" cy="20" r="12" fill="#fcd34d"/>
+      <path d="M20 12 L22 16 L26 16 L23 19 L24 23 L20 21 L16 23 L17 19 L14 16 L18 16 Z" fill="#f59e0b"/>
+    </svg>
+  `)}`;
+
+  const handleError = () => {
+    if (!hasError) {
+      setHasError(true);
+      setImageSrc(defaultTreasureImage);
+    }
+  };
+
+  return (
+    <img
+      src={imageSrc}
+      alt={treasureName}
+      className="treasure-image"
       onError={handleError}
     />
   );
@@ -80,6 +166,12 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   console.log('MobileScoreboard coupons:', coupons);
 
   const { t, locale } = useTranslation();
+  
+  // State for image overlay
+  const [overlayImage, setOverlayImage] = React.useState<{
+    src: string;
+    alt: string;
+  } | null>(null);
 
   // Debug: Log current locale
   React.useEffect(() => {
@@ -89,8 +181,27 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   // Calculate total score from actual treasures data
   const totalScore = treasures.reduce((sum: number, treasure: Treasure) => sum + treasure.score, 0);
 
+  // Handle coupon image click
+  const handleCouponImageClick = (couponId: number, couponName: string) => {
+    setOverlayImage({
+      src: `https://cms.locatify.com/store/get_coupon_image/turf_hunt/${couponId}`,
+      alt: couponName
+    });
+  };
+
+  // Close overlay
+  const closeOverlay = () => {
+    setOverlayImage(null);
+  };
+
   return (
     <>
+      <ImageOverlay
+        isOpen={!!overlayImage}
+        imageSrc={overlayImage?.src || ''}
+        imageAlt={overlayImage?.alt || ''}
+        onClose={closeOverlay}
+      />
       <div className="game-over-container">
         <div className="game-over-content">
           {/* Game Status Header */}
@@ -159,7 +270,11 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                     {coupons.map((coupon: Coupon) => (
                       <div key={coupon.id} >
                         <div className="reward-image">
-                          <CouponImage couponId={coupon.id} couponName={coupon.name} />
+                          <CouponImage 
+                            couponId={coupon.id} 
+                            couponName={coupon.name}
+                            onClick={() => handleCouponImageClick(coupon.id, coupon.name)}
+                          />
                         </div>
 
                       </div>
@@ -178,15 +293,11 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                   <div key={treasure.id} className="treasure-item">
                     <div className="treasure-content">
                       <div className="treasure-icon">
-                        {treasure.image ? (
-                          <img
-                            src={treasure.image}
-                            alt={treasure.name}
-                            className="treasure-image"
-                          />
-                        ) : (
-                          treasure.icon
-                        )}
+                        <TreasureImage
+                          waypointId={treasure.id}
+                          treasureName={treasure.name}
+                          fallbackIcon={treasure.icon}
+                        />
                       </div>
                       <span className="treasure-name">{treasure.name}</span>
                     </div>

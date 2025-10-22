@@ -42,6 +42,22 @@ export const SUPPORTED_LOCALES: Record<string, LocaleConfig> = {
     direction: 'ltr',
     dateFormat: 'dd.MM.yyyy',
     numberFormat: { locale: 'is-IS' }
+  },
+  de: {
+    code: 'de',
+    name: 'German',
+    nativeName: 'Deutsch',
+    direction: 'ltr',
+    dateFormat: 'dd.MM.yyyy',
+    numberFormat: { locale: 'de-DE' }
+  },
+  fi: {
+    code: 'fi',
+    name: 'Finnish',
+    nativeName: 'Suomi',
+    direction: 'ltr',
+    dateFormat: 'dd.MM.yyyy',
+    numberFormat: { locale: 'fi-FI' }
   }
 };
 
@@ -77,6 +93,8 @@ export interface TranslationFile {
     fr: string;
     es: string;
     is: string;
+    de: string;
+    fi: string;
     switchLanguage: string;
   };
   themes: {

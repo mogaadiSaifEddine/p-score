@@ -32,7 +32,7 @@ export class RouteParser {
   private static defaultRules: RouteValidationRules = {
     gameCodeMinLength: 3,
     validUserTypes: ['player', 'observer', 'admin'],
-    validLanguages: ['en', 'fr', 'es', 'is'],
+    validLanguages: ['en', 'fr', 'es', 'is', 'de', 'fi'],
     validGameTypes: ['turf_hunt', 'treasure_hunt', 'scavenger_hunt', 'quiz_game'],
   };
 

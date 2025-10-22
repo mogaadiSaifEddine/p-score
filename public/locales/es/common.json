@@ -35,6 +35,8 @@
     "fr": "Francés",
     "es": "Español",
     "is": "Islandés",
+    "de": "Alemán",
+    "fi": "Finlandés",
     "switchLanguage": "Cambiar idioma (actual: {{current}})"
   }
 }
