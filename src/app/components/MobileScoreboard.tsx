@@ -3,6 +3,7 @@ import './MobileScoreboard.css'
 import ThemeToggle from './ThemeToggle';
 import TeamViewToggle from './TeamViewToggle';
 import { useTranslation } from '../hooks/useTranslation';
+import { gameObserverService, ChallengePicture } from '../lib/game-observer-service';
 
 // Image overlay component
 const ImageOverlay: React.FC<{
@@ -30,7 +31,7 @@ const ImageOverlay: React.FC<{
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
-
+  
   return (
     <div className="image-overlay" onClick={onClose}>
       <div className="image-overlay-content" onClick={(e) => e.stopPropagation()}>
@@ -44,6 +45,45 @@ const ImageOverlay: React.FC<{
         />
       </div>
     </div>
+  );
+};
+
+// Component for challenge picture image with fallback
+const ChallengePictureImage: React.FC<{
+  challengePicture: ChallengePicture;
+  onClick?: () => void;
+}> = ({ challengePicture, onClick }) => {
+  const [imageSrc, setImageSrc] = React.useState('https://cms.locatify.com'+challengePicture.url);
+  const [hasError, setHasError] = React.useState(false);
+console.log(challengePicture);
+
+  // Default challenge picture image as SVG data URL
+  const defaultChallengeImage = `data:image/svg+xml;base64,${btoa(`
+    <svg width="100" height="60" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="60" rx="8" fill="#f3f4f6"/>
+      <rect x="2" y="2" width="96" height="56" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+      <circle cx="20" cy="20" r="6" fill="#e5e7eb"/>
+      <path d="M30 35 L45 20 L60 30 L75 15 L90 25 L90 50 L10 50 Z" fill="#d1d5db"/>
+      <rect x="35" y="40" width="30" height="3" rx="1.5" fill="#9ca3af"/>
+      <rect x="40" y="45" width="20" height="2" rx="1" fill="#d1d5db"/>
+    </svg>
+  `)}`;
+
+  const handleError = () => {
+    if (!hasError) {
+      setHasError(true);
+      setImageSrc(defaultChallengeImage);
+    }
+  };
+
+  return (
+    <img
+      src={imageSrc}
+      alt={`Challenge picture from ${challengePicture.upload_time}`}
+      className={`coupon-image ${onClick ? 'coupon-image-clickable' : ''}`}
+      onError={handleError}
+      onClick={onClick}
+    />
   );
 };
 
@@ -159,6 +199,8 @@ interface MobileScoreboardProps {
   useTimer?: boolean;
   gameType?: string;
   allTeams?: TeamData[];
+  gameInstanceId?: number;
+  teamId?: number;
 }
 
 const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
@@ -170,7 +212,9 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   showEndGameButton = false,
   useTimer = false,
   gameType,
-  allTeams = []
+  allTeams = [],
+  gameInstanceId,
+  teamId
 }) => {
 
   const { t, locale } = useTranslation();
@@ -181,9 +225,46 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
     alt: string;
   } | null>(null);
 
+  // State for challenge pictures
+  const [challengePictures, setChallengePictures] = React.useState<ChallengePicture[]>([]);
+  const [challengePicturesLoading, setChallengePicturesLoading] = React.useState(false);
+  const [challengePicturesError, setChallengePicturesError] = React.useState<string | null>(null);
+
   // Debug: Log current locale
   React.useEffect(() => {
   }, [locale]);
+
+  // Fetch challenge pictures when component mounts or when gameInstanceId/teamId changes
+  React.useEffect(() => {
+    console.log('gameInstanceId', gameInstanceId);
+
+    const fetchChallengePictures = async () => {
+      if (!gameInstanceId || !teamId) {
+        return;
+      }
+
+      setChallengePicturesLoading(true);
+      setChallengePicturesError(null);
+
+      try {
+        const response = await gameObserverService.getChallengePictures(gameInstanceId, teamId);
+
+        if (response.success && response.data) {
+          setChallengePictures(response.data);
+        } else {
+          setChallengePicturesError(response.error || 'Failed to fetch challenge pictures');
+          setChallengePictures([]);
+        }
+      } catch (error) {
+        setChallengePicturesError(error instanceof Error ? error.message : 'Unknown error occurred');
+        setChallengePictures([]);
+      } finally {
+        setChallengePicturesLoading(false);
+      }
+    };
+
+    fetchChallengePictures();
+  }, [gameInstanceId, teamId]);
 
   // State for CMS team view toggle
   const [activeTab, setActiveTab] = React.useState<'myTeam' | 'allTeams'>('myTeam');
@@ -201,6 +282,14 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
     setOverlayImage({
       src: `https://cms.locatify.com/store/get_coupon_image/turf_hunt/${couponId}`,
       alt: couponName
+    });
+  };
+
+  // Handle challenge picture image click
+  const handleChallengePictureClick = (challengePicture: ChallengePicture) => {
+    setOverlayImage({
+      src:'https://cms.locatify.com'+ challengePicture.url,
+      alt: `Challenge picture from ${challengePicture.upload_time}`
     });
   };
 
@@ -316,6 +405,30 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                             couponId={coupon.id}
                             couponName={coupon.name}
                             onClick={() => handleCouponImageClick(coupon.id, coupon.name)}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Challenge Pictures Section - Only shown when pictures are available */}
+              {challengePictures.length > 0 && (
+                <div className="rewards-section">
+                  <div className="rewards-header">
+                    <h3 className="rewards-title">
+                      <span className="mobile-count">{t('scoreboard.challengePictures')} ({challengePictures.length})</span>
+                      <span className="desktop-no-count">{t('scoreboard.challengePictures')}</span>
+                    </h3>
+                  </div>
+                  <div className="rewards-list">
+                    {challengePictures.map((picture: ChallengePicture, index: number) => (
+                      <div key={`${picture.file_path}-${index}`}>
+                        <div className="reward-image">
+                          <ChallengePictureImage
+                            challengePicture={picture}
+                            onClick={() => handleChallengePictureClick(picture)}
                           />
                         </div>
                       </div>

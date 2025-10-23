@@ -12,6 +12,7 @@
     "noTreasures": "Engir fjársjóðir fundnir ennþá",
     "endGame": "Ljúka leik",
     "rewards": "Verðlaun",
+    "challengePictures": "Áskorunarmyndir",
     "myTeam": "Mitt lið",
     "allTeams": "Öll lið",
     "teamViewToggle": "Skipta um liðsýn",
@@ -30,7 +31,6 @@
     "loadingGame": "Hleð leikjagögnum...",
     "loading": "Hleður..."
   },
-
   "themes": {
     "light": "Ljóst",
     "dark": "Dökkt",

@@ -106,3 +106,8 @@ This specification defines UI improvements for the mobile scoreboard interface t
 3. THE Mobile_Scoreboard SHALL render challenge pictures with the same alignment, sizing, and visual treatment as Rewards_Icon elements
 4. WHEN challenge pictures are available, THE Mobile_Scoreboard SHALL display them in a dedicated section with appropriate section title
 5. WHEN no challenge pictures are available, THE Mobile_Scoreboard SHALL handle the empty state gracefully without displaying the Media_Section
+6. Use to handle typing of the API  interface ChallengePicture {
+  file_path: string;
+  upload_time: string;
+  url: string;
+}

@@ -384,6 +384,8 @@ export default function PublicScoreboardFinalFixPage() {
         useTimer={observer?.use_timer || false}
         gameType={gameType}
         allTeams={allTeamsData}
+        gameInstanceId={observer?.id}
+        teamId={parsedData?.teamId}
       />
     </ScoreboardProviders>
   );

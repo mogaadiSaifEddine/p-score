@@ -128,6 +128,12 @@ interface Foundby {
 }
 
 
+export interface ChallengePicture {
+  file_path: string;
+  upload_time: string;
+  url: string;
+}
+
 export interface ScoreboardData {
   teams: Array<{
     game_team_id: number;
@@ -233,6 +239,14 @@ class GameObserverService {
    */
   async getScoreboardByTeam(gameCode: string, teamId: number): Promise<ApiResponse<ScoreboardData>> {
     return this.makeRequest<ScoreboardData>(`/apis/observer/${gameCode}/scoreboard/${teamId}`);
+  }
+
+  /**
+   * Get challenge pictures for a specific game instance and team
+   * Endpoint: /observer/get_challenge_pictures?game_instance_id={gameInstanceId}&team_id={teamId}
+   */
+  async getChallengePictures(gameInstanceId: number, teamId: number): Promise<ApiResponse<ChallengePicture[]>> {
+    return this.makeRequest<ChallengePicture[]>(`/observer/get_challenge_pictures?game_instance_id=${gameInstanceId}&team_id=${teamId}`);
   }
 
   /**

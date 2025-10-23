@@ -51,22 +51,22 @@
     - Update `.score-box-number` color to blue matching score styling for desktop
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-- [-] 6. Implement challenge pictures functionality
-  - [ ] 6.1 Add API integration for challenge pictures
+- [x] 6. Implement challenge pictures functionality
+  - [x] 6.1 Add API integration for challenge pictures
     - Create API call to `/observer/get_challenge_pictures?game_instance_id={gameInstanceId}&team_id={teamId}` endpoint
     - Add challenge pictures state management to MobileScoreboard component
     - Implement proper error handling and loading states for API calls
-    - _Requirements: 8.1, 8.5_
+    - _Requirements: 8.1, 8.5, 8.6_
 
-  - [ ] 6.2 Create challenge pictures UI section
+  - [x] 6.2 Create challenge pictures UI section
     - Add challenge pictures section JSX structure matching rewards section layout
     - Implement challenge picture image component with fallback handling
     - Reuse existing rewards section CSS classes for consistent styling
     - Add appropriate section title and empty state handling
     - _Requirements: 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 7. Update translation files for proper capitalization on desktop
-  - Update `public/locales/en/common.json` to use proper title case for section headers displayed on desktop
+- [x] 7. Update translation files for proper capitalization on desktop
+  - Update `public/locales/en/common.json` and all the `public/locales/**/common.json` to use proper title case for section headers displayed on desktop
   - Ensure "Rewards" and "Treasures Discovered" use sentence case formatting for desktop display
   - Add translation key for challenge pictures section title
   - Consider conditional text rendering based on screen size if needed
