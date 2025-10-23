@@ -48,7 +48,7 @@ export default function LocaleSwitcher({ className = '' }: LocaleSwitcherProps) 
     const pathSegments = pathname.split('/');
     const languageIndex = pathSegments.findIndex((segment, index) => {
       // Look for the language parameter in the expected position
-      // Format: /public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[gameType]
+      // Format: /public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[appName]
       return index === 5 && Object.keys(SUPPORTED_LOCALES).includes(segment);
     });
     

@@ -8,7 +8,7 @@ export interface RouteParams {
   teamId: string;
   userType: string;
   language: string;
-  gameType: string;
+  appName: string;
 }
 
 export interface ParsedRouteData {
@@ -16,7 +16,7 @@ export interface ParsedRouteData {
   teamId: number;
   userType: 'player' | 'observer' | 'admin';
   language: string;
-  gameType: string;
+  appName: string;
   isValid: boolean;
   errors: string[];
 }
@@ -25,7 +25,7 @@ export interface RouteValidationRules {
   gameCodeMinLength?: number;
   validUserTypes?: string[];
   validLanguages?: string[];
-  validGameTypes?: string[];
+  validAppNames?: string[];
 }
 
 export class RouteParser {
@@ -33,7 +33,7 @@ export class RouteParser {
     gameCodeMinLength: 3,
     validUserTypes: ['player', 'observer', 'admin'],
     validLanguages: ['en', 'fr', 'es', 'is', 'de', 'fi'],
-    validGameTypes: ['turf_hunt', 'treasure_hunt', 'scavenger_hunt', 'quiz_game'],
+    validAppNames: ['turf_hunt', 'treasure_hunt', 'scavenger_hunt', 'quiz_game'],
   };
 
   static parsePublicScoreboardRoute(
@@ -48,7 +48,7 @@ export class RouteParser {
     const teamIdStr = params.teamId?.trim();
     const userType = params.userType?.toLowerCase().trim();
     const language = params.language?.toLowerCase().trim();
-    const gameType = params.gameType?.toLowerCase().trim();
+    const appName = params.appName?.toLowerCase().trim();
 
     // Validate gameCode
     if (!gameCode) {
@@ -85,14 +85,14 @@ export class RouteParser {
       validatedLanguage = 'en';
     }
 
-    // Validate gameType
-    if (!gameType) {
-      errors.push('Game type is required');
+    // Validate appName
+    if (!appName) {
+      errors.push('App name is required');
     } else if (
-      validationRules.validGameTypes &&
-      !validationRules.validGameTypes.includes(gameType)
+      validationRules.validAppNames &&
+      !validationRules.validAppNames.includes(appName)
     ) {
-      errors.push(`Game type must be one of: ${validationRules.validGameTypes.join(', ')}`);
+      errors.push(`App name must be one of: ${validationRules.validAppNames.join(', ')}`);
     }
 
     return {
@@ -100,7 +100,7 @@ export class RouteParser {
       teamId,
       userType: userType as 'player' | 'observer' | 'admin',
       language: validatedLanguage.toLowerCase(),
-      gameType: gameType.toLowerCase(),
+      appName: appName.toLowerCase(),
       isValid: errors.length === 0,
       errors,
     };
@@ -111,12 +111,12 @@ export class RouteParser {
     teamId: number;
     userType: string;
     language: string;
-    gameType: string;
+    appName: string;
     baseUrl?: string;
   }): string {
-    const { gameCode, teamId, userType, language, gameType, baseUrl = '' } = data;
+    const { gameCode, teamId, userType, language, appName, baseUrl = '' } = data;
 
-    return `${baseUrl}/public-scoreboard/${gameCode.toUpperCase()}/${teamId}/${userType.toLowerCase()}/${language.toLowerCase()}/${gameType.toLowerCase()}`;
+    return `${baseUrl}/public-scoreboard/${gameCode.toUpperCase()}/${teamId}/${userType.toLowerCase()}/${language.toLowerCase()}/${appName.toLowerCase()}`;
   }
 
   static parseSearchParams(
@@ -196,7 +196,7 @@ export class RouteParser {
   }
 
   static getRouteDescription(routeData: ParsedRouteData): string {
-    const { gameCode, teamId, userType, language, gameType } = routeData;
+    const { gameCode, teamId, userType, language, appName } = routeData;
 
     const userTypeDescriptions = {
       player: 'Player View',
@@ -204,14 +204,14 @@ export class RouteParser {
       admin: 'Admin View',
     };
 
-    const gameTypeDescriptions = {
+    const appNameDescriptions = {
       turf_hunt: 'Turf Hunt',
       treasure_hunt: 'Treasure Hunt',
       scavenger_hunt: 'Scavenger Hunt',
       quiz_game: 'Quiz Game',
     };
 
-    return `${gameTypeDescriptions[gameType] || gameType} - ${userTypeDescriptions[userType] || userType} for Team ${teamId} in Game ${gameCode} (${language.toUpperCase()})`;
+    return `${appNameDescriptions[appName] || appName} - ${userTypeDescriptions[userType] || userType} for Team ${teamId} in Game ${gameCode} (${language.toUpperCase()})`;
   }
 
   static getValidationErrorsFormatted(errors: string[]): string {
@@ -243,7 +243,7 @@ export class RouteParser {
       teamId: match[2],
       userType: match[3],
       language: match[4],
-      gameType: match[5],
+      appName: match[5],
     };
   }
 
@@ -265,7 +265,7 @@ export class RouteParser {
         teamId: parsedData.teamId,
         userType: parsedData.userType,
         language: parsedData.language,
-        gameType: parsedData.gameType,
+        appName: parsedData.appName,
       });
 
       return {

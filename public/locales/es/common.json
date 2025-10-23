@@ -10,7 +10,6 @@
     "time": "Tiempo",
     "treasuresDiscovered": "Tesoros descubiertos",
     "noTreasures": "Aún no se han descubierto tesoros",
-    "endGame": "Terminar juego",
     "rewards": "Recompensas",
     "challengePictures": "Fotos de desafío",
     "myTeam": "Mi equipo",
@@ -20,18 +19,6 @@
     "teamName": "Nombre del equipo",
     "treasureName": "Nombre del tesoro"
   },
-  "errors": {
-    "invalidUrl": "Parámetros de URL inválidos",
-    "teamNotFound": "Equipo no encontrado",
-    "noGameData": "No hay datos del juego disponibles",
-    "apiError": "Error de API ocurrido",
-    "tryAgain": "Por favor, inténtalo de nuevo"
-  },
-  "loading": {
-    "loadingGame": "Cargando datos del juego...",
-    "loading": "Cargando..."
-  },
-
   "themes": {
     "light": "Claro",
     "dark": "Oscuro",
@@ -39,12 +26,6 @@
     "switchTheme": "Cambiar tema (actual: {{current}})"
   },
   "languages": {
-    "en": "Inglés",
-    "fr": "Francés",
-    "es": "Español",
-    "is": "Islandés",
-    "de": "Alemán",
-    "fi": "Finlandés",
     "switchLanguage": "Cambiar idioma (actual: {{current}})"
   }
 }

@@ -11,7 +11,7 @@ export interface UseRouteParamsOptions {
     gameCodeMinLength?: number;
     validUserTypes?: string[];
     validLanguages?: string[];
-    validGameTypes?: string[];
+    validAppNames?: string[];
   };
 }
 
@@ -110,7 +110,7 @@ export function useRouteGenerator() {
     teamId: number;
     userType: string;
     language: string;
-    gameType: string;
+    appName: string;
   }) => {
     return RouteParser.generatePublicScoreboardUrl({
       ...data,
@@ -123,7 +123,7 @@ export function useRouteGenerator() {
     teamId: number;
     userType: string;
     language: string;
-    gameType: string;
+    appName: string;
   }) => {
     return RouteParser.generatePublicScoreboardUrl(data);
   };
@@ -153,9 +153,9 @@ export function usePublicScoreboardData(options: UseRouteParamsOptions = {}) {
     isObserverView: () => routeInfo.parsedData?.userType === 'observer',
     isAdminView: () => routeInfo.parsedData?.userType === 'admin',
     
-    // Game type checks
-    isTurfHunt: () => routeInfo.parsedData?.gameType === 'turf_hunt',
-    isTreasureHunt: () => routeInfo.parsedData?.gameType === 'treasure_hunt',
+    // App name checks
+    isTurfHunt: () => routeInfo.parsedData?.appName === 'turf_hunt',
+    isTreasureHunt: () => routeInfo.parsedData?.appName === 'treasure_hunt',
     
     // Language helpers
     isEnglish: () => routeInfo.parsedData?.language === 'en',

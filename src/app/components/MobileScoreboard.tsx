@@ -31,7 +31,7 @@ const ImageOverlay: React.FC<{
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
-  
+
   return (
     <div className="image-overlay" onClick={onClose}>
       <div className="image-overlay-content" onClick={(e) => e.stopPropagation()}>
@@ -53,9 +53,9 @@ const ChallengePictureImage: React.FC<{
   challengePicture: ChallengePicture;
   onClick?: () => void;
 }> = ({ challengePicture, onClick }) => {
-  const [imageSrc, setImageSrc] = React.useState('https://cms.locatify.com'+challengePicture.url);
+  const [imageSrc, setImageSrc] = React.useState('https://cms.locatify.com' + challengePicture.url);
   const [hasError, setHasError] = React.useState(false);
-console.log(challengePicture);
+  console.log(challengePicture);
 
   // Default challenge picture image as SVG data URL
   const defaultChallengeImage = `data:image/svg+xml;base64,${btoa(`
@@ -132,12 +132,36 @@ const CouponImage: React.FC<{
 };
 
 // Component for treasure image with fallback
-const TreasureImage: React.FC<{ waypointId: number; treasureName: string; fallbackIcon: string }> = ({ waypointId, treasureName, fallbackIcon }) => {
-  const [imageSrc, setImageSrc] = React.useState(
-    `https://cms.locatify.com/store/point_image/turf_hunt/${waypointId}`
-  );
+const TreasureImage: React.FC<{
+  waypointId: number;
+  treasureName: string;
+  fallbackIcon: string;
+  appName?: string;
+  gameProject?: number;
+}> = ({ waypointId, treasureName, fallbackIcon, appName, gameProject }) => {
+  // Build the treasure icon URL using the provided pattern
+  console.log(appName, gameProject , 'gameproj');
+  
+  const treasureIconUrl = React.useMemo(() => {
+    if (appName && gameProject) {
+      const url = `https://cms.locatify.com/store/point_image/${appName}/${gameProject}/${waypointId}/ld/`;
+      console.log('Treasure icon URL:', url);
+      return url;
+    }
+    // Fallback to the old pattern if we don't have the required parameters
+    const fallbackUrl = `https://cms.locatify.com/store/point_image/turf_hunt/${waypointId}`;
+    console.log('Treasure icon fallback URL:', fallbackUrl);
+    return fallbackUrl;
+  }, [appName, gameProject, waypointId]);
+
+  const [imageSrc, setImageSrc] = React.useState(treasureIconUrl);
   const [hasError, setHasError] = React.useState(false);
 
+  // Update image source when URL changes
+  React.useEffect(() => {
+    setImageSrc(treasureIconUrl);
+    setHasError(false);
+  }, [treasureIconUrl]);
 
   // Default treasure image as SVG data URL
   const defaultTreasureImage = `data:image/svg+xml;base64,${btoa(`
@@ -152,6 +176,13 @@ const TreasureImage: React.FC<{ waypointId: number; treasureName: string; fallba
     if (!hasError) {
       setHasError(true);
       setImageSrc(defaultTreasureImage);
+      console.log('Treasure icon failed to load, using default SVG for:', treasureName);
+    }
+  };
+
+  const handleLoad = () => {
+    if (!hasError) {
+      console.log('Treasure icon loaded successfully for:', treasureName);
     }
   };
 
@@ -161,6 +192,7 @@ const TreasureImage: React.FC<{ waypointId: number; treasureName: string; fallba
       alt={treasureName}
       className="treasure-image"
       onError={handleError}
+      onLoad={handleLoad}
     />
   );
 };
@@ -201,6 +233,8 @@ interface MobileScoreboardProps {
   allTeams?: TeamData[];
   gameInstanceId?: number;
   teamId?: number;
+  appName?: string;
+  gameProject?: number;
 }
 
 const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
@@ -214,7 +248,9 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   gameType,
   allTeams = [],
   gameInstanceId,
-  teamId
+  teamId,
+  appName,
+  gameProject
 }) => {
 
   const { t, locale } = useTranslation();
@@ -269,7 +305,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   // State for CMS team view toggle
   const [activeTab, setActiveTab] = React.useState<'myTeam' | 'allTeams'>('myTeam');
 
-  // Check if this is a CMS game type
+  // Check if this is a CMS app
   const isCMSGame = gameType === 'CMS';
 
   // Calculate total score from actual treasures data
@@ -288,7 +324,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   // Handle challenge picture image click
   const handleChallengePictureClick = (challengePicture: ChallengePicture) => {
     setOverlayImage({
-      src:'https://cms.locatify.com'+ challengePicture.url,
+      src: 'https://cms.locatify.com' + challengePicture.url,
       alt: `Challenge picture from ${challengePicture.upload_time}`
     });
   };
@@ -394,7 +430,6 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                   <div className="rewards-header">
                     <h3 className="rewards-title">
                       <span className="mobile-count">{t('scoreboard.rewards')} ({coupons.length})</span>
-                      <span className="desktop-no-count">{t('scoreboard.rewards')}</span>
                     </h3>
                   </div>
                   <div className="rewards-list">
@@ -419,7 +454,6 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                   <div className="rewards-header">
                     <h3 className="rewards-title">
                       <span className="mobile-count">{t('scoreboard.challengePictures')} ({challengePictures.length})</span>
-                      <span className="desktop-no-count">{t('scoreboard.challengePictures')}</span>
                     </h3>
                   </div>
                   <div className="rewards-list">
@@ -454,21 +488,10 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                       : `${t('scoreboard.treasuresDiscovered')} (${treasures.length})`
                     }
                   </span>
-                  <span className="desktop-no-count">
-                    {isCMSGame && activeTab === 'allTeams'
-                      ? t('scoreboard.allTeams')
-                      : t('scoreboard.treasuresDiscovered')
-                    }
-                  </span>
                 </h3>
                 <h3 className="treasures-title desktop-dynamic-header">
                   <span className="mobile-header">{t('scoreboard.points')}</span>
-                  <span className="desktop-header">
-                    {isCMSGame && activeTab === 'allTeams'
-                      ? t('scoreboard.teamName')
-                      : t('scoreboard.treasureName')
-                    }
-                  </span>
+                 
                 </h3>
               </div>
 
@@ -535,6 +558,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                             waypointId={treasure.id}
                             treasureName={treasure.name}
                             fallbackIcon={treasure.icon}
+                            appName={appName}
+                            gameProject={gameProject}
                           />
                         </div>
                         <span className="treasure-name">{treasure.name}</span>

@@ -10,7 +10,6 @@
     "time": "Tími",
     "treasuresDiscovered": "Fjársjóðir fundnir",
     "noTreasures": "Engir fjársjóðir fundnir ennþá",
-    "endGame": "Ljúka leik",
     "rewards": "Verðlaun",
     "challengePictures": "Áskorunarmyndir",
     "myTeam": "Mitt lið",
@@ -20,17 +19,6 @@
     "teamName": "Nafn liðs",
     "treasureName": "Nafn fjársjóðs"
   },
-  "errors": {
-    "invalidUrl": "Ógild URL færibreytur",
-    "teamNotFound": "Lið fannst ekki",
-    "noGameData": "Engin leikjagögn tiltæk",
-    "apiError": "API villa kom upp",
-    "tryAgain": "Vinsamlegast reyndu aftur"
-  },
-  "loading": {
-    "loadingGame": "Hleð leikjagögnum...",
-    "loading": "Hleður..."
-  },
   "themes": {
     "light": "Ljóst",
     "dark": "Dökkt",
@@ -38,12 +26,6 @@
     "switchTheme": "Skipta um þema (núverandi: {{current}})"
   },
   "languages": {
-    "en": "Enska",
-    "fr": "Franska",
-    "es": "Spænska",
-    "is": "Íslenska",
-    "de": "Þýska",
-    "fi": "Finnska",
     "switchLanguage": "Skipta um tungumál (núverandi: {{current}})"
   }
 }

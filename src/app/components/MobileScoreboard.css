@@ -685,22 +685,22 @@
     position: relative;
   }
 
-  /* Desktop dynamic header display */
+  /* Desktop dynamic header display - show same as mobile */
   .desktop-dynamic-header .mobile-header {
-    display: none;
+    display: inline;
   }
 
   .desktop-dynamic-header .desktop-header {
-    display: inline;
-  }
-
-  /* Desktop count display - hide counts and pseudo-elements */
-  .mobile-count {
     display: none;
   }
 
-  .desktop-no-count {
+  /* Desktop count display - show counts like mobile */
+  .mobile-count {
     display: inline;
+  }
+
+  .desktop-no-count {
+    display: none;
   }
 }
 
@@ -808,7 +808,7 @@
 @media (min-width: 768px) {
   .treasure-content {
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
   }
 }
@@ -1026,6 +1026,28 @@
   height: 100%;
   object-fit: cover;
   border-radius: clamp(8px, 2vw, 10px);
+}
+
+/* Enhanced Treasure Images for Larger Screens */
+@media (min-width: 768px) {
+  .treasure-image {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .treasure-item:hover .treasure-image {
+    transform: scale(1.02);
+  }
+}
+
+@media (min-width: 1024px) {
+  .treasure-image {
+    border-radius: 10px;
+  }
+
+  .treasure-item:hover .treasure-image {
+    transform: scale(1.05);
+  }
 }
 
 .treasure-name {

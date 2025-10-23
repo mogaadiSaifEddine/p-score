@@ -10,7 +10,6 @@
     "time": "Temps",
     "treasuresDiscovered": "Trésors découverts",
     "noTreasures": "Aucun trésor découvert pour le moment",
-    "endGame": "Terminer le jeu",
     "rewards": "Récompenses",
     "challengePictures": "Photos de défi",
     "myTeam": "Mon équipe",
@@ -20,17 +19,6 @@
     "teamName": "Nom de l'équipe",
     "treasureName": "Nom du trésor"
   },
-  "errors": {
-    "invalidUrl": "Paramètres d'URL invalides",
-    "teamNotFound": "Équipe introuvable",
-    "noGameData": "Aucune donnée de jeu disponible",
-    "apiError": "Erreur API survenue",
-    "tryAgain": "Veuillez réessayer"
-  },
-  "loading": {
-    "loadingGame": "Chargement des données du jeu...",
-    "loading": "Chargement..."
-  },
   "themes": {
     "light": "Clair",
     "dark": "Sombre",
@@ -38,12 +26,6 @@
     "switchTheme": "Changer le thème (actuel: {{current}})"
   },
   "languages": {
-    "en": "Anglais",
-    "fr": "Français",
-    "es": "Espagnol",
-    "is": "Islandais",
-    "de": "Allemand",
-    "fi": "Finnois",
     "switchLanguage": "Changer la langue (actuelle: {{current}})"
   }
 }

@@ -1,4 +1,4 @@
-// src/app/public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[gameType]/layout.tsx
+// src/app/public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[appName]/layout.tsx
 // Dynamic layout with metadata for public scoreboard pages
 
 import { generateDynamicOGImage, generateGameSchema, generateSEOMetadata, generateTeamSchema } from "@/app/lib/seo";
@@ -11,13 +11,13 @@ interface ScoreboardLayoutProps {
     teamId: string;
     userType: string;
     language: string;
-    gameType: string;
+    appName: string;
   };
 }
 
 // This function generates metadata dynamically based on the route parameters
 export async function generateMetadata({ params }: { params: ScoreboardLayoutProps['params'] }): Promise<Metadata> {
-  const { gameCode, teamId, userType, language, gameType } = params;
+  const { gameCode, teamId, userType, language, appName } = params;
   
   // You could fetch actual team data here if needed
   // For now, we'll use the route parameters to generate metadata
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: ScoreboardLayoutPro
   });
 
   // Generate the current page URL
-  const currentUrl = `/public-scoreboard/${gameCode}/${teamId}/${userType}/${language}/${gameType}`;
+  const currentUrl = `/public-scoreboard/${gameCode}/${teamId}/${userType}/${language}/${appName}`;
 
   return generateSEOMetadata({
     title: `${teamName} - Game ${gameCodeUpper} Live Scoreboard`,
@@ -47,10 +47,10 @@ export async function generateMetadata({ params }: { params: ScoreboardLayoutPro
 }
 
 export default function ScoreboardLayout({ children, params }: ScoreboardLayoutProps) {
-  const { gameCode, teamId, userType, language, gameType } = params;
+  const { gameCode, teamId, userType, language, appName } = params;
   const teamName = `Team ${teamId}`;
   const gameCodeUpper = gameCode.toUpperCase();
-  const currentUrl = `https://locatify.com/public-scoreboard/${gameCode}/${teamId}/${userType}/${language}/${gameType}`;
+  const currentUrl = `https://locatify.com/public-scoreboard/${gameCode}/${teamId}/${userType}/${language}/${appName}`;
 
   // Generate structured data for better SEO
   const gameSchema = generateGameSchema({

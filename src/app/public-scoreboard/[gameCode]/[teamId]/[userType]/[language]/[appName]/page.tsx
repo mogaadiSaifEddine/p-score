@@ -1,4 +1,4 @@
-// app/public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[gameType]/page-final-fix.tsx
+// app/public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[appName]/page-final-fix.tsx
 // Final fix with better team detection and error handling
 
 'use client';
@@ -62,6 +62,7 @@ export default function PublicScoreboardFinalFixPage() {
   });
   // Get current team data
   const currentTeam = getCurrentTeamData();
+console.log('gamEEEE0' , game);
 
   // Get treasure data from team-specific API
   const teamTreasures = getTeamTreasures();
@@ -132,7 +133,7 @@ export default function PublicScoreboardFinalFixPage() {
     return [];
   }, [teamCoupons]);
 
-  // Extract game type from GameByCodeResponse
+  // Extract app name from GameByCodeResponse
   const gameType = observer?.number_of_teams > 1 ? 'CMS' : '';
 
   // Format teams data for MobileScoreboard - create distinct teams based on players
@@ -386,6 +387,8 @@ export default function PublicScoreboardFinalFixPage() {
         allTeams={allTeamsData}
         gameInstanceId={observer?.id}
         teamId={parsedData?.teamId}
+        appName={parsedData?.appName}
+        gameProject={game?.project}
       />
     </ScoreboardProviders>
   );

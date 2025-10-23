@@ -10,7 +10,6 @@
     "time": "Zeit",
     "treasuresDiscovered": "Entdeckte Schätze",
     "noTreasures": "Noch keine Schätze entdeckt",
-    "endGame": "Spiel beenden",
     "rewards": "Belohnungen",
     "challengePictures": "Herausforderungsbilder",
     "myTeam": "Mein Team",
@@ -20,17 +19,6 @@
     "teamName": "Teamname",
     "treasureName": "Schatzname"
   },
-  "errors": {
-    "invalidUrl": "Ungültige URL-Parameter",
-    "teamNotFound": "Team nicht gefunden",
-    "noGameData": "Keine Spieldaten verfügbar",
-    "apiError": "API-Fehler aufgetreten",
-    "tryAgain": "Bitte versuchen Sie es erneut"
-  },
-  "loading": {
-    "loadingGame": "Lade Spieldaten...",
-    "loading": "Laden..."
-  },
   "themes": {
     "light": "Hell",
     "dark": "Dunkel",
@@ -38,12 +26,6 @@
     "switchTheme": "Design wechseln (aktuell: {{current}})"
   },
   "languages": {
-    "en": "Englisch",
-    "fr": "Französisch",
-    "es": "Spanisch",
-    "is": "Isländisch",
-    "de": "Deutsch",
-    "fi": "Finnisch",
     "switchLanguage": "Sprache wechseln (aktuell: {{current}})"
   }
 }

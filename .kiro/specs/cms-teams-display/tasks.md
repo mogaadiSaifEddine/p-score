@@ -1,9 +1,9 @@
 # Implementation Plan
 
 - [x] 1. Update MobileScoreboard component interface and props
-  - Add gameType and allTeams props to MobileScoreboardProps interface
+  - Add appName and allTeams props to MobileScoreboardProps interface
   - Update component to accept and handle new props
-  - Add conditional rendering logic based on gameType === 'CMS'
+  - Add conditional rendering logic based on appName === 'CMS'
   - _Requirements: 1.1, 3.1, 3.4_
 
 - [x] 2. Create TeamViewToggle component
@@ -46,7 +46,7 @@
     - _Requirements: 1.3, 1.4_
 
   - [x] 4.2 Implement conditional content rendering
-    - Add conditional rendering for TeamViewToggle when gameType is 'CMS'
+    - Add conditional rendering for TeamViewToggle when appName is 'CMS'
     - Implement content switching between current team view and all teams view
     - Ensure existing functionality remains unchanged for non-CMS games
     - _Requirements: 1.1, 1.3, 1.4, 3.1, 3.2_
@@ -54,7 +54,7 @@
 - [x] 5. Update parent component to pass game type and teams data
   - [x] 5.1 Modify page component to extract game_type from GameByCodeResponse
     - Update the main page component to read game_type from game observer data
-    - Pass gameType prop to MobileScoreboard component
+    - Pass appName prop to MobileScoreboard component
     - Handle cases where game_type is undefined or null
     - _Requirements: 1.1, 3.4, 3.5_
 

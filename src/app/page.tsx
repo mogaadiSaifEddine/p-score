@@ -1,4 +1,4 @@
-// app/public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[gameType]/page-exact.tsx
+// app/public-scoreboard/[gameCode]/[teamId]/[userType]/[language]/[appName]/page-exact.tsx
 // Page component using the exact UI design from the screenshot
 
 'use client';

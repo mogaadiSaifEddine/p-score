@@ -79,7 +79,7 @@ interface TeamData {
 ```typescript
 interface MobileScoreboardProps {
   // Existing props...
-  gameType?: string; // New prop from GameByCodeResponse
+  appName?: string; // New prop from GameByCodeResponse
   allTeams?: TeamData[]; // New prop for all teams data
 }
 ```

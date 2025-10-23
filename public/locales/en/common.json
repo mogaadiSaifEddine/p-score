@@ -10,7 +10,6 @@
     "time": "Time",
     "treasuresDiscovered": "Treasures Discovered",
     "noTreasures": "No treasures discovered yet",
-    "endGame": "End Game",
     "rewards": "Rewards",
     "challengePictures": "Challenge Pictures",
     "myTeam": "My Team",
@@ -20,18 +19,6 @@
     "teamName": "Team Name",
     "treasureName": "Treasure Name"
   },
-  "errors": {
-    "invalidUrl": "Invalid URL parameters",
-    "teamNotFound": "Team not found",
-    "noGameData": "No game data available",
-    "apiError": "API error occurred",
-    "tryAgain": "Please try again"
-  },
-  "loading": {
-    "loadingGame": "Loading game data...",
-    "loading": "Loading..."
-  },
-
   "themes": {
     "light": "Light",
     "dark": "Dark",
@@ -39,12 +26,6 @@
     "switchTheme": "Switch theme (current: {{current}})"
   },
   "languages": {
-    "en": "English",
-    "fr": "French",
-    "es": "Spanish",
-    "is": "Icelandic",
-    "de": "German",
-    "fi": "Finnish",
     "switchLanguage": "Switch language (current: {{current}})"
   }
 }

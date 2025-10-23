@@ -10,7 +10,6 @@
     "time": "Aika",
     "treasuresDiscovered": "Löydetyt aarteet",
     "noTreasures": "Aarteita ei ole vielä löydetty",
-    "endGame": "Lopeta peli",
     "rewards": "Palkinnot",
     "challengePictures": "Haastekuvat",
     "myTeam": "Oma joukkue",
@@ -20,17 +19,6 @@
     "teamName": "Joukkueen nimi",
     "treasureName": "Aarteen nimi"
   },
-  "errors": {
-    "invalidUrl": "Virheelliset URL-parametrit",
-    "teamNotFound": "Joukkuetta ei löytynyt",
-    "noGameData": "Pelitietoja ei ole saatavilla",
-    "apiError": "API-virhe tapahtui",
-    "tryAgain": "Yritä uudelleen"
-  },
-  "loading": {
-    "loadingGame": "Ladataan pelitietoja...",
-    "loading": "Ladataan..."
-  },
   "themes": {
     "light": "Vaalea",
     "dark": "Tumma",
@@ -38,12 +26,6 @@
     "switchTheme": "Vaihda teemaa (nykyinen: {{current}})"
   },
   "languages": {
-    "en": "Englanti",
-    "fr": "Ranska",
-    "es": "Espanja",
-    "is": "Islanti",
-    "de": "Saksa",
-    "fi": "Suomi",
     "switchLanguage": "Vaihda kieltä (nykyinen: {{current}})"
   }
 }
