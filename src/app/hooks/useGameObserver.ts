@@ -76,7 +76,6 @@ export function useGameObserver({
         error: null,
       }));
     } catch (error) {
-      console.error('Error loading game data:', error);
       setState((prev) => ({
         ...prev,
         loading: false,
@@ -107,7 +106,7 @@ export function useGameObserver({
           : prev.teamScoreboard,
       }));
     } catch (error) {
-      console.error('Error refreshing scoreboard:', error);
+      // Silently fail
     }
   }, [gameCode, teamId]);
 
@@ -219,16 +218,7 @@ export function useGameObserver({
     getCurrentTeamData: () => (teamId ? getTeamById(teamId) : null),
     hasTeamData: () => !!state.teamScoreboard,
 
-    // Debug helpers
-    getDebugInfo: () => ({
-      hasGame: !!state.game,
-      hasObserver: !!state.observer,
-      hasScoreboard: !!state.scoreboard,
-      hasTeamScoreboard: !!state.teamScoreboard,
-      teamScoreboardStructure: state.teamScoreboard ? Object.keys(state.teamScoreboard) : [],
-      requestedTeamId: teamId,
-      apiCalled: teamId ? `/apis/observer/${gameCode}/scoreboard/${teamId}` : 'No team API called',
-    }),
+
 
     // Get team-specific treasures/progress if available
     getTeamTreasures: () => {

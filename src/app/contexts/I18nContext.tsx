@@ -49,13 +49,11 @@ export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
           value = value[k];
         } else {
           // Key not found, return key with warning prefix
-          console.warn(`Translation key not found: ${key} for locale: ${locale}`);
           return `[Missing: ${key}]`;
         }
       }
 
       if (typeof value !== 'string') {
-        console.warn(`Translation value is not a string: ${key} for locale: ${locale}`);
         return `[Invalid: ${key}]`;
       }
 
@@ -68,7 +66,6 @@ export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
 
       return value;
     } catch (error) {
-      console.error(`Error accessing translation key: ${key}`, error);
       return `[Error: ${key}]`;
     }
   };
@@ -82,11 +79,9 @@ export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
       
       // Update locale if fallback was used
       if (hadFallback && actualLocale !== localeCode) {
-        console.info(`Locale changed from '${localeCode}' to '${actualLocale}' due to fallback`);
         setLocale(actualLocale);
       }
     } catch (error) {
-      console.error(`Critical error loading translations for locale: ${localeCode}`, error);
       setTranslations(null);
     } finally {
       setIsLoading(false);

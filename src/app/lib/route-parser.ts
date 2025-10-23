@@ -81,7 +81,6 @@ export class RouteParser {
       language.length !== 2 ||
       (validationRules.validLanguages && !validationRules.validLanguages.includes(language))
     ) {
-      console.warn(`Invalid language '${language}', falling back to English`);
       validatedLanguage = 'en';
     }
 

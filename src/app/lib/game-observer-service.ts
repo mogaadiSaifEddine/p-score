@@ -199,7 +199,6 @@ class GameObserverService {
       };
 
     } catch (error) {
-      console.error('API request failed:', error);
       return {
         data: null,
         status: 500,
@@ -293,7 +292,7 @@ class GameObserverService {
           callback(response.data );
         }
       } catch (error) {
-        console.error('Polling error:', error);
+        // Silently continue polling
       }
 
       if (isPolling) {

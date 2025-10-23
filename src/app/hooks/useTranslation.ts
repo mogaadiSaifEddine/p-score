@@ -32,14 +32,12 @@ export function useTranslation(): UseTranslationReturn {
  */
 export function validateTranslationKey(key: string): boolean {
   if (!key || typeof key !== 'string') {
-    console.error('Translation key must be a non-empty string');
     return false;
   }
 
   // Check for valid dot notation format
   const keyParts = key.split('.');
   if (keyParts.some(part => !part.trim())) {
-    console.error(`Invalid translation key format: ${key}. Keys cannot have empty segments.`);
     return false;
   }
 
@@ -84,7 +82,6 @@ export function useLocaleFormatting() {
     try {
       return new Intl.NumberFormat(locale, options).format(number);
     } catch (error) {
-      console.error(`Error formatting number for locale ${locale}:`, error);
       return number.toString();
     }
   };
@@ -96,7 +93,6 @@ export function useLocaleFormatting() {
     try {
       return new Intl.DateTimeFormat(locale, options).format(date);
     } catch (error) {
-      console.error(`Error formatting date for locale ${locale}:`, error);
       return date.toISOString();
     }
   };

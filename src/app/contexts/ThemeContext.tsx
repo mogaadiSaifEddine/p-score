@@ -48,7 +48,6 @@ export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
 
       // Validate the theme
       if (!isValidTheme(initialThemeValue)) {
-        console.warn(`Invalid theme: ${initialThemeValue}, falling back to ${DEFAULT_THEME}`);
         initialThemeValue = DEFAULT_THEME;
       }
 
@@ -90,7 +89,6 @@ export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
   // Set theme function
   const setTheme = (newTheme: Theme) => {
     if (!isValidTheme(newTheme)) {
-      console.warn(`Invalid theme: ${newTheme}, ignoring`);
       return;
     }
 

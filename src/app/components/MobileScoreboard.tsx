@@ -55,7 +55,6 @@ const ChallengePictureImage: React.FC<{
 }> = ({ challengePicture, onClick }) => {
   const [imageSrc, setImageSrc] = React.useState('https://cms.locatify.com' + challengePicture.url);
   const [hasError, setHasError] = React.useState(false);
-  console.log(challengePicture);
 
   // Default challenge picture image as SVG data URL
   const defaultChallengeImage = `data:image/svg+xml;base64,${btoa(`
@@ -139,17 +138,14 @@ const TreasureImage: React.FC<{
   gameProject?: number;
 }> = ({ waypointId, treasureName, appName, gameProject }) => {
   // Build the treasure icon URL using the provided pattern
-  console.log(appName, gameProject , 'gameproj');
   
   const treasureIconUrl = React.useMemo(() => {
     if (appName && gameProject) {
       const url = `https://cms.locatify.com/store/point_image/${appName}/${gameProject}/${waypointId}/ld/`;
-      console.log('Treasure icon URL:', url);
       return url;
     }
     // Fallback to the old pattern if we don't have the required parameters
     const fallbackUrl = `https://cms.locatify.com/store/point_image/turf_hunt/${waypointId}`;
-    console.log('Treasure icon fallback URL:', fallbackUrl);
     return fallbackUrl;
   }, [appName, gameProject, waypointId]);
 
@@ -175,14 +171,11 @@ const TreasureImage: React.FC<{
     if (!hasError) {
       setHasError(true);
       setImageSrc(defaultTreasureImage);
-      console.log('Treasure icon failed to load, using default SVG for:', treasureName);
     }
   };
 
   const handleLoad = () => {
-    if (!hasError) {
-      console.log('Treasure icon loaded successfully for:', treasureName);
-    }
+    // Image loaded successfully
   };
 
   return (
@@ -259,13 +252,10 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   // State for challenge pictures
   const [challengePictures, setChallengePictures] = React.useState<ChallengePicture[]>([]);
 
-  // Debug: Log current locale
-  React.useEffect(() => {
-  }, [locale]);
+
 
   // Fetch challenge pictures when component mounts or when gameInstanceId/teamId changes
   React.useEffect(() => {
-    console.log('gameInstanceId', gameInstanceId);
 
     const fetchChallengePictures = async () => {
       if (!gameInstanceId || !teamId) {

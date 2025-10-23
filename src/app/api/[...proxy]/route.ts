@@ -197,7 +197,6 @@ async function handleProxy(request: NextRequest, method: string, pathSegments: s
     });
 
   } catch (error) {
-    console.error('Proxy error:', error);
     return NextResponse.json(
       { 
         error: 'Proxy request failed', 

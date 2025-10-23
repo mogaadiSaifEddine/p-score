@@ -62,7 +62,6 @@ export default function PublicScoreboardFinalFixPage() {
   });
   // Get current team data
   const currentTeam = getCurrentTeamData();
-console.log('gamEEEE0' , game);
 
   // Get treasure data from team-specific API
   const teamTreasures = getTeamTreasures();
@@ -363,7 +362,7 @@ console.log('gamEEEE0' , game);
   const gameStatus = isGameFinished ? 'finished' : isGameStarted ? 'in_progress' : 'not_started';
 
 
-  console.log(allTeamsData);
+
 
   return (
     <ScoreboardProviders initialLocale={parsedData?.language}>

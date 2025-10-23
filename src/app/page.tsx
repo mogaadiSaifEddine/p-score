@@ -40,9 +40,7 @@ export default function PublicScoreboardExactPage() {
   // Get current team data
   const currentTeam = getCurrentTeamData();
 
-  // Debug logging
-  React.useEffect(() => {
-  }, [parsedData, currentTeam, hasTeamData, teamScoreboard]);
+
 
   // Loading state for route parsing
   if (!isValidRoute && !routeError) {

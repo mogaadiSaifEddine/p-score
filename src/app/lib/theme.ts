@@ -58,7 +58,6 @@ export function detectSystemTheme(): ResolvedTheme {
   try {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   } catch (error) {
-    console.warn('Failed to detect system theme:', error);
     return 'light';
   }
 }
@@ -94,7 +93,7 @@ export function getStoredTheme(): Theme | null {
       return stored;
     }
   } catch (error) {
-    console.warn('Failed to read theme from localStorage:', error);
+    // Silently fail
   }
 
   return null;
@@ -111,7 +110,7 @@ export function storeTheme(theme: Theme): void {
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch (error) {
-    console.warn('Failed to store theme in localStorage:', error);
+    // Silently fail
   }
 }
 
@@ -166,7 +165,7 @@ export function setupSystemThemeListener(callback: (theme: ResolvedTheme) => voi
       return () => mediaQuery.removeListener(handleChange);
     }
   } catch (error) {
-    console.warn('Failed to setup system theme listener:', error);
+    // Silently fail
   }
 
   return () => {};
