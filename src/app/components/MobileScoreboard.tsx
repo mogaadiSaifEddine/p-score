@@ -135,10 +135,9 @@ const CouponImage: React.FC<{
 const TreasureImage: React.FC<{
   waypointId: number;
   treasureName: string;
-  fallbackIcon: string;
   appName?: string;
   gameProject?: number;
-}> = ({ waypointId, treasureName, fallbackIcon, appName, gameProject }) => {
+}> = ({ waypointId, treasureName, appName, gameProject }) => {
   // Build the treasure icon URL using the provided pattern
   console.log(appName, gameProject , 'gameproj');
   
@@ -226,8 +225,6 @@ interface MobileScoreboardProps {
   treasures: Treasure[];
   coupons?: Coupon[];
   teamName?: string;
-  onEndGame?: () => void;
-  showEndGameButton?: boolean;
   useTimer?: boolean;
   gameType?: string;
   allTeams?: TeamData[];
@@ -242,8 +239,6 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   treasures = [],
   coupons = [],
   teamName = 'Team',
-  onEndGame,
-  showEndGameButton = false,
   useTimer = false,
   gameType,
   allTeams = [],
@@ -263,8 +258,6 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 
   // State for challenge pictures
   const [challengePictures, setChallengePictures] = React.useState<ChallengePicture[]>([]);
-  const [challengePicturesLoading, setChallengePicturesLoading] = React.useState(false);
-  const [challengePicturesError, setChallengePicturesError] = React.useState<string | null>(null);
 
   // Debug: Log current locale
   React.useEffect(() => {
@@ -279,23 +272,16 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
         return;
       }
 
-      setChallengePicturesLoading(true);
-      setChallengePicturesError(null);
-
       try {
         const response = await gameObserverService.getChallengePictures(gameInstanceId, teamId);
 
         if (response.success && response.data) {
           setChallengePictures(response.data);
         } else {
-          setChallengePicturesError(response.error || 'Failed to fetch challenge pictures');
           setChallengePictures([]);
         }
       } catch (error) {
-        setChallengePicturesError(error instanceof Error ? error.message : 'Unknown error occurred');
         setChallengePictures([]);
-      } finally {
-        setChallengePicturesLoading(false);
       }
     };
 
@@ -557,7 +543,6 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                           <TreasureImage
                             waypointId={treasure.id}
                             treasureName={treasure.name}
-                            fallbackIcon={treasure.icon}
                             appName={appName}
                             gameProject={gameProject}
                           />

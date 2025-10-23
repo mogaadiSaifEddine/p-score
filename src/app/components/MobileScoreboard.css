@@ -544,11 +544,6 @@
     overflow: hidden;
   }
 
-  /* Remove horizontal line elements on desktop */
-  .score-box::before {
-    display: none;
-  }
-
   .score-box-number {
     font-size: 18px;
     font-weight: 700;
@@ -566,11 +561,6 @@
       0 6px 25px var(--shadow-heavy),
       inset 0 2px 0 rgba(255, 255, 255, 0.15);
     border: 3px solid var(--border-light);
-  }
-
-  /* Remove horizontal line elements on desktop */
-  .score-box::before {
-    display: none;
   }
 
   .score-box-number {
@@ -653,17 +643,9 @@
   display: inline;
 }
 
-.desktop-dynamic-header .desktop-header {
-  display: none;
-}
-
 /* Mobile count display (default) */
 .mobile-count {
   display: inline;
-}
-
-.desktop-no-count {
-  display: none;
 }
 
 /* Enhanced Treasures Header for Larger Screens */
@@ -690,17 +672,9 @@
     display: inline;
   }
 
-  .desktop-dynamic-header .desktop-header {
-    display: none;
-  }
-
   /* Desktop count display - show counts like mobile */
   .mobile-count {
     display: inline;
-  }
-
-  .desktop-no-count {
-    display: none;
   }
 }
 

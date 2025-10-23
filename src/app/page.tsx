@@ -129,16 +129,7 @@ export default function PublicScoreboardExactPage() {
   // Determine game status
   const gameStatus = isGameFinished ? 'finished' : isGameStarted ? 'in_progress' : 'not_started';
 
-  // Handle end game
-  const handleEndGame = async () => {
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      reload();
-    } catch (error) {
-      console.error('Error ending game:', error);
-    }
-  };
+
 
   return (
     <>

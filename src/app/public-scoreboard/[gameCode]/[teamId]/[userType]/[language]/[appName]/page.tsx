@@ -362,15 +362,7 @@ console.log('gamEEEE0' , game);
   // Determine game status
   const gameStatus = isGameFinished ? 'finished' : isGameStarted ? 'in_progress' : 'not_started';
 
-  // Handle end game
-  const handleEndGame = async () => {
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      reload();
-    } catch (error) {
-      console.error('Error ending game:', error);
-    }
-  };
+
   console.log(allTeamsData);
 
   return (
@@ -380,8 +372,6 @@ console.log('gamEEEE0' , game);
         treasures={treasures}
         coupons={couponsData}
         teamName={teamData.name}
-        onEndGame={handleEndGame}
-        showEndGameButton={isPlayerView() && gameStatus === 'in_progress'}
         useTimer={observer?.use_timer || false}
         gameType={gameType}
         allTeams={allTeamsData}
