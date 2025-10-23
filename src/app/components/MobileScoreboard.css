@@ -48,12 +48,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(
-      90deg,
-      var(--accent-color),
-      var(--score-accent),
-      var(--accent-color)
-    );
+    
     border-radius: 20px 20px 0 0;
   }
 }
@@ -651,11 +646,9 @@
 /* Enhanced Treasures Header for Larger Screens */
 @media (min-width: 768px) {
   .treasures-header {
-    margin-bottom: 24px;
     margin-top: 24px;
     padding-left: 6px;
     padding-right: 24px;
-    padding-bottom: 12px;
   }
 
   .treasures-title {
@@ -679,11 +672,9 @@
 
 @media (min-width: 1024px) {
   .treasures-header {
-    margin-bottom: 28px;
     margin-top: 28px;
     padding-left: 8px;
     padding-right: 28px;
-    padding-bottom: 16px;
   }
 
   .treasures-title {
