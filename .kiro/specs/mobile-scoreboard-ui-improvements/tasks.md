@@ -32,26 +32,26 @@
     - Preserve mobile/tablet row styling which is working correctly
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [-] 4. Clean up section headers and remove decorative elements on desktop
+- [x] 4. Clean up section headers and remove decorative elements on desktop
   - Remove count indicators from section title rendering logic in MobileScoreboard.tsx for desktop display
   - Remove CSS pseudo-elements (::before) that create vertical bars in section headers within desktop media queries
   - Simplify header structure for cleaner appearance on desktop screens only
   - _Requirements: 5.1, 5.2, 5.3_
 
-- [ ] 5. Enhance game status and score display for desktop screens
-  - [ ] 5.1 Update game status positioning and formatting on desktop
+- [x] 5. Enhance game status and score display for desktop screens
+  - [x] 5.1 Update game status positioning and formatting on desktop
     - Add center alignment for "Game Finished" text in `.game-over-title` CSS within desktop media queries
     - Apply bold font-weight to "Total Score" label in `.score-label` for desktop breakpoints
     - Preserve existing mobile/tablet game status styling
     - _Requirements: 6.1, 6.2, 6.3_
 
-  - [ ] 5.2 Improve player name box styling on desktop
+  - [x] 5.2 Improve player name box styling on desktop
     - Remove horizontal line elements from `.score-box` CSS styling in desktop media queries
     - Adjust `.badge` positioning for elevated appearance on desktop screens only
     - Update `.score-box-number` color to blue matching score styling for desktop
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-- [ ] 6. Implement challenge pictures functionality
+- [-] 6. Implement challenge pictures functionality
   - [ ] 6.1 Add API integration for challenge pictures
     - Create API call to `/observer/get_challenge_pictures?game_instance_id={gameInstanceId}&team_id={teamId}` endpoint
     - Add challenge pictures state management to MobileScoreboard component

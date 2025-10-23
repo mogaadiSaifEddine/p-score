@@ -303,7 +303,10 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
               {coupons.length > 0 && (
                 <div className="rewards-section">
                   <div className="rewards-header">
-                    <h3 className="rewards-title">{t('scoreboard.rewards')} ({coupons.length})</h3>
+                    <h3 className="rewards-title">
+                      <span className="mobile-count">{t('scoreboard.rewards')} ({coupons.length})</span>
+                      <span className="desktop-no-count">{t('scoreboard.rewards')}</span>
+                    </h3>
                   </div>
                   <div className="rewards-list">
                     {coupons.map((coupon: Coupon) => (
@@ -332,10 +335,18 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
               {/* Dynamic List Header and Content - Changes based on active tab */}
               <div className="treasures-header">
                 <h3 className="treasures-title">
-                  {isCMSGame && activeTab === 'allTeams'
-                    ? `${t('scoreboard.allTeams')} (${allTeams.length})`
-                    : `${t('scoreboard.treasuresDiscovered')} (${treasures.length})`
-                  }
+                  <span className="mobile-count">
+                    {isCMSGame && activeTab === 'allTeams'
+                      ? `${t('scoreboard.allTeams')} (${allTeams.length})`
+                      : `${t('scoreboard.treasuresDiscovered')} (${treasures.length})`
+                    }
+                  </span>
+                  <span className="desktop-no-count">
+                    {isCMSGame && activeTab === 'allTeams'
+                      ? t('scoreboard.allTeams')
+                      : t('scoreboard.treasuresDiscovered')
+                    }
+                  </span>
                 </h3>
                 <h3 className="treasures-title desktop-dynamic-header">
                   <span className="mobile-header">{t('scoreboard.points')}</span>

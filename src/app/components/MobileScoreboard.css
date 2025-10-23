@@ -120,6 +120,7 @@
     color: var(--text-primary);
     text-shadow: 0 1px 2px var(--shadow-light);
     line-height: 1.2;
+    text-align: center;
   }
 }
 
@@ -138,6 +139,7 @@
     font-size: 20px;
     font-weight: 800;
     letter-spacing: 0.8px;
+    margin: 20px;
   }
 }
 
@@ -296,6 +298,11 @@
     letter-spacing: 0.8px;
     color: var(--text-secondary);
   }
+
+  /* Bold formatting for "Total Score" label on desktop */
+  .score-item:first-child .score-label {
+    font-weight: 700;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -322,6 +329,11 @@
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 1px;
+  }
+
+  /* Bold formatting for "Total Score" label on desktop */
+  .score-item:first-child .score-label {
+    font-weight: 800;
   }
 }
 
@@ -363,9 +375,10 @@
       0 8px 25px var(--shadow-heavy),
       0 0 0 4px rgba(255, 255, 255, 0.1),
       inset 0 2px 0 rgba(255, 255, 255, 0.2);
-    margin-bottom: -25px;
+    margin-bottom: -20px;
     background: linear-gradient(135deg, var(--badge-gradient-start), var(--badge-gradient-end));
     position: relative;
+    transform: translateY(-5px);
   }
 
   .badge::before {
@@ -417,11 +430,12 @@
   .badge {
     width: 110px;
     height: 110px;
-    margin-bottom: -28px;
+    margin-bottom: -23px;
     box-shadow:
       0 12px 35px var(--shadow-heavy),
       0 0 0 5px rgba(255, 255, 255, 0.15),
       inset 0 3px 0 rgba(255, 255, 255, 0.25);
+    transform: translateY(-8px);
   }
 
   .badge-shapes {
@@ -530,25 +544,16 @@
     overflow: hidden;
   }
 
+  /* Remove horizontal line elements on desktop */
   .score-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent-color), var(--score-accent));
-    border-radius: 16px 16px 0 0;
+    display: none;
   }
 
   .score-box-number {
     font-size: 18px;
     font-weight: 700;
     letter-spacing: 0.5px;
-    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--accent-color);
     text-shadow: none;
   }
 }
@@ -563,15 +568,16 @@
     border: 3px solid var(--border-light);
   }
 
+  /* Remove horizontal line elements on desktop */
   .score-box::before {
-    height: 3px;
-    border-radius: 18px 18px 0 0;
+    display: none;
   }
 
   .score-box-number {
     font-size: 20px;
     font-weight: 800;
     letter-spacing: 0.8px;
+    color: var(--accent-color);
   }
 }
 
@@ -651,6 +657,15 @@
   display: none;
 }
 
+/* Mobile count display (default) */
+.mobile-count {
+  display: inline;
+}
+
+.desktop-no-count {
+  display: none;
+}
+
 /* Enhanced Treasures Header for Larger Screens */
 @media (min-width: 768px) {
   .treasures-header {
@@ -670,24 +685,21 @@
     position: relative;
   }
 
-  .treasures-title:first-child::before {
-    content: '';
-    position: absolute;
-    left: -6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 16px;
-    background: var(--accent-color);
-    border-radius: 2px;
-  }
-
   /* Desktop dynamic header display */
   .desktop-dynamic-header .mobile-header {
     display: none;
   }
 
   .desktop-dynamic-header .desktop-header {
+    display: inline;
+  }
+
+  /* Desktop count display - hide counts and pseudo-elements */
+  .mobile-count {
+    display: none;
+  }
+
+  .desktop-no-count {
     display: inline;
   }
 }
@@ -706,12 +718,6 @@
     font-weight: 400;
     letter-spacing: 1px;
     color: var(--text-primary);
-  }
-
-  .treasures-title:first-child::before {
-    left: -8px;
-    width: 4px;
-    height: 18px;
   }
 }
 
@@ -1038,7 +1044,6 @@
   text-align: right;
   padding-right: clamp(4px, 1.2vw, 6px);
   width: 50px;
-
 }
 
 /* Enhanced Treasure Text for Larger Screens */
@@ -1170,18 +1175,6 @@
     color: var(--text-secondary);
     position: relative;
   }
-
-  .rewards-title::before {
-    content: '';
-    position: absolute;
-    left: -6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 16px;
-    background: var(--score-accent);
-    border-radius: 2px;
-  }
 }
 
 @media (min-width: 1024px) {
@@ -1196,12 +1189,6 @@
     font-weight: 400;
     letter-spacing: 1px;
     color: var(--text-primary);
-  }
-
-  .rewards-title::before {
-    left: -8px;
-    width: 4px;
-    height: 18px;
   }
 }
 
