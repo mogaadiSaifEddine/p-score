@@ -2007,3 +2007,40 @@ Teams List Component Styles */
     transform: none;
   }
 }
+/* Team Player Icon Styles */
+.team-player-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: clamp(8px, 2vw, 10px);
+  transition: all 0.3s ease;
+}
+
+/* Enhanced Team Player Icons for Larger Screens */
+@media (min-width: 768px) {
+  .team-player-icon {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .treasure-item:hover .team-player-icon {
+    transform: scale(1.02);
+  }
+}
+
+@media (min-width: 1024px) {
+  .team-player-icon {
+    border-radius: 10px;
+  }
+
+  .treasure-item:hover .team-player-icon {
+    transform: scale(1.05);
+  }
+}
+
+/* Fallback styling for team player icons */
+.treasure-icon img.team-player-icon {
+  display: block;
+  margin: 0;
+  padding: 0;
+}

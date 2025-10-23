@@ -138,7 +138,7 @@ const TreasureImage: React.FC<{
   gameProject?: number;
 }> = ({ waypointId, treasureName, appName, gameProject }) => {
   // Build the treasure icon URL using the provided pattern
-  
+
   const treasureIconUrl = React.useMemo(() => {
     if (appName && gameProject) {
       const url = `https://cms.locatify.com/store/point_image/${appName}/${gameProject}/${waypointId}/ld/`;
@@ -310,31 +310,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
     setOverlayImage(null);
   };
 
-  // Team color combinations based on badge shapes
-  // Each team gets a different background color using one of the shape colors
-  // The shape that matches the background becomes white for contrast
-  const getTeamColorCombination = (index: number) => {
-    const combinations = [
-      {
-        background: 'var(--score-accent)', // Circle color as background
-        shapes: { circle: '#ffffff', triangle: '#7189e3', square: '#ff7280' }
-      },
-      {
-        background: '#7189e3', // Triangle color as background
-        shapes: { circle: 'var(--score-accent)', triangle: '#ffffff', square: '#ff7280' }
-      },
-      {
-        background: '#ff7280', // Square color as background
-        shapes: { circle: 'var(--score-accent)', triangle: '#7189e3', square: '#ffffff' }
-      },
-      {
-        background: '#22c55e', // Green as 4th option
-        shapes: { circle: 'var(--score-accent)', triangle: '#7189e3', square: '#ff7280' }
-      }
-    ];
 
-    return combinations[index % combinations.length];
-  };
 
   return (
     <>
@@ -467,7 +443,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 </h3>
                 <h3 className="treasures-title desktop-dynamic-header">
                   <span className="mobile-header">{t('scoreboard.points')}</span>
-                 
+
                 </h3>
               </div>
 
@@ -478,25 +454,23 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                   allTeams
                     .sort((a, b) => b.score - a.score) // Sort by score descending
                     .map((team: TeamData, index: number) => {
-                      const colorCombination = getTeamColorCombination(index);
+                      const playerIconIndex = index % 126; // Cycle through available player icons (0-125)
+                      const playerIconPath = `/images/player_icons/player_icon_${playerIconIndex}.imageset/player_icon_${playerIconIndex}.png`;
+
                       return (
                         <div key={team.id} className="treasure-item">
                           <div className="treasure-content">
-                            <div
-                              className="treasure-icon team-badge"
-                              style={{
-                                '--team-bg-color': colorCombination.background,
-                                '--team-circle-color': colorCombination.shapes.circle,
-                                '--team-triangle-color': colorCombination.shapes.triangle,
-                                '--team-square-color': colorCombination.shapes.square
-                              } as React.CSSProperties}
-                            >
-                              {/* Team badge shapes with custom colors */}
-                              <div className="badge-shapes">
-                                <div className="badge-circle"></div>
-                                <div className="badge-triangle"></div>
-                                <div className="badge-square"></div>
-                              </div>
+                            <div className="treasure-icon">
+                              <img
+                                src={playerIconPath}
+                                alt={`${team.name} icon`}
+                                className="team-player-icon"
+                                onError={(e) => {
+                                  // Fallback to default player icon if specific icon fails to load
+                                  const target = e.target as HTMLImageElement;
+                                  target.src = '/images/player_icons/player_icon_0.imageset/player_icon_0.png';
+                                }}
+                              />
                             </div>
                             <span className="treasure-name">{team.name}</span>
                           </div>
@@ -507,16 +481,12 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 ) : (
                   <div className="treasure-item">
                     <div className="treasure-content">
-                      <div
-                        className="treasure-icon team-badge"
-                        style={{ '--team-bg-color': 'var(--bg-secondary)' } as React.CSSProperties}
-                      >
-                        {/* Empty state badge shapes */}
-                        <div className="badge-shapes">
-                          <div className="badge-circle"></div>
-                          <div className="badge-triangle"></div>
-                          <div className="badge-square"></div>
-                        </div>
+                      <div className="treasure-icon">
+                        <img
+                          src="/images/player_icons/player_icon_0.imageset/player_icon_0.png"
+                          alt="No teams icon"
+                          className="team-player-icon"
+                        />
                       </div>
                       <span className="treasure-name">{t('scoreboard.noTeams')}</span>
                     </div>
