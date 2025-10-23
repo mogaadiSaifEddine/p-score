@@ -15,7 +15,9 @@
     "myTeam": "Mitt lið",
     "allTeams": "Öll lið",
     "teamViewToggle": "Skipta um liðsýn",
-    "noTeams": "Engin lið fundust"
+    "noTeams": "Engin lið fundust",
+    "teamName": "Nafn liðs",
+    "treasureName": "Nafn fjársjóðs"
   },
   "errors": {
     "invalidUrl": "Ógild URL færibreytur",

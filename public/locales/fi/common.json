@@ -6,11 +6,18 @@
   },
   "scoreboard": {
     "totalScore": "Kokonaispisteet",
+    "points": "Pisteet",
     "time": "Aika",
     "treasuresDiscovered": "Löydetyt aarteet",
     "noTreasures": "Aarteita ei ole vielä löydetty",
     "endGame": "Lopeta peli",
-    "rewards": "Palkinnot"
+    "rewards": "Palkinnot",
+    "myTeam": "Oma joukkue",
+    "allTeams": "Kaikki joukkueet",
+    "teamViewToggle": "Vaihda joukkuenäkymää",
+    "noTeams": "Joukkueita ei löytynyt",
+    "teamName": "Joukkueen nimi",
+    "treasureName": "Aarteen nimi"
   },
   "errors": {
     "invalidUrl": "Virheelliset URL-parametrit",

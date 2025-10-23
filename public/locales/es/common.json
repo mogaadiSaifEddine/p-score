@@ -15,7 +15,9 @@
     "myTeam": "Mi equipo",
     "allTeams": "Todos los equipos",
     "teamViewToggle": "Alternar vista de equipo",
-    "noTeams": "No se encontraron equipos"
+    "noTeams": "No se encontraron equipos",
+    "teamName": "Nombre del equipo",
+    "treasureName": "Nombre del tesoro"
   },
   "errors": {
     "invalidUrl": "Parámetros de URL inválidos",

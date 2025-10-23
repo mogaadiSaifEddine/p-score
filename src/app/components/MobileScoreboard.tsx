@@ -337,7 +337,15 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                     : `${t('scoreboard.treasuresDiscovered')} (${treasures.length})`
                   }
                 </h3>
-                <h3 className="treasures-title">{t('scoreboard.points')}</h3>
+                <h3 className="treasures-title desktop-dynamic-header">
+                  <span className="mobile-header">{t('scoreboard.points')}</span>
+                  <span className="desktop-header">
+                    {isCMSGame && activeTab === 'allTeams'
+                      ? t('scoreboard.teamName')
+                      : t('scoreboard.treasureName')
+                    }
+                  </span>
+                </h3>
               </div>
 
               {/* Dynamic List Content - Changes based on active tab */}

@@ -294,7 +294,6 @@
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.8px;
-    text-transform: uppercase;
     color: var(--text-secondary);
   }
 }
@@ -643,6 +642,15 @@
   letter-spacing: 0.3px;
 }
 
+/* Mobile header display (default) */
+.desktop-dynamic-header .mobile-header {
+  display: inline;
+}
+
+.desktop-dynamic-header .desktop-header {
+  display: none;
+}
+
 /* Enhanced Treasures Header for Larger Screens */
 @media (min-width: 768px) {
   .treasures-header {
@@ -656,9 +664,8 @@
 
   .treasures-title {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.8px;
-    text-transform: uppercase;
     color: var(--text-secondary);
     position: relative;
   }
@@ -674,6 +681,15 @@
     background: var(--accent-color);
     border-radius: 2px;
   }
+
+  /* Desktop dynamic header display */
+  .desktop-dynamic-header .mobile-header {
+    display: none;
+  }
+
+  .desktop-dynamic-header .desktop-header {
+    display: inline;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -687,7 +703,7 @@
 
   .treasures-title {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 1px;
     color: var(--text-primary);
   }
@@ -716,7 +732,7 @@
 @media (min-width: 768px) {
   .treasure-item {
     border-radius: 14px;
-    padding: 16px 20px;
+    padding: 12px 18px;
     margin-bottom: 10px;
     box-shadow:
       0 2px 12px var(--shadow-light),
@@ -725,6 +741,7 @@
     background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(255, 255, 255, 0.02) 100%);
     position: relative;
     overflow: hidden;
+    min-height: 60px;
   }
 
   .treasure-item::before {
@@ -755,11 +772,12 @@
 @media (min-width: 1024px) {
   .treasure-item {
     border-radius: 16px;
-    padding: 18px 24px;
+    padding: 14px 20px;
     margin-bottom: 12px;
     box-shadow:
       0 3px 15px var(--shadow-light),
       inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    min-height: 65px;
   }
 
   .treasure-item::before {
@@ -780,6 +798,15 @@
   gap: clamp(10px, 2.5vw, 14px);
 }
 
+/* Enhanced Treasure Content for Desktop Alignment */
+@media (min-width: 768px) {
+  .treasure-content {
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
 .treasure-icon {
   width: clamp(38px, 8vw, 48px);
   height: clamp(38px, 8vw, 48px);
@@ -795,8 +822,8 @@
 /* Enhanced Treasure Icons for Larger Screens */
 @media (min-width: 768px) {
   .treasure-icon {
-    width: 42px;
-    height: 42px;
+    width: 75px;
+    height: 75px;
     border-radius: 10px;
     font-size: 18px;
     border: 2px solid var(--border-light);
@@ -805,6 +832,7 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
     background: linear-gradient(135deg, var(--treasure-icon-bg) 0%, var(--bg-secondary) 100%);
     transition: all 0.3s ease;
+    align-self: flex-start;
   }
 
   .treasure-item:hover .treasure-icon {
@@ -818,14 +846,15 @@
 
 @media (min-width: 1024px) {
   .treasure-icon {
-    width: 46px;
-    height: 46px;
+    width: 85px;
+    height: 85px;
     border-radius: 12px;
     font-size: 20px;
     border: 3px solid var(--border-light);
     box-shadow:
       0 4px 12px var(--shadow-light),
       inset 0 2px 0 rgba(255, 255, 255, 0.15);
+    align-self: flex-start;
   }
 
   .treasure-item:hover .treasure-icon {
@@ -848,6 +877,23 @@
   overflow: visible;
 }
 
+/* Enhanced Team Badge for Desktop Screens */
+@media (min-width: 768px) {
+  .treasure-icon.team-badge {
+    width: 75px;
+    height: 75px;
+    align-self: flex-start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .treasure-icon.team-badge {
+    width: 85px;
+    height: 85px;
+    align-self: flex-start;
+  }
+}
+
 /* Team Badge with custom background color */
 .treasure-icon.team-badge[style*='--team-bg-color'] {
   background: var(
@@ -863,6 +909,21 @@
   height: clamp(20px, 4.5vw, 26px);
 }
 
+/* Enhanced Team Badge Shapes for Desktop */
+@media (min-width: 768px) {
+  .treasure-icon.team-badge .badge-shapes {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .treasure-icon.team-badge .badge-shapes {
+    width: 45px;
+    height: 45px;
+  }
+}
+
 .treasure-icon.team-badge .badge-circle {
   position: absolute;
   width: clamp(8px, 1.8vw, 10px);
@@ -871,6 +932,23 @@
   background: var(--team-circle-color, var(--score-accent));
   top: 1px;
   left: 0;
+}
+
+/* Enhanced Team Badge Circle for Desktop */
+@media (min-width: 768px) {
+  .treasure-icon.team-badge .badge-circle {
+    width: 16px;
+    height: 16px;
+    top: 2px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .treasure-icon.team-badge .badge-circle {
+    width: 18px;
+    height: 18px;
+    top: 3px;
+  }
 }
 
 .treasure-icon.team-badge .badge-triangle {
@@ -884,6 +962,27 @@
   right: -1px;
 }
 
+/* Enhanced Team Badge Triangle for Desktop */
+@media (min-width: 768px) {
+  .treasure-icon.team-badge .badge-triangle {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 12px solid var(--team-triangle-color, #7189e3);
+    top: 3px;
+    right: -2px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .treasure-icon.team-badge .badge-triangle {
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 14px solid var(--team-triangle-color, #7189e3);
+    top: 4px;
+    right: -2px;
+  }
+}
+
 .treasure-icon.team-badge .badge-square {
   position: absolute;
   width: clamp(7px, 1.6vw, 9px);
@@ -893,6 +992,27 @@
   left: clamp(6px, 1.3vw, 7px);
   border-radius: 1px;
   transform: rotate(30deg);
+}
+
+/* Enhanced Team Badge Square for Desktop */
+@media (min-width: 768px) {
+  .treasure-icon.team-badge .badge-square {
+    width: 14px;
+    height: 14px;
+    bottom: 2px;
+    left: 12px;
+    border-radius: 2px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .treasure-icon.team-badge .badge-square {
+    width: 16px;
+    height: 16px;
+    bottom: 3px;
+    left: 14px;
+    border-radius: 2px;
+  }
 }
 
 .treasure-image {
@@ -917,6 +1037,8 @@
   min-width: clamp(30px, 6vw, 38px);
   text-align: right;
   padding-right: clamp(4px, 1.2vw, 6px);
+  width: 50px;
+
 }
 
 /* Enhanced Treasure Text for Larger Screens */
@@ -930,27 +1052,31 @@
   }
 
   .treasure-score {
-    border-left: 4px solid var(--accent-color);
+    border-left: 6px solid var(--accent-color);
     font-size: 16px;
     font-weight: 700;
     min-width: 45px;
     padding-right: 8px;
+    padding-left: 12px;
     background: linear-gradient(135deg, var(--accent-color), var(--score-accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     position: relative;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
   }
 
   .treasure-score::before {
     content: '';
     position: absolute;
-    left: -4px;
+    left: -6px;
     top: 0;
     bottom: 0;
-    width: 4px;
+    width: 6px;
     background: linear-gradient(135deg, var(--accent-color), var(--score-accent));
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 3px 3px 0;
   }
 }
 
@@ -966,12 +1092,15 @@
     font-weight: 800;
     min-width: 50px;
     padding-right: 10px;
-    border-left: 5px solid var(--accent-color);
+    padding-left: 14px;
+    border-left: 8px solid var(--accent-color);
+    min-height: 45px;
   }
 
   .treasure-score::before {
-    left: -5px;
-    width: 5px;
+    left: -8px;
+    width: 8px;
+    border-radius: 0 4px 4px 0;
   }
 }
 .end-game-section {
@@ -1036,9 +1165,8 @@
 
   .rewards-title {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.8px;
-    text-transform: uppercase;
     color: var(--text-secondary);
     position: relative;
   }
@@ -1065,7 +1193,7 @@
 
   .rewards-title {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 1px;
     color: var(--text-primary);
   }
@@ -1118,6 +1246,15 @@
   width: 100%;
 }
 
+/* Enhanced Reward Content for Desktop Alignment */
+@media (min-width: 768px) {
+  .reward-content {
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
 .reward-image {
   width: clamp(50px, 10vw, 60px);
   height: clamp(50px, 10vw, 60px);
@@ -1135,8 +1272,8 @@
 /* Enhanced Reward Images for Larger Screens */
 @media (min-width: 768px) {
   .reward-image {
-    width: 85px;
-    height: 85px;
+    width: 75px;
+    height: 75px;
     border-radius: 14px;
     border: 3px solid var(--border-light);
     box-shadow:
@@ -1145,6 +1282,7 @@
     background: linear-gradient(135deg, var(--treasure-icon-bg) 0%, var(--bg-secondary) 100%);
     position: relative;
     overflow: hidden;
+    align-self: flex-start;
   }
 
   .reward-image::before {
@@ -1176,13 +1314,14 @@
 
 @media (min-width: 1024px) {
   .reward-image {
-    width: 95px;
-    height: 95px;
+    width: 85px;
+    height: 85px;
     border-radius: 16px;
     border: 4px solid var(--border-light);
     box-shadow:
       0 6px 20px var(--shadow-light),
       inset 0 2px 0 rgba(255, 255, 255, 0.15);
+    align-self: flex-start;
   }
 
   .reward-image:hover {
@@ -1366,7 +1505,6 @@ Image Overlay Styles */
     background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
     position: relative;
     overflow: hidden;
-    text-transform: uppercase;
     letter-spacing: 0.8px;
   }
 

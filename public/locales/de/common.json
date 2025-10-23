@@ -15,7 +15,9 @@
     "myTeam": "Mein Team",
     "allTeams": "Alle Teams",
     "teamViewToggle": "Team-Ansicht umschalten",
-    "noTeams": "Keine Teams gefunden"
+    "noTeams": "Keine Teams gefunden",
+    "teamName": "Teamname",
+    "treasureName": "Schatzname"
   },
   "errors": {
     "invalidUrl": "Ungültige URL-Parameter",

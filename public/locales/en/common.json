@@ -15,7 +15,9 @@
     "myTeam": "My Team",
     "allTeams": "All Teams",
     "teamViewToggle": "Team view toggle",
-    "noTeams": "No teams found"
+    "noTeams": "No teams found",
+    "teamName": "Team Name",
+    "treasureName": "Treasure Name"
   },
   "errors": {
     "invalidUrl": "Invalid URL parameters",

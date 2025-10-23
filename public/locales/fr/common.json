@@ -15,7 +15,9 @@
     "myTeam": "Mon équipe",
     "allTeams": "Toutes les équipes",
     "teamViewToggle": "Basculer la vue d'équipe",
-    "noTeams": "Aucune équipe trouvée"
+    "noTeams": "Aucune équipe trouvée",
+    "teamName": "Nom de l'équipe",
+    "treasureName": "Nom du trésor"
   },
   "errors": {
     "invalidUrl": "Paramètres d'URL invalides",
@@ -28,7 +30,6 @@
     "loadingGame": "Chargement des données du jeu...",
     "loading": "Chargement..."
   },
-
   "themes": {
     "light": "Clair",
     "dark": "Sombre",
