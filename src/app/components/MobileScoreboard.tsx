@@ -136,7 +136,9 @@ const TreasureImage: React.FC<{
   treasureName: string;
   appName?: string;
   gameProject?: number;
-}> = ({ waypointId, treasureName, appName, gameProject }) => {
+  onClick?: () => void;
+
+}> = ({ waypointId, treasureName, appName, gameProject ,onClick}) => {
   // Build the treasure icon URL using the provided pattern
 
   const treasureIconUrl = React.useMemo(() => {
@@ -185,6 +187,7 @@ const TreasureImage: React.FC<{
       className="treasure-image"
       onError={handleError}
       onLoad={handleLoad}
+       onClick={onClick}
     />
   );
 };
@@ -242,7 +245,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 }) => {
 
   const { t, locale } = useTranslation();
-
+  console.log(treasures);
+  
   // State for image overlay
   const [overlayImage, setOverlayImage] = React.useState<{
     src: string;
@@ -302,6 +306,14 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
     setOverlayImage({
       src: 'https://cms.locatify.com' + challengePicture.url,
       alt: `Challenge picture from ${challengePicture.upload_time}`
+    });
+  }; 
+  
+  // Handle challenge picture image click
+  const handleTreasurePictureClick = (waypointId: any) => {
+    setOverlayImage({
+      src: `https://cms.locatify.com/store/point_image/${appName}/${gameProject}/${waypointId}/ld/`,
+      alt: `Challenge picture from ${waypointId}`
     });
   };
 
@@ -505,6 +517,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                             treasureName={treasure.name}
                             appName={appName}
                             gameProject={gameProject}
+                            onClick={() => handleTreasurePictureClick(treasure.id)}
+                            
                           />
                         </div>
                         <span className="treasure-name">{treasure.name}</span>

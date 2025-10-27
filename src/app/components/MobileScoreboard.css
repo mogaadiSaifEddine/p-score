@@ -726,17 +726,6 @@
     transition: opacity 0.3s ease;
   }
 
-  .treasure-item:hover {
-    transform: translateY(-2px);
-    box-shadow:
-      0 8px 25px var(--shadow-medium),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border-color: var(--accent-color);
-  }
-
-  .treasure-item:hover::before {
-    opacity: 1;
-  }
 }
 
 @media (min-width: 1024px) {
@@ -754,12 +743,6 @@
     width: 4px;
   }
 
-  .treasure-item:hover {
-    transform: translateY(-3px);
-    box-shadow:
-      0 12px 35px var(--shadow-heavy),
-      inset 0 2px 0 rgba(255, 255, 255, 0.25);
-  }
 }
 
 .treasure-content {
@@ -805,13 +788,6 @@
     align-self: flex-start;
   }
 
-  .treasure-item:hover .treasure-icon {
-    border-color: var(--accent-color);
-    box-shadow:
-      0 5px 15px var(--shadow-medium),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
-  }
 }
 
 @media (min-width: 1024px) {
@@ -1937,14 +1913,6 @@ Teams List Component Styles */
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .badge:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow:
-      0 15px 40px var(--shadow-heavy),
-      0 0 0 6px rgba(255, 255, 255, 0.2),
-      inset 0 4px 0 rgba(255, 255, 255, 0.3);
-  }
-
   /* Professional grid layout for rewards */
   .rewards-list {
     display: grid;
@@ -1995,17 +1963,7 @@ Teams List Component Styles */
     animation: none;
   }
 
-  .badge:hover {
-    transform: none;
-  }
 
-  .treasure-item:hover {
-    transform: none;
-  }
-
-  .reward-image:hover {
-    transform: none;
-  }
 }
 /* Team Player Icon Styles */
 .team-player-icon {
@@ -2023,9 +1981,7 @@ Teams List Component Styles */
     transition: all 0.3s ease;
   }
 
-  .treasure-item:hover .team-player-icon {
-    transform: scale(1.02);
-  }
+  
 }
 
 @media (min-width: 1024px) {
@@ -2033,9 +1989,6 @@ Teams List Component Styles */
     border-radius: 10px;
   }
 
-  .treasure-item:hover .team-player-icon {
-    transform: scale(1.05);
-  }
 }
 
 /* Fallback styling for team player icons */

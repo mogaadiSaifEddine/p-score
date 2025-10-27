@@ -62,6 +62,8 @@ export function useTreasureData(
   treasureApiData: TreasureApiData[] = [],
   gameData?: GameData | null
 ) {
+  console.log(treasureApiData, gameData ,'useTreasureData');
+  
   const formattedTreasures = useMemo(() => {
     const treasures: FormattedTreasure[] = [];
 
@@ -75,13 +77,14 @@ export function useTreasureData(
         image: waypoint?.thumb_image,
         icon: getTreasureIcon(treasure.description, treasure.waypoint_challenge),
         score: treasure.score_earned || 0,
-        name: waypoint?.title || treasure.description || `Treasure ${index + 1}`,
+        name:treasure.description|| waypoint?.title || treasure.description || `Treasure ${index + 1}`,
         foundAt: treasure.time
       };
 
       treasures.push(formattedTreasure);
     });
-
+    console.log(treasures);
+    
     // Sort by score (highest first) or by time found
     return treasures.sort((a, b) => {
       if (a.foundAt && b.foundAt) {
