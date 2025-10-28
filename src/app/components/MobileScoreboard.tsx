@@ -228,6 +228,10 @@ interface MobileScoreboardProps {
   teamId?: number;
   appName?: string;
   gameProject?: number;
+  // WebSocket status
+  webSocketConnected?: boolean;
+  webSocketError?: string | null;
+  webSocketLastUpdate?: Date | null;
 }
 
 const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
@@ -241,7 +245,10 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   gameInstanceId,
   teamId,
   appName,
-  gameProject
+  gameProject,
+  webSocketConnected = false,
+  webSocketError = null,
+  webSocketLastUpdate = null
 }) => {
 
   const { t, locale } = useTranslation();
@@ -342,7 +349,21 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                   gameStatus === 'in_progress' ? t('gameStatus.inProgress') :
                     t('gameStatus.notStarted')}
               </h1>
-              <ThemeToggle className="header-theme-toggle" />
+              <div className="header-controls">
+                {/* WebSocket Status Indicator */}
+                {gameInstanceId && (
+                  <div className="websocket-status" title={
+                    webSocketConnected ? 
+                      `Live updates active${webSocketLastUpdate ? ` (last: ${webSocketLastUpdate.toLocaleTimeString()})` : ''}` :
+                      webSocketError ? `Connection error: ${webSocketError}` : 'Connecting to live updates...'
+                  }>
+                    <div className={`websocket-indicator ${webSocketConnected ? 'connected' : 'disconnected'}`}>
+                      <div className="websocket-dot"></div>
+                    </div>
+                  </div>
+                )}
+                <ThemeToggle className="header-theme-toggle" />
+              </div>
             </div>
           </div>
 

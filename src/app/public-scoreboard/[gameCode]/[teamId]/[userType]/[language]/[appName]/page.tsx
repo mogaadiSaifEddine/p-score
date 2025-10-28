@@ -8,6 +8,7 @@ import { useGameObserver } from '@/app/hooks/useGameObserver';
 import { usePublicScoreboardData } from '@/app/hooks/useRouteParams';
 import { GameData, useTreasureData } from '@/app/hooks/useTreasureData';
 import ScoreboardProviders from '@/app/components/ScoreboardProviders';
+import { WebSocketDebugInfo } from '@/app/components/WebSocketDebugInfo';
 import React from 'react';
 
 // Team icon configurations
@@ -39,7 +40,7 @@ export default function PublicScoreboardFinalFixPage() {
     }
   }, [parsedData]);
 
-  // Load game data with team-specific calls
+  // First load initial game data without WebSocket
   const {
     game,
     observer,
@@ -57,24 +58,75 @@ export default function PublicScoreboardFinalFixPage() {
   } = useGameObserver({
     gameCode: parsedData?.gameCode || '',
     teamId: parsedData?.teamId,
-    autoRefresh: false,
+    autoRefresh: true, // Keep polling for now
     refreshInterval: 5000
   });
+
+  // WebSocket integration - connect after we have the game instance ID
+  const [webSocketStatus, setWebSocketStatus] = React.useState({
+    connected: false,
+    error: null as string | null,
+    lastUpdate: null as Date | null
+  });
+
+  React.useEffect(() => {
+    if (observer?.id && parsedData?.gameCode) {
+      console.log('Attempting WebSocket connection for game instance:', observer.id);
+
+      // Import and use WebSocket service
+      import('@/app/lib/websocket-game-service').then(({ webSocketGameService }) => {
+        // Subscribe to updates
+        const unsubscribe = webSocketGameService.subscribe((status) => {
+          console.log('WebSocket game status update received:', status);
+          setWebSocketStatus(prev => ({
+            ...prev,
+            lastUpdate: new Date()
+          }));
+          // The useGameObserver hook will handle the data updates
+        });
+
+        // Connect to WebSocket
+        webSocketGameService.connect(observer.id.toString())
+          .then(() => {
+            console.log('WebSocket connected successfully');
+            setWebSocketStatus(prev => ({
+              ...prev,
+              connected: true,
+              error: null
+            }));
+          })
+          .catch((error) => {
+            console.error('WebSocket connection failed:', error);
+            setWebSocketStatus(prev => ({
+              ...prev,
+              connected: false,
+              error: error.message
+            }));
+          });
+
+        // Cleanup function
+        return () => {
+          unsubscribe();
+          webSocketGameService.disconnect();
+        };
+      });
+    }
+  }, [observer?.id, parsedData?.gameCode]);
   // Get current team data
   const currentTeam = getCurrentTeamData();
   console.log(game, 'game');
-  
+
   // Get treasure data from team-specific API
   const teamTreasures = getTeamTreasures();
-  
+
   // Get coupons data from team-specific API
   const teamCoupons = getTeamCoupons();
 
   // Format treasure data for the mobile UI
   const treasureApiData = React.useMemo(() => {
     if (teamTreasures.length > 0) {
-   
-     
+
+
       return teamTreasures.map((treasure: any, index: number) => ({
         waypoint_challenge: treasure.waypoint_id || treasure.id || treasure.challenge_id || index + 1,
         score_earned: treasure.score || treasure.points || treasure.score_earned || treasure.value || 0,
@@ -117,8 +169,8 @@ export default function PublicScoreboardFinalFixPage() {
     return null;
   }, [observer, game]);
 
-    console.log('treasureApiData',treasureApiData);
-    
+  console.log('treasureApiData', treasureApiData);
+
   // Use treasure data hook to format for UI
   const { treasures, totalScore } = useTreasureData(treasureApiData, gameData);
 
@@ -367,10 +419,16 @@ export default function PublicScoreboardFinalFixPage() {
   const gameStatus = isGameFinished ? 'finished' : isGameStarted ? 'in_progress' : 'not_started';
 
 
-  
+
 
   return (
     <ScoreboardProviders initialLocale={parsedData?.language}>
+      <WebSocketDebugInfo
+        gameInstanceId={observer?.id}
+        connected={webSocketStatus.connected}
+        error={webSocketStatus.error}
+        lastUpdate={webSocketStatus.lastUpdate}
+      />
       <MobileScoreboard
         gameStatus={gameStatus}
         treasures={treasures}
@@ -383,6 +441,9 @@ export default function PublicScoreboardFinalFixPage() {
         teamId={parsedData?.teamId}
         appName={parsedData?.appName}
         gameProject={game?.id}
+        webSocketConnected={webSocketStatus.connected}
+        webSocketError={webSocketStatus.error}
+        webSocketLastUpdate={webSocketStatus.lastUpdate}
       />
     </ScoreboardProviders>
   );

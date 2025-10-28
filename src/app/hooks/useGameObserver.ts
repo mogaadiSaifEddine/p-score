@@ -8,6 +8,8 @@ import {
   ObserverData,
   ScoreboardData,
 } from '../lib/game-observer-service';
+import { useWebSocketGameStatus } from './useWebSocketGameStatus';
+import { ParsedGameStatus } from '../lib/websocket-game-service';
 
 interface UseGameObserverState {
   game: GameByCodeResponse | null;
@@ -23,6 +25,9 @@ interface UseGameObserverOptions {
   teamId?: number;
   autoRefresh?: boolean;
   refreshInterval?: number;
+  // WebSocket options
+  useWebSocket?: boolean;
+  gameInstanceId?: string;
 }
 
 export function useGameObserver({
@@ -30,6 +35,8 @@ export function useGameObserver({
   teamId,
   autoRefresh = false,
   refreshInterval = 5000,
+  useWebSocket = false,
+  gameInstanceId,
 }: UseGameObserverOptions) {
   const [state, setState] = useState<UseGameObserverState>({
     game: null,
@@ -40,13 +47,31 @@ export function useGameObserver({
     error: null,
   });
 
+  // WebSocket integration
+  const webSocketStatus = useWebSocketGameStatus({
+    gameInstanceId: gameInstanceId || '',
+    autoConnect: useWebSocket && !!gameInstanceId,
+    onStatusUpdate: (status: ParsedGameStatus) => {
+      // Convert WebSocket status to scoreboard format
+      const webSocketScoreboard = convertWebSocketToScoreboard(status);
+      setState((prev) => ({
+        ...prev,
+        scoreboard: webSocketScoreboard,
+        // Update team scoreboard if this team is in the update
+        teamScoreboard:
+          teamId && status.teams_info.find((t) => parseInt(t.id) === teamId)
+            ? convertTeamInfoToScoreboard(status.teams_info.find((t) => parseInt(t.id) === teamId)!)
+            : prev.teamScoreboard,
+      }));
+    },
+  });
+
   // Load initial data
   const loadData = useCallback(async () => {
     if (!gameCode) return;
 
     try {
       setState((prev) => ({ ...prev, loading: true, error: null }));
-
 
       // Always load general game data
       const [gameResponse, observerResponse, scoreboardResponse] = await Promise.all([
@@ -55,12 +80,10 @@ export function useGameObserver({
         gameObserverService.getScoreboard(gameCode),
       ]);
 
-      
       // Load team-specific data if teamId is provided
       let teamScoreboardResponse = null;
       if (teamId) {
         teamScoreboardResponse = await gameObserverService.getScoreboardByTeam(gameCode, teamId);
-
       }
 
       // Update state with successful responses
@@ -115,22 +138,55 @@ export function useGameObserver({
     loadData();
   }, [loadData]);
 
-  // Set up auto-refresh for scoreboard
+  // Helper function to convert WebSocket status to scoreboard format
+  const convertWebSocketToScoreboard = useCallback((status: ParsedGameStatus): ScoreboardData => {
+    return {
+      teams: status.teams_info.map((team) => ({
+        game_team_id: parseInt(team.id),
+        name: team.name,
+        score: parseInt(team.score),
+        players: [], // WebSocket doesn't provide player info
+        has_finished: team.has_finished === 'True',
+      })),
+      treasures_found: status.teams_info.flatMap((team) =>
+        team.found_treasures.map((treasure) => ({
+          id: treasure.id,
+          found_by_team: parseInt(team.id),
+        }))
+      ),
+      game_status: status.status_code,
+    };
+  }, []);
+
+  // Helper function to convert team info to team scoreboard format
+  const convertTeamInfoToScoreboard = useCallback((teamInfo: ParsedGameStatus['teams_info'][0]) => {
+    return {
+      game_team_id: parseInt(teamInfo.id),
+      name: teamInfo.name,
+      score: parseInt(teamInfo.score),
+      players: [],
+      has_finished: teamInfo.has_finished === 'True',
+      found_treasures: teamInfo.found_treasures,
+      game_duration: teamInfo.game_duration,
+      start_time: teamInfo.start_time,
+      time_penalty: teamInfo.time_penalty,
+      score_adjustment: parseInt(teamInfo.score_adjustment),
+    };
+  }, []);
+
+  // Set up auto-refresh for scoreboard (only if not using WebSocket)
   useEffect(() => {
-    if (!autoRefresh || !gameCode) return;
+    if (!autoRefresh || !gameCode || useWebSocket) return;
 
     const interval = setInterval(refreshScoreboard, refreshInterval);
     return () => clearInterval(interval);
-  }, [autoRefresh, refreshInterval, refreshScoreboard, gameCode]);
+  }, [autoRefresh, refreshInterval, refreshScoreboard, gameCode, useWebSocket]);
 
   // Enhanced team finder that handles multiple API response structures
   const getTeamById = useCallback(
     (targetTeamId: number) => {
-    
-
       // Strategy 1: Check team-specific API response first
       if (state.teamScoreboard) {
-
         // Case 1: API returns array of teams
         if (state.teamScoreboard.teams && Array.isArray(state.teamScoreboard.teams)) {
           const team = state.teamScoreboard.teams.find(
@@ -198,9 +254,16 @@ export function useGameObserver({
     loading: state.loading,
     error: state.error,
 
+    // WebSocket state
+    webSocketConnected: webSocketStatus.isConnected,
+    webSocketError: webSocketStatus.connectionError,
+    lastWebSocketUpdate: webSocketStatus.lastUpdated,
+
     // Actions
     reload: loadData,
     refreshScoreboard,
+    connectWebSocket: webSocketStatus.connect,
+    disconnectWebSocket: webSocketStatus.disconnect,
 
     // Computed values
     isGameStarted: state.observer?.is_started || false,
@@ -218,27 +281,28 @@ export function useGameObserver({
     getCurrentTeamData: () => (teamId ? getTeamById(teamId) : null),
     hasTeamData: () => !!state.teamScoreboard,
 
-
-
     // Get team-specific treasures/progress if available
     getTeamTreasures: () => {
-  console.log(state);
-  
-  if (state.observer && state.teamScoreboard) {
-    const teamId = state.teamScoreboard.game_team_id;
-    const treasuresFound = state.observer.treasures_found || [];
-    console.log('treasuresFound',treasuresFound.filter((treasure: any) => 
-      treasure.found_by?.some((finder: any) => finder.id === teamId)
-    ));
-    
-    // Filter treasures where the current team is in the found_by array
-    return treasuresFound.filter((treasure: any) => 
-      treasure.found_by?.some((finder: any) => finder.id === teamId)
-    );
-  }
-  
-  return [];
-},
+      console.log(state);
+
+      if (state.observer && state.teamScoreboard) {
+        const teamId = state.teamScoreboard.game_team_id;
+        const treasuresFound = state.observer.treasures_found || [];
+        console.log(
+          'treasuresFound',
+          treasuresFound.filter((treasure: any) =>
+            treasure.found_by?.some((finder: any) => finder.id === teamId)
+          )
+        );
+
+        // Filter treasures where the current team is in the found_by array
+        return treasuresFound.filter((treasure: any) =>
+          treasure.found_by?.some((finder: any) => finder.id === teamId)
+        );
+      }
+
+      return [];
+    },
 
     // Get team-specific coupons/rewards if available
     getTeamCoupons: () => {

@@ -2,6 +2,7 @@
 // Simple service for handling game observer and scoreboard APIs (no auth required)
 
 import { WayPoint } from "../types";
+import { webSocketGameService, ParsedGameStatus } from "./websocket-game-service";
 
 export interface ApiResponse<T = any> {
   data: T | null;
@@ -307,6 +308,36 @@ class GameObserverService {
     return () => {
       isPolling = false;
     };
+  }
+
+  /**
+   * Start WebSocket connection for real-time game status updates
+   * @param gameInstanceId - The game instance ID for WebSocket connection
+   * @param callback - Callback function to handle parsed game status updates
+   * @returns Promise that resolves when connected, and unsubscribe function
+   */
+  async startWebSocketUpdates(
+    gameInstanceId: string,
+    callback: (status: ParsedGameStatus) => void
+  ): Promise<() => void> {
+    // Subscribe to WebSocket updates
+    const unsubscribe = webSocketGameService.subscribe(callback);
+    
+    // Connect to WebSocket
+    await webSocketGameService.connect(gameInstanceId);
+    
+    // Return combined cleanup function
+    return () => {
+      unsubscribe();
+      webSocketGameService.disconnect();
+    };
+  }
+
+  /**
+   * Check if WebSocket is currently connected
+   */
+  get isWebSocketConnected(): boolean {
+    return webSocketGameService.isConnected;
   }
 }
 
