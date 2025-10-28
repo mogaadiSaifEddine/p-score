@@ -21,7 +21,6 @@
 /* Tablet and Desktop Enhancements */
 @media (min-width: 768px) {
   .game-over-container {
-    padding: 20px;
     align-items: center;
     background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
   }
@@ -48,7 +47,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    
+
     border-radius: 20px 20px 0 0;
   }
 }
@@ -725,18 +724,6 @@
     opacity: 0;
     transition: opacity 0.3s ease;
   }
-
-  .treasure-item:hover {
-    transform: translateY(-2px);
-    box-shadow:
-      0 8px 25px var(--shadow-medium),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border-color: var(--accent-color);
-  }
-
-  .treasure-item:hover::before {
-    opacity: 1;
-  }
 }
 
 @media (min-width: 1024px) {
@@ -752,13 +739,6 @@
 
   .treasure-item::before {
     width: 4px;
-  }
-
-  .treasure-item:hover {
-    transform: translateY(-3px);
-    box-shadow:
-      0 12px 35px var(--shadow-heavy),
-      inset 0 2px 0 rgba(255, 255, 255, 0.25);
   }
 }
 
@@ -786,7 +766,6 @@
   align-items: center;
   justify-content: center;
   font-size: clamp(20px, 4.5vw, 26px);
-  border: 1px solid var(--border-color);
 }
 
 /* Enhanced Treasure Icons for Larger Screens */
@@ -804,14 +783,6 @@
     transition: all 0.3s ease;
     align-self: flex-start;
   }
-
-  .treasure-item:hover .treasure-icon {
-    border-color: var(--accent-color);
-    box-shadow:
-      0 5px 15px var(--shadow-medium),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
-  }
 }
 
 @media (min-width: 1024px) {
@@ -827,7 +798,8 @@
     align-self: flex-start;
   }
 
-  .treasure-item:hover .treasure-icon {
+  /* Only apply hover effects to treasure icons that are NOT team player icons */
+  .treasure-item:hover .treasure-icon:not(:has(.team-player-icon)) {
     box-shadow:
       0 8px 20px var(--shadow-heavy),
       inset 0 2px 0 rgba(255, 255, 255, 0.25);
@@ -1132,7 +1104,7 @@
 /* Rewards Section */
 
 .rewards-header {
-  margin-bottom: clamp(12px, 3vw, 16px);
+  margin-bottom: 12px;
   padding-left: 2px;
 }
 
@@ -1147,9 +1119,9 @@
 /* Enhanced Rewards Title for Larger Screens */
 @media (min-width: 768px) {
   .rewards-header {
-    margin-bottom: 20px;
+    margin-bottom: 0;
     padding-left: 6px;
-    padding-bottom: 12px;
+    padding-bottom: 0;
   }
 
   .rewards-title {
@@ -1162,12 +1134,6 @@
 }
 
 @media (min-width: 1024px) {
-  .rewards-header {
-    margin-bottom: 24px;
-    padding-left: 8px;
-    padding-bottom: 16px;
-  }
-
   .rewards-title {
     font-size: 14px;
     font-weight: 400;
@@ -1188,7 +1154,7 @@
 @media (min-width: 768px) {
   .rewards-list {
     gap: 16px;
-    margin: 30px 0;
+    /* margin: 30px 0; */
     justify-content: flex-start;
   }
 }
@@ -1196,7 +1162,7 @@
 @media (min-width: 1024px) {
   .rewards-list {
     gap: 20px;
-    margin: 40px 0;
+    /* margin: 40px 0; */
   }
 }
 
@@ -1875,11 +1841,13 @@ Teams List Component Styles */
 
   /* Enhanced spacing for content sections */
   .rewards-section {
-    margin: 32px 0;
-    padding: 20px 0;
+    margin: 0;
+    padding: 0;
     background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.02) 100%);
   }
-
+  .rewards-section#first {
+    margin-top: 40px;
+  }
   /* Professional focus states for accessibility */
   .treasure-item:focus-within {
     outline: 3px solid var(--focus-ring);
@@ -1928,8 +1896,8 @@ Teams List Component Styles */
 @media (min-width: 1024px) {
   /* Enhanced content spacing */
   .rewards-section {
-    margin: 40px 0;
-    padding: 24px 0;
+    margin: 0 0;
+    /* padding: 24px 0; */
   }
 
   /* Subtle interactive effects for the badge */
@@ -1937,21 +1905,13 @@ Teams List Component Styles */
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .badge:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow:
-      0 15px 40px var(--shadow-heavy),
-      0 0 0 6px rgba(255, 255, 255, 0.2),
-      inset 0 4px 0 rgba(255, 255, 255, 0.3);
-  }
-
   /* Professional grid layout for rewards */
   .rewards-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+    display: flex;
+    /* grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
     gap: 20px;
     max-width: 500px;
-    margin: 0 auto;
+    margin: 0 auto; */
   }
 
   /* Enhanced typography hierarchy */
@@ -1994,18 +1954,6 @@ Teams List Component Styles */
   .game-over-content {
     animation: none;
   }
-
-  .badge:hover {
-    transform: none;
-  }
-
-  .treasure-item:hover {
-    transform: none;
-  }
-
-  .reward-image:hover {
-    transform: none;
-  }
 }
 /* Team Player Icon Styles */
 .team-player-icon {
@@ -2022,19 +1970,11 @@ Teams List Component Styles */
     border-radius: 8px;
     transition: all 0.3s ease;
   }
-
-  .treasure-item:hover .team-player-icon {
-    transform: scale(1.02);
-  }
 }
 
 @media (min-width: 1024px) {
   .team-player-icon {
     border-radius: 10px;
-  }
-
-  .treasure-item:hover .team-player-icon {
-    transform: scale(1.05);
   }
 }
 

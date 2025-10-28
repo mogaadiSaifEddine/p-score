@@ -62,16 +62,19 @@ export default function PublicScoreboardFinalFixPage() {
   });
   // Get current team data
   const currentTeam = getCurrentTeamData();
-
+  console.log(game, 'game');
+  
   // Get treasure data from team-specific API
   const teamTreasures = getTeamTreasures();
-
+  
   // Get coupons data from team-specific API
   const teamCoupons = getTeamCoupons();
 
   // Format treasure data for the mobile UI
   const treasureApiData = React.useMemo(() => {
     if (teamTreasures.length > 0) {
+   
+     
       return teamTreasures.map((treasure: any, index: number) => ({
         waypoint_challenge: treasure.waypoint_id || treasure.id || treasure.challenge_id || index + 1,
         score_earned: treasure.score || treasure.points || treasure.score_earned || treasure.value || 0,
@@ -114,6 +117,8 @@ export default function PublicScoreboardFinalFixPage() {
     return null;
   }, [observer, game]);
 
+    console.log('treasureApiData',treasureApiData);
+    
   // Use treasure data hook to format for UI
   const { treasures, totalScore } = useTreasureData(treasureApiData, gameData);
 
@@ -362,7 +367,7 @@ export default function PublicScoreboardFinalFixPage() {
   const gameStatus = isGameFinished ? 'finished' : isGameStarted ? 'in_progress' : 'not_started';
 
 
-
+  
 
   return (
     <ScoreboardProviders initialLocale={parsedData?.language}>
@@ -377,7 +382,7 @@ export default function PublicScoreboardFinalFixPage() {
         gameInstanceId={observer?.id}
         teamId={parsedData?.teamId}
         appName={parsedData?.appName}
-        gameProject={game?.project}
+        gameProject={game?.id}
       />
     </ScoreboardProviders>
   );

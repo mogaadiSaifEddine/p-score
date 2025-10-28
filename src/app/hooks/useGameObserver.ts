@@ -222,19 +222,23 @@ export function useGameObserver({
 
     // Get team-specific treasures/progress if available
     getTeamTreasures: () => {
-      if (state.teamScoreboard) {
-        // Try different possible structures for treasures
-        const teamData = state.teamScoreboard as any;
-        return (
-          teamData.treasures_found ||
-          teamData.treasures ||
-          teamData.waypoints_completed ||
-          teamData.progress ||
-          []
-        );
-      }
-      return [];
-    },
+  console.log(state);
+  
+  if (state.observer && state.teamScoreboard) {
+    const teamId = state.teamScoreboard.game_team_id;
+    const treasuresFound = state.observer.treasures_found || [];
+    console.log('treasuresFound',treasuresFound.filter((treasure: any) => 
+      treasure.found_by?.some((finder: any) => finder.id === teamId)
+    ));
+    
+    // Filter treasures where the current team is in the found_by array
+    return treasuresFound.filter((treasure: any) => 
+      treasure.found_by?.some((finder: any) => finder.id === teamId)
+    );
+  }
+  
+  return [];
+},
 
     // Get team-specific coupons/rewards if available
     getTeamCoupons: () => {
