@@ -390,7 +390,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 
               {/* Rewards Section - Always shown */}
               {coupons.length > 0 && (
-                <div className="rewards-section">
+                <div id='first' className="rewards-section">
                   <div className="rewards-header">
                     <h3 className="rewards-title">
                       <span className="mobile-count">{t('scoreboard.rewards')} ({coupons.length})</span>
