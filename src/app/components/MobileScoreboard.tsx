@@ -249,10 +249,6 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 }) => {
 
   const { t, locale } = useTranslation();
-  console.log('MobileScoreboard treasures:', treasures);
-  console.log('MobileScoreboard treasuresFoundData:', treasuresFoundData);
-  console.log('MobileScoreboard discoveredScore:', discoveredScore);
-
   // State for image overlay
   const [overlayImage, setOverlayImage] = React.useState<{
     src: string;
@@ -401,7 +397,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 <div id='first' className="rewards-section">
                   <div className="rewards-header">
                     <h3 className="rewards-title">
-                      <span className="mobile-count">{t('scoreboard.rewards')} ({coupons.length})</span>
+                      <span className="mobile-count">{t('scoreboard.rewards')} </span>
                     </h3>
                   </div>
                   <div className="rewards-list">
@@ -425,7 +421,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 <div className="rewards-section">
                   <div className="rewards-header">
                     <h3 className="rewards-title">
-                      <span className="mobile-count">{t('scoreboard.challengePictures')} ({challengePictures.length})</span>
+                      <span className="mobile-count">{t('scoreboard.challengePictures')}</span>
                     </h3>
                   </div>
                   <div className="rewards-list">
@@ -456,8 +452,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 <h3 className="treasures-title">
                   <span className="mobile-count">
                     {isCMSGame && activeTab === 'allTeams'
-                      ? `${t('scoreboard.allTeams')} (${allTeams.length})`
-                      : `${t('scoreboard.treasuresDiscovered')} (${treasures.length})`
+                      ? `${t('scoreboard.allTeams')}`
+                      : `${t('scoreboard.treasuresDiscovered')}`
                     }
                   </span>
                 </h3>
