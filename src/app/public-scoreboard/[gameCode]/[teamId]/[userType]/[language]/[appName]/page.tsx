@@ -389,7 +389,7 @@ export default function PublicScoreboardFinalFixPage() {
         treasures={treasures}
         coupons={couponsData}
         teamName={teamData.name}
-        gameName={observer?.name || game?.name || `Game ${parsedData?.gameCode}`}
+        gameName={ game?.alias || `Game ${parsedData?.gameCode}`}
         useTimer={observer?.use_timer || false}
         gameType={gameType}
         allTeams={allTeamsData}
