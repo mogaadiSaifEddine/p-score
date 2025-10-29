@@ -37,6 +37,9 @@
   --score-primary: #5b8d96;
   --score-secondary: #a8d7dc;
   --score-accent: #7ed8c8;
+  --primary-blue: #688cd5;
+  --secondary-blue: #7189e3;
+  --coral-red: #ff7280;
   --badge-gradient-start: #f4be7f;
   --badge-gradient-end: #efaa68;
   --treasure-icon-bg: #f9f9f9;
@@ -66,7 +69,7 @@
   --text-muted: #cbd5e1;
   
   --border-color: #e2e8f0;
-  --border-light: #f1f5f9;
+  --border-light: #b8dcff80;
   --divider-color: #e2e8f0;
   
   --accent-color: #3b82f6;
@@ -85,6 +88,9 @@
   --score-primary: #5b8d96;
   --score-secondary: #a8d7dc;
   --score-accent: #7ed8c8;
+  --primary-blue: #739aeb;
+  --secondary-blue: #7189e3;
+  --coral-red: #ff7280;
   --badge-gradient-start: #f4be7f;
   --badge-gradient-end: #efaa68;
   --treasure-icon-bg: #f9f9f9;
@@ -136,6 +142,9 @@
   --score-primary: #7dd3fc;
   --score-secondary: #67e8f9;
   --score-accent: #5eead4;
+  --primary-blue: #739aeb;
+  --secondary-blue: #7189e3;
+  --coral-red: #fca5a5;
   --badge-gradient-start: #fbbf24;
   --badge-gradient-end: #f59e0b;
   --treasure-icon-bg: #374151;

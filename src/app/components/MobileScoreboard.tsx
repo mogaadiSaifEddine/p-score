@@ -47,6 +47,15 @@ const ImageOverlay: React.FC<{
     </div>
   );
 };
+const  DynamicText  : React.FC<any>= (text)=> {
+  console.log(text);
+  
+  const textLength: number = text.text.length;
+  const style = { '--text-length': textLength } as React.CSSProperties;
+
+  return <p className="dynamic-text" style={style}>{text.text}</p>;
+}
+
 
 // Component for challenge picture image with fallback
 const ChallengePictureImage: React.FC<{
@@ -138,7 +147,7 @@ const TreasureImage: React.FC<{
   gameProject?: number;
   onClick?: () => void;
 
-}> = ({ waypointId, treasureName, appName, gameProject ,onClick}) => {
+}> = ({ waypointId, treasureName, appName, gameProject, onClick }) => {
   // Build the treasure icon URL using the provided pattern
 
   const treasureIconUrl = React.useMemo(() => {
@@ -187,7 +196,7 @@ const TreasureImage: React.FC<{
       className="treasure-image"
       onError={handleError}
       onLoad={handleLoad}
-       onClick={onClick}
+      onClick={onClick}
     />
   );
 };
@@ -221,6 +230,7 @@ interface MobileScoreboardProps {
   treasures: Treasure[];
   coupons?: Coupon[];
   teamName?: string;
+  gameName?: string;
   useTimer?: boolean;
   gameType?: string;
   allTeams?: TeamData[];
@@ -228,6 +238,8 @@ interface MobileScoreboardProps {
   teamId?: number;
   appName?: string;
   gameProject?: number;
+  discoveredScore?: number;
+  treasuresFoundData?: any[];
 }
 
 const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
@@ -235,18 +247,19 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   treasures = [],
   coupons = [],
   teamName = 'Team',
+  gameName,
   useTimer = false,
   gameType,
   allTeams = [],
   gameInstanceId,
   teamId,
   appName,
-  gameProject
+  gameProject,
+  discoveredScore = 0,
+  treasuresFoundData = []
 }) => {
 
   const { t, locale } = useTranslation();
-  console.log(treasures);
-  
   // State for image overlay
   const [overlayImage, setOverlayImage] = React.useState<{
     src: string;
@@ -288,8 +301,10 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   // Check if this is a CMS app
   const isCMSGame = gameType === 'CMS';
 
-  // Calculate total score from actual treasures data
-  const totalScore = treasures.reduce((sum: number, treasure: Treasure) => sum + treasure.score, 0);
+  // Calculate total score - use discovered score if available, otherwise fall back to treasures data
+  const totalScore = discoveredScore > 0
+    ? discoveredScore
+    : treasures.reduce((sum: number, treasure: Treasure) => sum + treasure.score, 0);
 
 
 
@@ -307,8 +322,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
       src: 'https://cms.locatify.com' + challengePicture.url,
       alt: `Challenge picture from ${challengePicture.upload_time}`
     });
-  }; 
-  
+  };
+
   // Handle challenge picture image click
   const handleTreasurePictureClick = (waypointId: any) => {
     setOverlayImage({
@@ -321,6 +336,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   const closeOverlay = () => {
     setOverlayImage(null);
   };
+  // components/DynamicText.js
 
 
 
@@ -334,6 +350,13 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
       />
       <div className="game-over-container">
         <div className="game-over-content">
+          {/* Game Name Header */}
+          {gameName && (
+            <div className="game-name-header">
+              <DynamicText text={gameName}/>
+            </div>
+          )}
+
           {/* Game Status Header */}
           <div className="game-over-header">
             <div className="header-content">
@@ -342,7 +365,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                   gameStatus === 'in_progress' ? t('gameStatus.inProgress') :
                     t('gameStatus.notStarted')}
               </h1>
-              <ThemeToggle className="header-theme-toggle" />
+              {/* <ThemeToggle className="header-theme-toggle" /> */}
             </div>
           </div>
 
@@ -361,14 +384,24 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 
                 {/* Center - Badge and Score Box */}
                 <div className="badge-container">
-                  {/* Badge */}
+                  {/* Badge with Player Icon */}
                   <div className="badge">
-                    {/* Shapes inside badge */}
-                    <div className="badge-shapes">
-                      <div className="badge-circle"></div>
-                      <div className="badge-triangle"></div>
-                      <div className="badge-square"></div>
-                    </div>
+                    <img
+                      src="/images/player_icons/player_icon_0.imageset/player_icon_0.png"
+                      alt="Player icon"
+                      className="badge-player-icon"
+                      onError={(e) => {
+                        // Fallback to a simple circle if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent && !parent.querySelector('.badge-fallback')) {
+                          const fallback = document.createElement('div');
+                          fallback.className = 'badge-fallback badge-circle';
+                          parent.appendChild(fallback);
+                        }
+                      }}
+                    />
                   </div>
 
                   {/* Large Score Box - Below Badge */}
@@ -393,7 +426,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 <div id='first' className="rewards-section">
                   <div className="rewards-header">
                     <h3 className="rewards-title">
-                      <span className="mobile-count">{t('scoreboard.rewards')} ({coupons.length})</span>
+                      <span className="mobile-count">{t('scoreboard.rewards')} </span>
                     </h3>
                   </div>
                   <div className="rewards-list">
@@ -417,7 +450,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 <div className="rewards-section">
                   <div className="rewards-header">
                     <h3 className="rewards-title">
-                      <span className="mobile-count">{t('scoreboard.challengePictures')} ({challengePictures.length})</span>
+                      <span className="mobile-count">{t('scoreboard.challengePictures')}</span>
                     </h3>
                   </div>
                   <div className="rewards-list">
@@ -448,8 +481,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 <h3 className="treasures-title">
                   <span className="mobile-count">
                     {isCMSGame && activeTab === 'allTeams'
-                      ? `${t('scoreboard.allTeams')} (${allTeams.length})`
-                      : `${t('scoreboard.treasuresDiscovered')} (${treasures.length})`
+                      ? `${t('scoreboard.allTeams')}`
+                      : `${t('scoreboard.treasuresDiscovered')}`
                     }
                   </span>
                 </h3>
@@ -518,7 +551,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                             appName={appName}
                             gameProject={gameProject}
                             onClick={() => handleTreasurePictureClick(treasure.id)}
-                            
+
                           />
                         </div>
                         <span className="treasure-name">{treasure.name}</span>

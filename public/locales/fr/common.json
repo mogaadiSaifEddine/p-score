@@ -17,7 +17,8 @@
     "teamViewToggle": "Basculer la vue d'équipe",
     "noTeams": "Aucune équipe trouvée",
     "teamName": "Nom de l'équipe",
-    "treasureName": "Nom du trésor"
+    "treasureName": "Nom du trésor",
+    "allTeamsSection": "Équipes dans le jeu"
   },
   "themes": {
     "light": "Clair",

@@ -7,6 +7,7 @@ import {
   GameByCodeResponse,
   ObserverData,
   ScoreboardData,
+  TreasuresFoundResponse,
 } from '../lib/game-observer-service';
 
 interface UseGameObserverState {
@@ -14,6 +15,7 @@ interface UseGameObserverState {
   observer: ObserverData | null;
   scoreboard: ScoreboardData | null;
   teamScoreboard: any;
+  treasuresFound: any[] | null;
   loading: boolean;
   error: string | null;
 }
@@ -36,6 +38,7 @@ export function useGameObserver({
     observer: null,
     scoreboard: null,
     teamScoreboard: null,
+    treasuresFound: null,
     loading: true,
     error: null,
   });
@@ -58,9 +61,10 @@ export function useGameObserver({
       
       // Load team-specific data if teamId is provided
       let teamScoreboardResponse = null;
+      let treasuresFoundResponse = null;
       if (teamId) {
         teamScoreboardResponse = await gameObserverService.getScoreboardByTeam(gameCode, teamId);
-
+        treasuresFoundResponse = await gameObserverService.getTreasuresFound(gameCode, teamId);
       }
 
       // Update state with successful responses
@@ -72,6 +76,9 @@ export function useGameObserver({
         teamScoreboard: teamScoreboardResponse?.success
           ? teamScoreboardResponse.data
           : prev.teamScoreboard,
+        treasuresFound: treasuresFoundResponse?.success
+          ? treasuresFoundResponse.data
+          : prev.treasuresFound,
         loading: false,
         error: null,
       }));
@@ -89,14 +96,17 @@ export function useGameObserver({
     if (!gameCode) return;
 
     try {
-      const promises = [gameObserverService.getScoreboard(gameCode)];
-
+      const scoreboardResponse = await gameObserverService.getScoreboard(gameCode);
+      
+      let teamScoreboardResponse = null;
+      let treasuresFoundResponse = null;
+      
       if (teamId) {
-        promises.push(gameObserverService.getScoreboardByTeam(gameCode, teamId));
+        [teamScoreboardResponse, treasuresFoundResponse] = await Promise.all([
+          gameObserverService.getScoreboardByTeam(gameCode, teamId),
+          gameObserverService.getTreasuresFound(gameCode, teamId)
+        ]);
       }
-
-      const responses = await Promise.all(promises);
-      const [scoreboardResponse, teamScoreboardResponse] = responses;
 
       setState((prev) => ({
         ...prev,
@@ -104,6 +114,9 @@ export function useGameObserver({
         teamScoreboard: teamScoreboardResponse?.success
           ? teamScoreboardResponse.data
           : prev.teamScoreboard,
+        treasuresFound: treasuresFoundResponse?.success
+          ? treasuresFoundResponse.data
+          : prev.treasuresFound,
       }));
     } catch (error) {
       // Silently fail
@@ -193,6 +206,7 @@ export function useGameObserver({
     observer: state.observer,
     scoreboard: state.scoreboard,
     teamScoreboard: state.teamScoreboard,
+    treasuresFound: state.treasuresFound,
 
     // State
     loading: state.loading,
@@ -217,6 +231,57 @@ export function useGameObserver({
     // Team-specific helpers
     getCurrentTeamData: () => (teamId ? getTeamById(teamId) : null),
     hasTeamData: () => !!state.teamScoreboard,
+
+    // Calculate discovered score from treasures found API
+    getDiscoveredScore: () => {
+      if (!state.treasuresFound || !Array.isArray(state.treasuresFound)) {
+        console.log('No treasures found data available');
+        return 0;
+      }
+
+      const totalScore = state.treasuresFound.reduce((totalScore, treasure) => {
+        // Add the point score
+        const pointScore = treasure.score_earned || 0;
+        
+        // Add all challenge scores
+        const challengeScore = treasure.challenges?.reduce((challengeSum: number, challenge: any) => {
+          return challengeSum + (challenge.score_earned || 0);
+        }, 0) || 0;
+
+        const treasureTotal = pointScore + challengeScore;
+        console.log(`Treasure ${treasure.alias}: point=${pointScore}, challenges=${challengeScore}, total=${treasureTotal}`);
+        
+        return totalScore + treasureTotal;
+      }, 0);
+
+      console.log(`Total discovered score: ${totalScore}`);
+      return totalScore;
+    },
+
+    // Get formatted treasures from treasures found API
+    getDiscoveredTreasures: () => {
+      if (!state.treasuresFound || !Array.isArray(state.treasuresFound)) {
+        console.log('No treasures found data available for treasures list');
+        return [];
+      }
+
+      return state.treasuresFound.map((treasure, index) => {
+        // Calculate total score for this treasure (point + challenges)
+        const pointScore = treasure.score_earned || 0;
+        const challengeScore = treasure.challenges?.reduce((challengeSum: number, challenge: any) => {
+          return challengeSum + (challenge.score_earned || 0);
+        }, 0) || 0;
+        const totalTreasureScore = pointScore + challengeScore;
+
+        return {
+          id: treasure.found_waypoint || index + 1,
+          icon: '', // Will be handled by TreasureImage component
+          name: treasure.alias || `Treasure ${index + 1}`,
+          score: totalTreasureScore,
+          foundAt: treasure.time
+        };
+      });
+    },
 
 
 

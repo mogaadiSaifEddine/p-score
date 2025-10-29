@@ -134,6 +134,30 @@ export interface ChallengePicture {
   url: string;
 }
 
+export interface TreasuresFoundResponse {
+  time: string;
+  log_error: boolean;
+  alias: string;
+  found_waypoint: number;
+  found_station: number | null;
+  score_earned: number;
+  challenges: Challenge[];
+}
+
+export interface Challenge {
+  time: string;
+  log_type: number;
+  log_error: boolean;
+  waypoint_challenge: number;
+  found_game_instance_item: number | null;
+  score_earned: number;
+  score_adjustment: number;
+  description: string | null;
+  time_penalty: number;
+  score_penalty: number;
+  other: string;
+}
+
 export interface ScoreboardData {
   teams: Array<{
     game_team_id: number;
@@ -246,6 +270,14 @@ class GameObserverService {
    */
   async getChallengePictures(gameInstanceId: number, teamId: number): Promise<ApiResponse<ChallengePicture[]>> {
     return this.makeRequest<ChallengePicture[]>(`/observer/get_challenge_pictures?game_instance_id=${gameInstanceId}&team_id=${teamId}`);
+  }
+
+  /**
+   * Get treasures found data for a specific game code and team
+   * Endpoint: /apis/observer/{gameCode}/scoreboard/{teamId}/treasures_found
+   */
+  async getTreasuresFound(gameCode: string, teamId: number): Promise<ApiResponse<TreasuresFoundResponse[]>> {
+    return this.makeRequest<TreasuresFoundResponse[]>(`/apis/observer/${gameCode}/scoreboard/${teamId}/treasures_found`);
   }
 
   /**

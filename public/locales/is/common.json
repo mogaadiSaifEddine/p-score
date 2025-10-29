@@ -17,7 +17,8 @@
     "teamViewToggle": "Skipta um liðsýn",
     "noTeams": "Engin lið fundust",
     "teamName": "Nafn liðs",
-    "treasureName": "Nafn fjársjóðs"
+    "treasureName": "Nafn fjársjóðs",
+    "allTeamsSection": "Lið í leiknum"
   },
   "themes": {
     "light": "Ljóst",

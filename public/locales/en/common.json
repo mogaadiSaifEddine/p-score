@@ -6,7 +6,7 @@
   },
   "scoreboard": {
     "totalScore": "Total Score",
-    "points": "Points",
+    "points": "Score",
     "time": "Time",
     "treasuresDiscovered": "Treasures Discovered",
     "noTreasures": "No treasures discovered yet",
@@ -17,7 +17,8 @@
     "teamViewToggle": "Team view toggle",
     "noTeams": "No teams found",
     "teamName": "Team Name",
-    "treasureName": "Treasure Name"
+    "treasureName": "Treasure Name",
+    "allTeamsSection":"Teams in the game"
   },
   "themes": {
     "light": "Light",

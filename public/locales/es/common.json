@@ -17,7 +17,8 @@
     "teamViewToggle": "Alternar vista de equipo",
     "noTeams": "No se encontraron equipos",
     "teamName": "Nombre del equipo",
-    "treasureName": "Nombre del tesoro"
+    "treasureName": "Nombre del tesoro",
+    "allTeamsSection": "Equipos en el juego"
   },
   "themes": {
     "light": "Claro",
