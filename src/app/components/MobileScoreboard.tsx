@@ -47,6 +47,15 @@ const ImageOverlay: React.FC<{
     </div>
   );
 };
+const  DynamicText  : React.FC<any>= (text)=> {
+  console.log(text);
+  
+  const textLength: number = text.text.length;
+  const style = { '--text-length': textLength } as React.CSSProperties;
+
+  return <p className="dynamic-text" style={style}>{text.text}</p>;
+}
+
 
 // Component for challenge picture image with fallback
 const ChallengePictureImage: React.FC<{
@@ -221,6 +230,7 @@ interface MobileScoreboardProps {
   treasures: Treasure[];
   coupons?: Coupon[];
   teamName?: string;
+  gameName?: string;
   useTimer?: boolean;
   gameType?: string;
   allTeams?: TeamData[];
@@ -237,6 +247,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   treasures = [],
   coupons = [],
   teamName = 'Team',
+  gameName,
   useTimer = false,
   gameType,
   allTeams = [],
@@ -325,6 +336,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   const closeOverlay = () => {
     setOverlayImage(null);
   };
+  // components/DynamicText.js
 
 
 
@@ -338,6 +350,13 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
       />
       <div className="game-over-container">
         <div className="game-over-content">
+          {/* Game Name Header */}
+          {gameName && (
+            <div className="game-name-header">
+              <DynamicText text={gameName}/>
+            </div>
+          )}
+
           {/* Game Status Header */}
           <div className="game-over-header">
             <div className="header-content">
@@ -346,7 +365,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                   gameStatus === 'in_progress' ? t('gameStatus.inProgress') :
                     t('gameStatus.notStarted')}
               </h1>
-              <ThemeToggle className="header-theme-toggle" />
+              {/* <ThemeToggle className="header-theme-toggle" /> */}
             </div>
           </div>
 
@@ -365,14 +384,24 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 
                 {/* Center - Badge and Score Box */}
                 <div className="badge-container">
-                  {/* Badge */}
+                  {/* Badge with Player Icon */}
                   <div className="badge">
-                    {/* Shapes inside badge */}
-                    <div className="badge-shapes">
-                      <div className="badge-circle"></div>
-                      <div className="badge-triangle"></div>
-                      <div className="badge-square"></div>
-                    </div>
+                    <img
+                      src="/images/player_icons/player_icon_0.imageset/player_icon_0.png"
+                      alt="Player icon"
+                      className="badge-player-icon"
+                      onError={(e) => {
+                        // Fallback to a simple circle if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent && !parent.querySelector('.badge-fallback')) {
+                          const fallback = document.createElement('div');
+                          fallback.className = 'badge-fallback badge-circle';
+                          parent.appendChild(fallback);
+                        }
+                      }}
+                    />
                   </div>
 
                   {/* Large Score Box - Below Badge */}

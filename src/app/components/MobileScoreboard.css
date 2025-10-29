@@ -51,7 +51,12 @@
     border-radius: 20px 20px 0 0;
   }
 }
-
+.dynamic-text {
+  text-align: center;
+  white-space: nowrap;
+  /* The core formula: shorter text → bigger font */
+  font-size:calc(100vw /var( --text-length) + 10px);
+}
 @media (min-width: 1024px) {
   .game-over-content {
     max-width: 700px;
@@ -63,6 +68,25 @@
     height: 5px;
     border-radius: 24px 24px 0 0;
   }
+}
+
+/* Game Name Header */
+.game-name-header {
+   width: 100%;
+
+  /* margin-bottom: clamp(30px, 3vw, 20px); */
+}
+
+.game-name-title {
+  color: var#000;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0;
+  text-shadow: 0 1px 2px var(--shadow-light);
+  line-height: 1.2;
+    font-size: 5vw; /* Adjusts based on viewport */
+  white-space: nowrap;
+  text-align: center;
 }
 
 .game-over-header {
@@ -90,6 +114,18 @@
 
 /* Enhanced Header for Larger Screens */
 @media (min-width: 768px) {
+  .game-name-header {
+    margin-bottom: 20px;
+  }
+
+  .game-name-title {
+    color: #000;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-shadow: 0 2px 4px var(--shadow-medium);
+  }
+
   .game-over-header {
     margin-bottom: 32px;
     position: relative;
@@ -117,6 +153,17 @@
 }
 
 @media (min-width: 1024px) {
+  .game-name-header {
+    margin-bottom: 25px;
+  }
+
+  .game-name-title {
+    color: #000;
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+
   .game-over-header {
     margin-bottom: 40px;
   }
@@ -162,7 +209,7 @@
 
 .treasures-container {
   position: relative;
-  margin-top: 120px;
+  margin-top: 110px;
 }
 
 .score-section {
@@ -196,11 +243,11 @@
 
 @media (min-width: 1024px) {
   .treasures-container {
-    margin-top: 110px;
+    margin-top: 135px;
   }
 
   .score-section {
-    top: -110px;
+    top: -135px;
     grid-template-columns: 1fr 3fr 1fr;
     gap: 20px;
     max-width: 500px;
@@ -216,10 +263,20 @@
   min-width: clamp(55px, 12vw, 70px);
 }
 
+/* First score item (Total Score) - left aligned */
+.score-item:first-child {
+  align-items: flex-start;
+}
+
+/* Last score item (Time) - right aligned */
+.score-item:last-child {
+  align-items: flex-end;
+}
+
 .score-label {
   font-size: clamp(12px, 2.8vw, 15px);
   color: var(--primary-blue);
-  margin: auto;
+  /* margin: auto; */
   font-weight: 700;
   letter-spacing: 0.2px;
 }
@@ -248,6 +305,16 @@
   .score-item {
     gap: 12px;
     min-width: 80px;
+  }
+
+  /* First score item (Total Score) - left aligned */
+  .score-item:first-child {
+    align-items: flex-start;
+  }
+
+  /* Last score item (Time) - right aligned */
+  .score-item:last-child {
+    align-items: flex-end;
   }
 
   .score-circle {
@@ -294,6 +361,16 @@
   .score-item {
     gap: 14px;
     min-width: 90px;
+  }
+
+  /* First score item (Total Score) - left aligned */
+  .score-item:first-child {
+    align-items: flex-start;
+  }
+
+  /* Last score item (Time) - right aligned */
+  .score-item:last-child {
+    align-items: flex-end;
   }
 
   .score-circle {
@@ -366,7 +443,7 @@
     transform: translateY(-5px);
   }
 
-  .badge::before {
+  /* .badge::before {
     content: '';
     position: absolute;
     inset: -2px;
@@ -374,7 +451,7 @@
     background: linear-gradient(135deg, var(--accent-color), var(--score-accent));
     z-index: -1;
     opacity: 0.3;
-  }
+  } */
 
   .badge-shapes {
     width: 52px;
@@ -558,8 +635,8 @@
   padding-top: clamp(50px, 7vw, 130px);
   box-shadow: 0 -1px 0px var(--shadow-medium);
   border-radius: clamp(12px, 3vw, 16px);
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   min-height: 50vh;
 }
 
@@ -731,6 +808,8 @@
   display: flex;
   align-items: center;
   gap: clamp(10px, 2.5vw, 14px);
+  flex: 1;
+  min-width: 0;
 }
 
 /* Enhanced Treasure Content for Desktop Alignment */
@@ -739,6 +818,8 @@
     justify-content: flex-start;
     align-items: center;
     gap: 16px;
+    flex: 1;
+    min-width: 0;
   }
 }
 
@@ -975,10 +1056,15 @@
   color: var(--primary-blue);
   font-weight: 400;
   letter-spacing: 0.3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .treasure-score {
-  border-left: 3px solid var(--accent-color);
+  border-left: 1px solid var(--accent-color);
   font-size: clamp(20px, 5vw, 26px);
   color: var(--primary-blue);
   font-weight: 400;
@@ -995,6 +1081,11 @@
     font-weight: 500;
     letter-spacing: 0.3px;
     line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
   }
 
   .treasure-score {
@@ -1026,6 +1117,11 @@
     font-size: 15px;
     font-weight: 600;
     letter-spacing: 0.4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
   }
 
   .treasure-score {
@@ -1907,6 +2003,23 @@ Teams List Component Styles */
   border-radius: clamp(8px, 2vw, 10px);
   transition: all 0.3s ease;
 }
+
+/* Badge Player Icon Styles */
+/* .badge-player-icon {
+  width: clamp(50px, 12vw, 70px);
+  height: clamp(50px, 12vw, 70px);
+  object-fit: cover;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+} */
+
+/* Fallback circle for badge when image fails to load */
+/* .badge-fallback {
+  width: clamp(50px, 12vw, 70px);
+  height: clamp(50px, 12vw, 70px);
+  border-radius: 50%;
+  background: var(--score-accent);
+} */
 
 /* Enhanced Team Player Icons for Larger Screens */
 @media (min-width: 768px) {

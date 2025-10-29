@@ -17,7 +17,8 @@
     "teamViewToggle": "Vaihda joukkuenäkymää",
     "noTeams": "Joukkueita ei löytynyt",
     "teamName": "Joukkueen nimi",
-    "treasureName": "Aarteen nimi"
+    "treasureName": "Aarteen nimi",
+    "allTeamsSection": "Joukkueet pelissä"
   },
   "themes": {
     "light": "Vaalea",

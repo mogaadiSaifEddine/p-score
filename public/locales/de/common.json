@@ -17,7 +17,8 @@
     "teamViewToggle": "Team-Ansicht umschalten",
     "noTeams": "Keine Teams gefunden",
     "teamName": "Teamname",
-    "treasureName": "Schatzname"
+    "treasureName": "Schatzname",
+    "allTeamsSection": "Teams im Spiel"
   },
   "themes": {
     "light": "Hell",
