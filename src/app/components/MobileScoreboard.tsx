@@ -138,7 +138,7 @@ const TreasureImage: React.FC<{
   gameProject?: number;
   onClick?: () => void;
 
-}> = ({ waypointId, treasureName, appName, gameProject ,onClick}) => {
+}> = ({ waypointId, treasureName, appName, gameProject, onClick }) => {
   // Build the treasure icon URL using the provided pattern
 
   const treasureIconUrl = React.useMemo(() => {
@@ -187,7 +187,7 @@ const TreasureImage: React.FC<{
       className="treasure-image"
       onError={handleError}
       onLoad={handleLoad}
-       onClick={onClick}
+      onClick={onClick}
     />
   );
 };
@@ -228,6 +228,8 @@ interface MobileScoreboardProps {
   teamId?: number;
   appName?: string;
   gameProject?: number;
+  discoveredScore?: number;
+  treasuresFoundData?: any[];
 }
 
 const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
@@ -241,12 +243,16 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   gameInstanceId,
   teamId,
   appName,
-  gameProject
+  gameProject,
+  discoveredScore = 0,
+  treasuresFoundData = []
 }) => {
 
   const { t, locale } = useTranslation();
-  console.log(treasures);
-  
+  console.log('MobileScoreboard treasures:', treasures);
+  console.log('MobileScoreboard treasuresFoundData:', treasuresFoundData);
+  console.log('MobileScoreboard discoveredScore:', discoveredScore);
+
   // State for image overlay
   const [overlayImage, setOverlayImage] = React.useState<{
     src: string;
@@ -288,8 +294,10 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   // Check if this is a CMS app
   const isCMSGame = gameType === 'CMS';
 
-  // Calculate total score from actual treasures data
-  const totalScore = treasures.reduce((sum: number, treasure: Treasure) => sum + treasure.score, 0);
+  // Calculate total score - use discovered score if available, otherwise fall back to treasures data
+  const totalScore = discoveredScore > 0
+    ? discoveredScore
+    : treasures.reduce((sum: number, treasure: Treasure) => sum + treasure.score, 0);
 
 
 
@@ -307,8 +315,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
       src: 'https://cms.locatify.com' + challengePicture.url,
       alt: `Challenge picture from ${challengePicture.upload_time}`
     });
-  }; 
-  
+  };
+
   // Handle challenge picture image click
   const handleTreasurePictureClick = (waypointId: any) => {
     setOverlayImage({
@@ -518,7 +526,7 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                             appName={appName}
                             gameProject={gameProject}
                             onClick={() => handleTreasurePictureClick(treasure.id)}
-                            
+
                           />
                         </div>
                         <span className="treasure-name">{treasure.name}</span>

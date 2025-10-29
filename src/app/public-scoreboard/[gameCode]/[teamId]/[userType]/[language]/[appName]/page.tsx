@@ -45,6 +45,7 @@ export default function PublicScoreboardFinalFixPage() {
     observer,
     scoreboard,
     teamScoreboard,
+    treasuresFound,
     loading: gameLoading,
     error: gameError,
     reload,
@@ -53,7 +54,9 @@ export default function PublicScoreboardFinalFixPage() {
     getCurrentTeamData,
     hasTeamData,
     getTeamTreasures,
-    getTeamCoupons
+    getTeamCoupons,
+    getDiscoveredScore,
+    getDiscoveredTreasures
   } = useGameObserver({
     gameCode: parsedData?.gameCode || '',
     teamId: parsedData?.teamId,
@@ -63,18 +66,18 @@ export default function PublicScoreboardFinalFixPage() {
   // Get current team data
   const currentTeam = getCurrentTeamData();
   console.log(game, 'game');
-  
+
   // Get treasure data from team-specific API
   const teamTreasures = getTeamTreasures();
-  
+
   // Get coupons data from team-specific API
   const teamCoupons = getTeamCoupons();
 
   // Format treasure data for the mobile UI
   const treasureApiData = React.useMemo(() => {
     if (teamTreasures.length > 0) {
-   
-     
+
+
       return teamTreasures.map((treasure: any, index: number) => ({
         waypoint_challenge: treasure.waypoint_id || treasure.id || treasure.challenge_id || index + 1,
         score_earned: treasure.score || treasure.points || treasure.score_earned || treasure.value || 0,
@@ -117,10 +120,20 @@ export default function PublicScoreboardFinalFixPage() {
     return null;
   }, [observer, game]);
 
-    console.log('treasureApiData',treasureApiData);
-    
-  // Use treasure data hook to format for UI
-  const { treasures, totalScore } = useTreasureData(treasureApiData, gameData);
+  console.log('treasureApiData', treasureApiData);
+
+  // Get discovered treasures from the new API
+  const discoveredTreasures = getDiscoveredTreasures();
+
+  // Use treasure data hook to format for UI (fallback)
+  const { treasures: fallbackTreasures, totalScore } = useTreasureData(treasureApiData, gameData);
+
+  // Prioritize discovered treasures over fallback treasures
+  const treasures = discoveredTreasures.length > 0 ? discoveredTreasures : fallbackTreasures;
+
+  console.log('Discovered treasures:', discoveredTreasures);
+  console.log('Fallback treasures:', fallbackTreasures);
+  console.log('Final treasures used:', treasures);
 
   // Format coupons data for the mobile UI
   const couponsData = React.useMemo(() => {
@@ -367,7 +380,7 @@ export default function PublicScoreboardFinalFixPage() {
   const gameStatus = isGameFinished ? 'finished' : isGameStarted ? 'in_progress' : 'not_started';
 
 
-  
+
 
   return (
     <ScoreboardProviders initialLocale={parsedData?.language}>
@@ -383,6 +396,8 @@ export default function PublicScoreboardFinalFixPage() {
         teamId={parsedData?.teamId}
         appName={parsedData?.appName}
         gameProject={game?.id}
+        discoveredScore={getDiscoveredScore()}
+        treasuresFoundData={treasuresFound || []}
       />
     </ScoreboardProviders>
   );
