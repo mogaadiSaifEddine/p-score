@@ -5,51 +5,156 @@ import TeamViewToggle from './TeamViewToggle';
 import { useTranslation } from '../hooks/useTranslation';
 import { gameObserverService, ChallengePicture } from '../lib/game-observer-service';
 
-// Image overlay component
+// Image overlay component with navigation and download
 const ImageOverlay: React.FC<{
   isOpen: boolean;
-  imageSrc: string;
-  imageAlt: string;
+  images: Array<{ src: string; alt: string; filename?: string }>;
+  currentIndex: number;
   onClose: () => void;
-}> = ({ isOpen, imageSrc, imageAlt, onClose }) => {
+  onNavigate: (index: number) => void;
+}> = ({ isOpen, images, currentIndex, onClose, onNavigate }) => {
+  const currentImage = images[currentIndex];
+
   React.useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      switch (e.key) {
+        case 'Escape':
+          onClose();
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          if (currentIndex > 0) {
+            onNavigate(currentIndex - 1);
+          }
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          if (currentIndex < images.length - 1) {
+            onNavigate(currentIndex + 1);
+          }
+          break;
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
+      document.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, onNavigate, currentIndex, images.length]);
 
-  if (!isOpen) return null;
+  const handleDownload = async () => {
+    if (!currentImage) return;
+
+    try {
+      const response = await fetch(currentImage.src);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = currentImage.filename || `image-${currentIndex + 1}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to download image:', error);
+    }
+  };
+
+  const goToPrevious = () => {
+    if (currentIndex > 0) {
+      onNavigate(currentIndex - 1);
+    }
+  };
+
+  const goToNext = () => {
+    if (currentIndex < images.length - 1) {
+      onNavigate(currentIndex + 1);
+    }
+  };
+
+  if (!isOpen || !currentImage) return null;
 
   return (
     <div className="image-overlay" onClick={onClose}>
       <div className="image-overlay-content" onClick={(e) => e.stopPropagation()}>
-        <button className="image-overlay-close" onClick={onClose}>
-          ×
+        {/* Header with counter and close button */}
+        <div className="image-overlay-header">
+          <div className="image-overlay-counter">
+            {currentIndex + 1} / {images.length}
+          </div>
+          <button className="image-overlay-close" onClick={onClose}>
+            ×
+          </button>
+        </div>
+
+        {/* Download button positioned at bottom left of image */}
+        <button
+          className="image-overlay-download"
+          onClick={handleDownload}
+          title="Download image"
+        >
+          ⬇
         </button>
+
+        {/* Navigation arrows */}
+        {images.length > 1 && (
+          <>
+            <button
+              className={`image-overlay-nav image-overlay-nav-prev ${currentIndex === 0 ? 'disabled' : ''}`}
+              onClick={goToPrevious}
+              disabled={currentIndex === 0}
+              title="Previous image"
+            >
+              ‹
+            </button>
+            <button
+              className={`image-overlay-nav image-overlay-nav-next ${currentIndex === images.length - 1 ? 'disabled' : ''}`}
+              onClick={goToNext}
+              disabled={currentIndex === images.length - 1}
+              title="Next image"
+            >
+              ›
+            </button>
+          </>
+        )}
+
+        {/* Main image */}
         <img
-          src={imageSrc}
-          alt={imageAlt}
+          src={currentImage.src}
+          alt={currentImage.alt}
           className="image-overlay-image"
         />
+
+        {/* Thumbnail navigation for multiple images */}
+        {images.length > 1 && (
+          <div className="image-overlay-thumbnails">
+            {images.map((image, index) => (
+              <button
+                key={index}
+                className={`image-overlay-thumbnail ${index === currentIndex ? 'active' : ''}`}
+                onClick={() => onNavigate(index)}
+              >
+                <img src={image.src} alt={image.alt} />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
-const  DynamicText  : React.FC<any>= (text)=> {
+const DynamicText: React.FC<any> = (text) => {
   console.log(text);
-  
+
   const textLength: number = text.text.length;
   const style = { '--text-length': textLength } as React.CSSProperties;
 
@@ -260,11 +365,16 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 }) => {
 
   const { t, locale } = useTranslation();
-  // State for image overlay
-  const [overlayImage, setOverlayImage] = React.useState<{
-    src: string;
-    alt: string;
-  } | null>(null);
+  // State for image overlay with navigation
+  const [overlayState, setOverlayState] = React.useState<{
+    isOpen: boolean;
+    images: Array<{ src: string; alt: string; filename?: string }>;
+    currentIndex: number;
+  }>({
+    isOpen: false,
+    images: [],
+    currentIndex: 0
+  });
 
   // State for challenge pictures
   const [challengePictures, setChallengePictures] = React.useState<ChallengePicture[]>([]);
@@ -310,31 +420,63 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 
   // Handle coupon image click
   const handleCouponImageClick = (couponId: number, couponName: string) => {
-    setOverlayImage({
-      src: `https://cms.locatify.com/store/get_coupon_image/turf_hunt/${couponId}`,
-      alt: couponName
+    const couponImages = coupons.map(coupon => ({
+      src: `https://cms.locatify.com/store/get_coupon_image/turf_hunt/${coupon.id}`,
+      alt: coupon.name,
+      filename: `coupon-${coupon.name.replace(/[^a-zA-Z0-9]/g, '-')}.jpg`
+    }));
+
+    const currentIndex = coupons.findIndex(coupon => coupon.id === couponId);
+
+    setOverlayState({
+      isOpen: true,
+      images: couponImages,
+      currentIndex: Math.max(0, currentIndex)
     });
   };
 
   // Handle challenge picture image click
   const handleChallengePictureClick = (challengePicture: ChallengePicture) => {
-    setOverlayImage({
-      src: 'https://cms.locatify.com' + challengePicture.url,
-      alt: `Challenge picture from ${challengePicture.upload_time}`
+    const challengeImages = challengePictures.map((picture, index) => ({
+      src: 'https://cms.locatify.com' + picture.url,
+      alt: `Challenge picture from ${picture.upload_time}`,
+      filename: `challenge-picture-${index + 1}.jpg`
+    }));
+
+    const currentIndex = challengePictures.findIndex(picture => picture.url === challengePicture.url);
+
+    setOverlayState({
+      isOpen: true,
+      images: challengeImages,
+      currentIndex: Math.max(0, currentIndex)
     });
   };
 
-  // Handle challenge picture image click
+  // Handle treasure picture image click
   const handleTreasurePictureClick = (waypointId: any) => {
-    setOverlayImage({
-      src: `https://cms.locatify.com/store/point_image/${appName}/${gameProject}/${waypointId}/ld/`,
-      alt: `Challenge picture from ${waypointId}`
+    const treasureImages = treasures.map(treasure => ({
+      src: `https://cms.locatify.com/store/point_image/${appName}/${gameProject}/${treasure.id}/ld/`,
+      alt: `Treasure: ${treasure.name}`,
+      filename: `treasure-${treasure.name.replace(/[^a-zA-Z0-9]/g, '-')}.jpg`
+    }));
+
+    const currentIndex = treasures.findIndex(treasure => treasure.id === waypointId);
+
+    setOverlayState({
+      isOpen: true,
+      images: treasureImages,
+      currentIndex: Math.max(0, currentIndex)
     });
   };
 
   // Close overlay
   const closeOverlay = () => {
-    setOverlayImage(null);
+    setOverlayState(prev => ({ ...prev, isOpen: false }));
+  };
+
+  // Navigate between images
+  const handleImageNavigation = (index: number) => {
+    setOverlayState(prev => ({ ...prev, currentIndex: index }));
   };
   // components/DynamicText.js
 
@@ -343,17 +485,18 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   return (
     <>
       <ImageOverlay
-        isOpen={!!overlayImage}
-        imageSrc={overlayImage?.src || ''}
-        imageAlt={overlayImage?.alt || ''}
+        isOpen={overlayState.isOpen}
+        images={overlayState.images}
+        currentIndex={overlayState.currentIndex}
         onClose={closeOverlay}
+        onNavigate={handleImageNavigation}
       />
       <div className="game-over-container">
         <div className="game-over-content">
           {/* Game Name Header */}
           {gameName && (
             <div className="game-name-header">
-              <DynamicText text={gameName}/>
+              <DynamicText text={gameName} />
             </div>
           )}
 
