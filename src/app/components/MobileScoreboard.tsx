@@ -228,6 +228,8 @@ interface MobileScoreboardProps {
   teamId?: number;
   appName?: string;
   gameProject?: number;
+  discoveredScore?: number;
+  treasuresFoundData?: any[];
 }
 
 const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
@@ -241,12 +243,12 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   gameInstanceId,
   teamId,
   appName,
-  gameProject
+  gameProject,
+  discoveredScore = 0,
+  treasuresFoundData = []
 }) => {
 
   const { t, locale } = useTranslation();
-  console.log(treasures);
-
   // State for image overlay
   const [overlayImage, setOverlayImage] = React.useState<{
     src: string;
@@ -288,8 +290,10 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   // Check if this is a CMS app
   const isCMSGame = gameType === 'CMS';
 
-  // Calculate total score from actual treasures data
-  const totalScore = treasures.reduce((sum: number, treasure: Treasure) => sum + treasure.score, 0);
+  // Calculate total score - use discovered score if available, otherwise fall back to treasures data
+  const totalScore = discoveredScore > 0
+    ? discoveredScore
+    : treasures.reduce((sum: number, treasure: Treasure) => sum + treasure.score, 0);
 
 
 
