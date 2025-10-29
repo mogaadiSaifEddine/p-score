@@ -72,7 +72,7 @@
 
 /* Game Name Header */
 .game-name-header {
-   width: 100%;
+  width: 100%;
 
   /* margin-bottom: clamp(30px, 3vw, 20px); */
 }
@@ -84,7 +84,7 @@
   margin: 0;
   text-shadow: 0 1px 2px var(--shadow-light);
   line-height: 1.2;
-    font-size: 5vw; /* Adjusts based on viewport */
+  font-size: 5vw; /* Adjusts based on viewport */
   white-space: nowrap;
   text-align: center;
 }
@@ -229,11 +229,11 @@
 /* Enhanced Score Section for Larger Screens */
 @media (min-width: 768px) {
   .treasures-container {
-    margin-top: 100px;
+    margin-top: 150px;
   }
 
   .score-section {
-    top: -100px;
+    top: -140px;
     grid-template-columns: 1fr 2.5fr 1fr;
     gap: 15px;
     max-width: 450px;
@@ -1395,12 +1395,46 @@ Image Overlay Styles */
   justify-content: center;
 }
 
+/* Desktop padding for overlay content */
+@media (min-width: 768px) {
+  .image-overlay-content {
+    max-width: 70vw;
+    max-height: 70vh;
+    padding: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .image-overlay-content {
+    max-width: 60vw;
+    max-height: 60vh;
+    padding: 60px;
+  }
+}
+
 .image-overlay-image {
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 90vw;
+  max-height: 90vh;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Desktop styling for overlay image */
+@media (min-width: 768px) {
+  .image-overlay-image {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    margin: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .image-overlay-image {
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    margin: 30px;
+  }
 }
 
 .image-overlay-close {
@@ -2089,6 +2123,27 @@ Teams List Component Styles */
   transform: scale(1.1);
 }
 
+/* Desktop positioning for download button */
+@media (min-width: 768px) {
+  .image-overlay-download {
+    bottom: 60px;
+    left: 60px;
+    width: 55px;
+    height: 55px;
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .image-overlay-download {
+    bottom: 90px;
+    left: 90px;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+}
+
 .image-overlay-nav {
   position: absolute;
   top: 50%;
@@ -2177,12 +2232,12 @@ Teams List Component Styles */
   .image-overlay-header {
     top: -50px;
   }
-  
+
   .image-overlay-counter {
     font-size: 12px;
     padding: 6px 12px;
   }
-  
+
   .image-overlay-download {
     bottom: 15px;
     right: 15px;
@@ -2190,26 +2245,26 @@ Teams List Component Styles */
     height: 45px;
     font-size: 18px;
   }
-  
+
   .image-overlay-nav {
     width: 40px;
     height: 40px;
     font-size: 20px;
   }
-  
+
   .image-overlay-nav-prev {
     left: 10px;
   }
-  
+
   .image-overlay-nav-next {
     right: 10px;
   }
-  
+
   .image-overlay-thumbnails {
     bottom: -70px;
     gap: 6px;
   }
-  
+
   .image-overlay-thumbnail {
     width: 50px;
     height: 50px;
