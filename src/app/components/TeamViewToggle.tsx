@@ -31,7 +31,7 @@ const TeamViewToggle: React.FC<TeamViewToggleProps> = ({
         aria-selected={activeTab === 'myTeam'}
         aria-controls="myteam-panel"
         id="myteam-tab"
-        className={`team-tab ${activeTab === 'myTeam' ? 'team-tab-active' : ''}`}
+        className={`team-tab ${activeTab === 'myTeam' ? '' : 'team-tab-active'}`}
         onClick={() => onTabChange('myTeam')}
         onKeyDown={(e) => handleKeyDown(e, 'myTeam')}
         tabIndex={activeTab === 'myTeam' ? 0 : -1}
@@ -43,7 +43,7 @@ const TeamViewToggle: React.FC<TeamViewToggleProps> = ({
         aria-selected={activeTab === 'allTeams'}
         aria-controls="allteams-panel"
         id="allteams-tab"
-        className={`team-tab ${activeTab === 'allTeams' ? 'team-tab-active' : ''}`}
+        className={`team-tab ${activeTab === 'allTeams' ? '' : 'team-tab-active'}`}
         onClick={() => onTabChange('allTeams')}
         onKeyDown={(e) => handleKeyDown(e, 'allTeams')}
         tabIndex={activeTab === 'allTeams' ? 0 : -1}

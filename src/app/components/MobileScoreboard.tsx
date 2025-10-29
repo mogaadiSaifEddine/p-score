@@ -421,8 +421,16 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 )}
               </div>
 
-              {/* Rewards Section - Always shown */}
-              {coupons.length > 0 && (
+              {/* CMS Team View Toggle - Only shown for CMS games, positioned at the top */}
+              {isCMSGame && (
+                <TeamViewToggle
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                />
+              )}
+
+              {/* Rewards Section - Hidden when All Teams is selected */}
+              {coupons.length > 0 && (!isCMSGame || activeTab === 'myTeam') && (
                 <div id='first' className="rewards-section">
                   <div className="rewards-header">
                     <h3 className="rewards-title">
@@ -445,8 +453,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 </div>
               )}
 
-              {/* Challenge Pictures Section - Only shown when pictures are available */}
-              {challengePictures.length > 0 && (
+              {/* Challenge Pictures Section - Hidden when All Teams is selected */}
+              {challengePictures.length > 0 && (!isCMSGame || activeTab === 'myTeam') && (
                 <div className="rewards-section">
                   <div className="rewards-header">
                     <h3 className="rewards-title">
@@ -466,14 +474,6 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                     ))}
                   </div>
                 </div>
-              )}
-
-              {/* CMS Team View Toggle - Only shown for CMS games, positioned between rewards and list */}
-              {isCMSGame && (
-                <TeamViewToggle
-                  activeTab={activeTab}
-                  onTabChange={setActiveTab}
-                />
               )}
 
               {/* Dynamic List Header and Content - Changes based on active tab */}
