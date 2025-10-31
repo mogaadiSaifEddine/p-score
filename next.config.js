@@ -4,6 +4,7 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
+    output: 'standalone',
   reactStrictMode: true,
   experimental: {
     instrumentationHook: false,
@@ -14,7 +15,8 @@ const nextConfig = {
       'api.charge-tn.com', 
       'api.Locatify.com', 
       'api.Locatify.tech',
-      'staging-api.Locatify.tech'
+      'staging-api.Locatify.tech',
+      'cms.locatify.com'
     ],
     unoptimized: isCapacitorBuild, // Disable image optimization for Capacitor builds
   },
