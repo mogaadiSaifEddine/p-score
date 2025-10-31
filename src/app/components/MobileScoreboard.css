@@ -2275,3 +2275,96 @@ Teams List Component Styles */
 .image-overlay-content:has(.image-overlay-thumbnails:empty) .image-overlay-thumbnails {
   display: none;
 }
+/* Lazy Loading Image Styles */
+.lazy-image-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+.lazy-image-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  min-height: 60px;
+}
+
+.lazy-image-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-light);
+  border-top: 2px solid var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.lazy-image {
+  transition: opacity 0.3s ease-in-out;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lazy-image.loading {
+  opacity: 0;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+}
+
+/* Ensure lazy images work well with existing styles */
+.lazy-image-container.coupon-image {
+  width: 100%;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lazy-image-container.treasure-image {
+  width: 40px;
+  height: 40px;
+  /* border-radius: 50%; */
+  overflow: hidden;
+}
+
+.lazy-image-container.image-overlay-image {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 12px;
+  overflow: hidden;
+}
+/* Treasure image fallback styling */
+.treasure-image-fallback {
+  opacity: 0.6;
+  cursor: default !important;
+  pointer-events: none;
+}
+
+.treasure-image-fallback:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure treasure images have proper cursor when clickable */
+.treasure-image:not(.treasure-image-fallback) {
+  cursor: pointer;
+}
+
+.treasure-image:not(.treasure-image-fallback):hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}

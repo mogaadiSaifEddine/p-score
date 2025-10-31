@@ -1,9 +1,68 @@
 import React from 'react';
+import Image from 'next/image';
 import './MobileScoreboard.css'
 import ThemeToggle from './ThemeToggle';
 import TeamViewToggle from './TeamViewToggle';
 import { useTranslation } from '../hooks/useTranslation';
 import { gameObserverService, ChallengePicture } from '../lib/game-observer-service';
+
+// Lazy loading image component for external images
+const LazyImage: React.FC<{
+  src: string;
+  alt: string;
+  className?: string;
+  onClick?: () => void;
+  onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
+  onLoad?: () => void;
+}> = ({ src, alt, className, onClick, onError, onLoad }) => {
+  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isInView, setIsInView] = React.useState(false);
+  const imgRef = React.useRef<HTMLImageElement>(null);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleLoad = () => {
+    setIsLoaded(true);
+    onLoad?.();
+  };
+
+  return (
+    <div ref={imgRef} className={`lazy-image-container ${className || ''}`}>
+      {!isLoaded && (
+        <div className="lazy-image-placeholder">
+          <div className="lazy-image-spinner"></div>
+        </div>
+      )}
+      {isInView && (
+        <img
+          src={src}
+          alt={alt}
+          className={`lazy-image ${isLoaded ? 'loaded' : 'loading'} ${className || ''}`}
+          onClick={onClick}
+          onError={onError}
+          onLoad={handleLoad}
+          loading="lazy"
+        />
+      )}
+    </div>
+  );
+};
 
 // Image overlay component with navigation and download
 const ImageOverlay: React.FC<{
@@ -128,7 +187,7 @@ const ImageOverlay: React.FC<{
         )}
 
         {/* Main image */}
-        <img
+        <LazyImage
           src={currentImage.src}
           alt={currentImage.alt}
           className="image-overlay-image"
@@ -143,7 +202,7 @@ const ImageOverlay: React.FC<{
                 className={`image-overlay-thumbnail ${index === currentIndex ? 'active' : ''}`}
                 onClick={() => onNavigate(index)}
               >
-                <img src={image.src} alt={image.alt} />
+                <LazyImage src={image.src} alt={image.alt} />
               </button>
             ))}
           </div>
@@ -190,7 +249,7 @@ const ChallengePictureImage: React.FC<{
   };
 
   return (
-    <img
+    <LazyImage
       src={imageSrc}
       alt={`Challenge picture from ${challengePicture.upload_time}`}
       className={`coupon-image ${onClick ? 'coupon-image-clickable' : ''}`}
@@ -234,7 +293,7 @@ const CouponImage: React.FC<{
   };
 
   return (
-    <img
+    <LazyImage
       src={imageSrc}
       alt={couponName}
       className={`coupon-image ${onClick ? 'coupon-image-clickable' : ''}`}
@@ -251,8 +310,9 @@ const TreasureImage: React.FC<{
   appName?: string;
   gameProject?: number;
   onClick?: () => void;
-
-}> = ({ waypointId, treasureName, appName, gameProject, onClick }) => {
+  onImageError?: (waypointId: number) => void;
+  onImageLoad?: (waypointId: number) => void;
+}> = ({ waypointId, treasureName, appName, gameProject, onClick, onImageError, onImageLoad }) => {
   // Build the treasure icon URL using the provided pattern
 
   const treasureIconUrl = React.useMemo(() => {
@@ -287,21 +347,32 @@ const TreasureImage: React.FC<{
     if (!hasError) {
       setHasError(true);
       setImageSrc(defaultTreasureImage);
+      onImageError?.(waypointId);
     }
   };
 
   const handleLoad = () => {
     // Image loaded successfully
+    if (!hasError) {
+      onImageLoad?.(waypointId);
+    }
+  };
+
+  // Only allow clicking if not using fallback image
+  const handleClick = () => {
+    if (!hasError && onClick) {
+      onClick();
+    }
   };
 
   return (
-    <img
+    <LazyImage
       src={imageSrc}
       alt={treasureName}
-      className="treasure-image"
+      className={`treasure-image ${hasError ? 'treasure-image-fallback' : ''}`}
       onError={handleError}
       onLoad={handleLoad}
-      onClick={onClick}
+      onClick={handleClick}
     />
   );
 };
@@ -379,6 +450,23 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
   // State for challenge pictures
   const [challengePictures, setChallengePictures] = React.useState<ChallengePicture[]>([]);
 
+  // State to track which treasure images have errors (fallback images)
+  const [treasureImageErrors, setTreasureImageErrors] = React.useState<Set<number>>(new Set());
+
+  // Handle treasure image error
+  const handleTreasureImageError = (waypointId: number) => {
+    setTreasureImageErrors(prev => new Set(prev).add(waypointId));
+  };
+
+  // Handle treasure image load success
+  const handleTreasureImageLoad = (waypointId: number) => {
+    setTreasureImageErrors(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(waypointId);
+      return newSet;
+    });
+  };
+
 
 
   // Fetch challenge pictures when component mounts or when gameInstanceId/teamId changes
@@ -454,19 +542,29 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
 
   // Handle treasure picture image click
   const handleTreasurePictureClick = (waypointId: any) => {
-    const treasureImages = treasures.map(treasure => ({
+    // Don't open overlay if the clicked treasure has an image error (fallback image)
+    if (treasureImageErrors.has(waypointId)) {
+      return;
+    }
+
+    // Filter out treasures that have image errors for the overlay
+    const validTreasures = treasures.filter(treasure => !treasureImageErrors.has(treasure.id));
+    const treasureImages = validTreasures.map(treasure => ({
       src: `https://cms.locatify.com/store/point_image/${appName}/${gameProject}/${treasure.id}/ld/`,
       alt: `Treasure: ${treasure.name}`,
       filename: `treasure-${treasure.name.replace(/[^a-zA-Z0-9]/g, '-')}.jpg`
     }));
 
-    const currentIndex = treasures.findIndex(treasure => treasure.id === waypointId);
+    const currentIndex = validTreasures.findIndex(treasure => treasure.id === waypointId);
 
-    setOverlayState({
-      isOpen: true,
-      images: treasureImages,
-      currentIndex: Math.max(0, currentIndex)
-    });
+    // Only open overlay if there are valid images and the current treasure is valid
+    if (treasureImages.length > 0 && currentIndex >= 0) {
+      setOverlayState({
+        isOpen: true,
+        images: treasureImages,
+        currentIndex: currentIndex
+      });
+    }
   };
 
   // Close overlay
@@ -529,10 +627,13 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                 <div className="badge-container">
                   {/* Badge with Player Icon */}
                   <div className="badge">
-                    <img
+                    <Image
                       src="/images/player_icons/player_icon_0.imageset/player_icon_0.png"
                       alt="Player icon"
+                      width={40}
+                      height={40}
                       className="badge-player-icon"
+                      priority
                       onError={(e) => {
                         // Fallback to a simple circle if image fails to load
                         const target = e.target as HTMLImageElement;
@@ -649,10 +750,13 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                         <div key={team.id} className="treasure-item">
                           <div className="treasure-content">
                             <div className="treasure-icon">
-                              <img
+                              <Image
                                 src={playerIconPath}
                                 alt={`${team.name} icon`}
+                                width={40}
+                                height={40}
                                 className="team-player-icon"
+                                loading="lazy"
                                 onError={(e) => {
                                   // Fallback to default player icon if specific icon fails to load
                                   const target = e.target as HTMLImageElement;
@@ -670,10 +774,13 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                   <div className="treasure-item">
                     <div className="treasure-content">
                       <div className="treasure-icon">
-                        <img
+                        <Image
                           src="/images/player_icons/player_icon_0.imageset/player_icon_0.png"
                           alt="No teams icon"
+                          width={40}
+                          height={40}
                           className="team-player-icon"
+                          loading="lazy"
                         />
                       </div>
                       <span className="treasure-name">{t('scoreboard.noTeams')}</span>
@@ -694,7 +801,8 @@ const MobileScoreboard: React.FC<MobileScoreboardProps> = ({
                             appName={appName}
                             gameProject={gameProject}
                             onClick={() => handleTreasurePictureClick(treasure.id)}
-
+                            onImageError={handleTreasureImageError}
+                            onImageLoad={handleTreasureImageLoad}
                           />
                         </div>
                         <span className="treasure-name">{treasure.name}</span>
